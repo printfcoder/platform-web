@@ -1,6 +1,6 @@
 # Micro Web [doing]
 
-Micro Web is the Micro Dashboard.
+Micro Web is the Dashboard of Micro.
 
 ![](./docs/img/2.show.gif)
 
