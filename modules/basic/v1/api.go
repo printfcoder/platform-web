@@ -3,6 +3,7 @@ package v1
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/micro-in-cn/micro-web/modules/internal/helper"
 	"github.com/micro/go-micro/cmd"
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-micro/selector"
@@ -41,9 +42,12 @@ func (api *api) webServices(w http.ResponseWriter, r *http.Request) {
 
 	webServices := make([]*registry.Service, 0)
 	for _, s := range services {
-		if strings.Index(s.Name, namespace) == 0 && len(strings.TrimPrefix(s.Name, namespace)) > 0 {
-			s.Name = strings.Replace(s.Name, namespace+".", "", 1)
-			webServices = append(webServices, s)
+
+		for _, webN := range WebNamespacePrefix {
+			if strings.Index(s.Name, webN) == 0 && len(strings.TrimPrefix(s.Name, webN)) > 0 {
+				s.Name = strings.Replace(s.Name, webN+".", "", 1)
+				webServices = append(webServices, s)
+			}
 		}
 	}
 
@@ -74,7 +78,6 @@ func (api *api) services(w http.ResponseWriter, r *http.Request) {
 		for _, s := range ss {
 			service.Nodes = append(service.Nodes, s.Nodes...)
 		}
-
 	}
 
 	sort.Sort(common.SortedServices{Services: services})
@@ -187,8 +190,8 @@ func (api *api) apiGatewayServices(w http.ResponseWriter, r *http.Request) {
 
 			filter := func(services []*registry.Service) []*registry.Service {
 				for _, s := range services {
-					for _, n := range s.Nodes {
-						if n.Metadata[metadata.NameServerType] == metadata.ServiceTypeAPIGateway {
+					for _, gwN := range GatewayNamespaces {
+						if s.Name == gwN {
 							ret = append(ret, s)
 							break
 						}
@@ -241,4 +244,20 @@ func (api *api) health(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rpc(w, helper.RequestToContext(r), rpcReq)
+}
+
+func (api *api) stats(w http.ResponseWriter, r *http.Request) {
+
+	defer r.Body.Close()
+
+	rpcReq := &rpcRequest{
+		Service:  r.URL.Query().Get("service"),
+		Endpoint: "Debug.Stats",
+		Request:  "{}",
+		URL:      r.URL.Path,
+		Address:  r.URL.Query().Get("address"),
+	}
+
+	rpc(w, helper.RequestToContext(r), rpcReq)
+	return
 }

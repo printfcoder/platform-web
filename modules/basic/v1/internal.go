@@ -169,7 +169,7 @@ func writeJsonData(w http.ResponseWriter, data interface{}) {
 
 func writeError(w http.ResponseWriter, msg string) {
 
-	rsp := &Rsp{
+	rsp := &modeles.Rsp{
 		Error:   msg,
 		Success: false,
 	}
