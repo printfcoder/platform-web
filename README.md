@@ -1,6 +1,6 @@
-# Micro Web [doing]
+# Platform Web [In Progress]
 
-Micro Web is the Dashboard of Micro.
+Platform Web is a developer admin dashboard for Micro.
 
 ![](./docs/img/2.show.gif)
 
@@ -17,7 +17,7 @@ Micro Web is the Dashboard of Micro.
 
 # 内容
 
-Micro Web是Micro的控制台。
+Platform Web是Micro的控制台。
 
 - [benchmarks](./benchmarks) 基准性能测试
 - [common](./common) 通用工具库
