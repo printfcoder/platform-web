@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/micro-in-cn/micro-web/modules"
 	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/cmd"
 	"github.com/micro/go-micro/errors"
@@ -152,7 +153,7 @@ func apiProxy() http.Handler {
 
 func writeJsonData(w http.ResponseWriter, data interface{}) {
 
-	rsp := &Rsp{
+	rsp := &modules.Rsp{
 		Data:    data,
 		Success: true,
 	}
@@ -169,7 +170,7 @@ func writeJsonData(w http.ResponseWriter, data interface{}) {
 
 func writeError(w http.ResponseWriter, msg string) {
 
-	rsp := &modeles.Rsp{
+	rsp := &modules.Rsp{
 		Error:   msg,
 		Success: false,
 	}

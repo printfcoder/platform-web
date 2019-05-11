@@ -1,27 +1,41 @@
 package cmd
 
 import (
+	z "github.com/micro-in-cn/micro-web/internal/zap"
 	"github.com/micro-in-cn/micro-web/modules"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro/cmd"
 	"github.com/micro/go-web"
+	"go.uber.org/zap"
 	"net/http"
-	"strings"
 )
 
 var (
 	Address   = ":8082"
 	name      = "go.micro.web.dashboard"
 	Version   = "1.0.1"
-	Path      = "/"
+	RootPath  = "/v1/api"
 	Namespace = "go.micro.web.v2"
+	logger    = z.GetLogger()
 )
 
 // Init app
 func Init(ops ...modules.Option) {
 
 	app := cmd.App()
-	app.Commands = Commands(ops...)
+	app.Flags = append(app.Flags,
+		cli.StringFlag{
+			Name:   "root_path",
+			Usage:  "Set the root path of micro web",
+			EnvVar: "MICRO_WEB_NAMESPACE",
+		},
+		cli.StringFlag{
+			Name:   "static_dir",
+			Usage:  "Set the static dir of micro web",
+			EnvVar: "MICRO_WEB_STATIC_DIR",
+		},
+	)
+
 	app.Action = func(c *cli.Context) {
 		run(c)
 	}
@@ -47,6 +61,10 @@ func run(ctx *cli.Context, srvOpts ...modules.Option) {
 		Version = ctx.GlobalString("address")
 	}
 
+	if len(ctx.String("root_path")) > 0 {
+		RootPath = ctx.String("root_path")
+	}
+
 	if len(ctx.String("address")) > 0 {
 		Address = ctx.String("address")
 	}
@@ -59,20 +77,28 @@ func run(ctx *cli.Context, srvOpts ...modules.Option) {
 
 	s.HandleFunc("/favicon.ico", faviconHandler)
 
-	// Init plugins
+	logger.Info("loading modules", zap.Any("modules", modules.Modules()))
+
+	// Init modules
 	for _, p := range modules.Modules() {
 
 		p.Init(ctx)
 		r := p.Path()
 
+		if r == "/" {
+			r = ""
+		}
+
 		for k, h := range p.Handlers() {
-			if strings.LastIndex(r, "/") != len(r)-1 && strings.Index(k, "/") != 0 {
-				r += "/"
-			}
+
+			route := RootPath + r + k
+
 			if h.IsFunc() {
-				s.HandleFunc(r+k, h.Func)
+				logger.Info("handler Func", zap.Any("route", route), zap.Any("func", h.Func))
+				s.HandleFunc(route, h.Func)
 			} else {
-				s.Handle(r+k, h.Hld)
+				logger.Info("handler Handle", zap.Any("route", route), zap.Any("handle", h.Hld))
+				s.Handle(route, h.Hld)
 			}
 		}
 	}
@@ -95,33 +121,4 @@ func run(ctx *cli.Context, srvOpts ...modules.Option) {
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
 	return
-}
-
-func Commands(options ...modules.Option) []cli.Command {
-	command := cli.Command{
-		Name:  "web",
-		Usage: "Run the web dashboard",
-		Action: func(c *cli.Context) {
-			run(c, options...)
-		},
-		Flags: []cli.Flag{
-			cli.StringFlag{
-				Name:   "address",
-				Usage:  "Set the web UI address e.g 0.0.0.0:8082",
-				EnvVar: "MICRO_WEB_ADDRESS",
-			},
-			cli.StringFlag{
-				Name:   "namespace",
-				Usage:  "Set the namespace used by the Web proxy e.g. com.example.web",
-				EnvVar: "MICRO_WEB_NAMESPACE",
-			},
-			cli.StringFlag{
-				Name:   "static_dir",
-				Usage:  "Set the static dir of micro web",
-				EnvVar: "MICRO_WEB_STATIC_DIR",
-			},
-		},
-	}
-
-	return []cli.Command{command}
 }

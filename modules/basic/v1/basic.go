@@ -52,6 +52,10 @@ func (m *basicModule) Flags() []cli.Flag {
 
 func (m *basicModule) Handlers() (mp map[string]*modules.Handler) {
 
+	m.Lock()
+	mp = make(map[string]*modules.Handler)
+	defer m.Unlock()
+
 	mp["/services"] = &modules.Handler{
 		Func:   m.api.services,
 		Method: []string{"GET"},

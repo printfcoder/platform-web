@@ -1,0 +1,15 @@
+micro:
+  micro_web:
+    name: go.micro.web
+    address: 127.0.0.1
+    port: 8082
+    zap:
+      level: error
+      development: false
+      encoding: json
+      logFileDir:
+      outputPaths: []
+      errorOutputPaths: []
+      maxSize: 50
+      maxBackups: 200
+      maxAge: 10
