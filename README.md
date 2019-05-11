@@ -2,6 +2,10 @@
 
 Platform Web is a developer admin dashboard for Micro.
 
+# Overview
+
+The micro web dashboard provides simple access to services with the ability to explore and interact with them. Platform Web looks to go a step further providing a full featured developer admin dashboard with auth, metrics, monitoring and much more. Platform Web is a micro web app like any other but focused on providing a platform wide overview.
+
 ![](./docs/img/2.show.gif)
 
 ![](./docs/img/1.architecture.png)
