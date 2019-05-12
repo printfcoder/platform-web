@@ -8,15 +8,20 @@ import (
 	"github.com/micro/go-web"
 	"go.uber.org/zap"
 	"net/http"
+	"time"
 )
 
 var (
-	Address   = ":8082"
-	name      = "go.micro.web.dashboard"
-	Version   = "1.0.1"
-	RootPath  = "/v1/api"
-	Namespace = "go.micro.web.v2"
-	logger    = z.GetLogger()
+	Address          = ":9082"
+	name             = "go.micro.web.platform"
+	Version          = "1.0.1-beta"
+	RootPath         = "/platform"
+	apiPath          = "/api/v1"
+	StaticDir        = "webapp"
+	Namespace        = "go.micro.web.platform"
+	registerTTL      = 30 * time.Second
+	registerInterval = 10 * time.Second
+	logger           = z.GetLogger()
 )
 
 // Init app
@@ -45,8 +50,6 @@ func Init(ops ...modules.Option) {
 	)
 }
 
-// Setup sets up the web app
-
 func run(ctx *cli.Context, srvOpts ...modules.Option) {
 
 	if len(ctx.GlobalString("server_name")) > 0 {
@@ -69,41 +72,50 @@ func run(ctx *cli.Context, srvOpts ...modules.Option) {
 		Address = ctx.String("address")
 	}
 
+	if len(ctx.GlobalString("register_ttl")) > 0 {
+		registerTTL = ctx.Duration("register_ttl")
+	}
+
+	if len(ctx.GlobalString("register_interval")) > 0 {
+		registerInterval = ctx.Duration("register_interval")
+	}
+
 	s := web.NewService(
 		web.Name(name),
 		web.Version(Version),
 		web.Address(Address),
+		web.RegisterTTL(registerTTL),
+		web.RegisterInterval(registerInterval),
 	)
 
+	// favicon.ico
 	s.HandleFunc("/favicon.ico", faviconHandler)
 
-	logger.Info("loading modules", zap.Any("modules", modules.Modules()))
+	// static dir
+	s.Handle(RootPath+"/", http.StripPrefix(RootPath+"/", http.FileServer(http.Dir(StaticDir))))
 
-	// Init modules
-	for _, p := range modules.Modules() {
+	// init modules
+	for _, m := range modules.Modules() {
 
-		p.Init(ctx)
-		r := p.Path()
+		logger.Info("loading module：", zap.Any("module", m.Name()))
 
-		if r == "/" {
-			r = ""
-		}
+		m.Init(ctx)
+		r := m.Path()
 
-		for k, h := range p.Handlers() {
+		for k, h := range m.Handlers() {
 
-			route := RootPath + r + k
+			route := RootPath + apiPath + r + k
 
 			if h.IsFunc() {
-				logger.Info("handler Func", zap.Any("route", route), zap.Any("func", h.Func))
+				logger.Info("handler Func", zap.Any("route", route))
 				s.HandleFunc(route, h.Func)
 			} else {
-				logger.Info("handler Handle", zap.Any("route", route), zap.Any("handle", h.Hld))
+				logger.Info("handler Handle", zap.Any("route", route))
 				s.Handle(route, h.Hld)
 			}
 		}
 	}
 
-	// 初始化服务
 	if err := s.Init(
 		web.Action(
 			func(c *cli.Context) {
@@ -113,7 +125,6 @@ func run(ctx *cli.Context, srvOpts ...modules.Option) {
 		panic(err)
 	}
 
-	// 运行服务
 	if err := s.Run(); err != nil {
 		panic(err)
 	}

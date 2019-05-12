@@ -1,5 +1,5 @@
 export default {
   url: {
-    basicUrl: process.env.NODE_ENV === "development" ? "/api" : "/api"
+    basicUrl: process.env.NODE_ENV === "development" ? "/platform/api" : "/platform/api"
   }
 };

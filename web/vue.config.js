@@ -6,7 +6,7 @@ module.exports = {
         disableHostCheck: true,
         proxy: {
             '/': {
-                target: 'http://127.0.0.1:8082',
+                target: 'http://127.0.0.1:9082',
                 changeOrigin: true,
                 pathRewrite: {
                     '/': '/', // optional, it is just a placeholder of usage.
@@ -23,7 +23,7 @@ module.exports = {
         'vue-echarts',
         'resize-detector'
     ],
-    publicPath: '/',
-    outputDir: 'dist',
+    publicPath: '/platform/',
+    outputDir: '../srv/webapp',
     assetsDir: 'static',
 };

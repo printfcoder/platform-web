@@ -41,6 +41,9 @@
 
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
+    import config from "@/config";
+
+    const baseURL = config.url.basicUrl + "/v1/b";
 
     @Component({
         components: {}
@@ -98,7 +101,7 @@
                                 $.ajax({
                                     dataType: "json",
                                     contentType: "application/json",
-                                    url: "api/v1/services",
+                                    url: baseURL + "/services",
                                     data: {},
                                     success: function (data: any) {
                                         let services = [];
@@ -118,7 +121,7 @@
                                 $.ajax({
                                     dataType: "json",
                                     contentType: "application/json",
-                                    url: "api/v1/service/" + args[2],
+                                    url: baseURL + "/service/" + args[2],
                                     data: {},
                                     success: function (data: any) {
                                         if (data.data.length == 0) {
@@ -181,7 +184,7 @@
                                 $.ajax({
                                     dataType: "json",
                                     contentType: "application/json",
-                                    url: "api/v1/service/" + args[1],
+                                    url: baseURL + "/service/" + args[1],
                                     data: {},
                                     success: function (data: any) {
 
@@ -200,7 +203,7 @@
 
                                                 $.ajax({
                                                     dataType: "json",
-                                                    url: "api/v1/health",
+                                                    url: baseURL + "/health",
                                                     data: {
                                                         "service": service.name,
                                                         "address": node.address + ":" + node.port,
@@ -239,7 +242,7 @@
                                     endpoint: "POST",
                                     dataType: "json",
                                     contentType: "application/json",
-                                    url: "api/v1/rpc",
+                                    url:  baseURL + "/rpc",
                                     data: JSON.stringify({"service": args[1], "endpoint": args[2], "request": request}),
                                     success: function (data: any) {
                                         term.echo(JSON.stringify(data, null, 2));

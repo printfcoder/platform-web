@@ -147,21 +147,6 @@
 
         created() {
             this.getServices()
-
-            for (var i = 0; i < dd1.length; i++) {
-                var b = false
-                for (var j = 0; j < dd2.length; j++) {
-
-                    if (dd1[i] == dd2[j]) {
-                        b = true;
-                        break
-                    }
-                }
-
-                if (!b) {
-                    console.log(dd1[i])
-                }
-            }
         }
 
         mounted() {

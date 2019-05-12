@@ -18,7 +18,7 @@ static dir path.
 micro web --static_dir=/path/to/new/ui/dist/dir
 ```
 
-The default location is ./web/webapp/dist
+The default location is [webapp](../srv/webapp)
 
 ## Development
 

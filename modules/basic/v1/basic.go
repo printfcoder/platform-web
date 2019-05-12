@@ -9,7 +9,7 @@ import (
 func init() {
 	m = &basicModule{
 		name: "basic",
-		path: "/",
+		path: "/b",
 	}
 
 	modules.Registry(m)
@@ -21,9 +21,6 @@ var (
 
 	GatewayNamespaces  = []string{"go.micro.api"}
 	WebNamespacePrefix = []string{"go.micro.web"}
-
-	// path to the html directory
-	StaticDir = "web/webapp/dist"
 )
 
 // basicModule includes web, registry, CLI, Stats submodules.
@@ -71,17 +68,17 @@ func (m *basicModule) Handlers() (mp map[string]*modules.Handler) {
 		Method: []string{"GET"},
 	}
 
-	mp["/service/api-gateway-services"] = &modules.Handler{
+	mp["/api-gateway-services"] = &modules.Handler{
 		Func:   m.api.apiGatewayServices,
 		Method: []string{"GET"},
 	}
 
-	mp["/service/service-details"] = &modules.Handler{
+	mp["/service-details"] = &modules.Handler{
 		Func:   m.api.serviceDetails,
 		Method: []string{"GET"},
 	}
 
-	mp["/service/stats"] = &modules.Handler{
+	mp["/stats"] = &modules.Handler{
 		Func:   m.api.stats,
 		Method: []string{"GET"},
 	}
