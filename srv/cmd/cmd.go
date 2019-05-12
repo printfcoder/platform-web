@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	z "github.com/micro-in-cn/micro-web/internal/zap"
-	"github.com/micro-in-cn/micro-web/modules"
+	z "github.com/micro-in-cn/platform-web/internal/zap"
+	"github.com/micro-in-cn/platform-web/modules"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro/cmd"
 	"github.com/micro/go-web"

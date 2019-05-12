@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/micro-in-cn/micro-web/modules"
+	"github.com/micro-in-cn/platform-web/modules"
 	"github.com/micro/cli"
 	"sync"
 )

@@ -1,5 +1,5 @@
 package main
 
 import (
-	_ "github.com/micro-in-cn/micro-web/modules/basic/v1"
+	_ "github.com/micro-in-cn/platform-web/modules/basic/v1"
 )

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/micro-in-cn/micro-web/srv/cmd"
+	"github.com/micro-in-cn/platform-web/srv/cmd"
 )
 
 func main() {
