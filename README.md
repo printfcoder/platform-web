@@ -25,7 +25,39 @@ The micro web dashboard provides simple access to services with the ability to e
 
 ## Getting Started
 
+### go run
 
+```bash
+cd srv
+go run main.go module.go
+```
+
+then you can click [http://127.0.0.0:9082/platform][http://127.0.0.0:9082/platform] to open platform dashboard.
+
+### go build
+
+windows 
+
+```bash
+cd srv
+GOOS=windows GOARCH=amd64 go build -o platform-web.exe main.go module.go
+```
+
+Linux
+
+```bash
+cd srv
+GOOS=linux GOARCH=amd64 go build -o platform-web main.go module.go
+```
+
+you should keep the webapp dir and backend app in same path, like:
+
+```bash
+
+- platform-web
+- webapp
+
+```
 
 # 内容
 
