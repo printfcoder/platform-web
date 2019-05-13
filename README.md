@@ -23,6 +23,10 @@ The micro web dashboard provides simple access to services with the ability to e
 - [srv](./srv) backend-api
 - [web](./web) basic front-page framework
 
+## Getting Started
+
+
+
 # 内容
 
 Platform Web是Micro的控制台。

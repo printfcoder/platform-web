@@ -1,24 +1,31 @@
 package cmd
 
 import (
+	"fmt"
 	z "github.com/micro-in-cn/platform-web/internal/zap"
 	"github.com/micro-in-cn/platform-web/modules"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro/cmd"
+	"github.com/micro/go-micro/selector"
 	"github.com/micro/go-web"
+	"github.com/micro/micro/web/common"
 	"go.uber.org/zap"
 	"net/http"
+	"net/http/httputil"
+	"regexp"
+	"strings"
 	"time"
 )
 
 var (
-	Address          = ":9082"
+	re               = regexp.MustCompile("^[a-zA-Z0-9]+([a-zA-Z0-9-]*[a-zA-Z0-9]*)?$")
+	address          = ":9082"
 	name             = "go.micro.web.platform"
-	Version          = "1.0.1-beta"
-	RootPath         = "/platform"
+	version          = "1.0.1-beta"
+	rootPath         = "/platform"
 	apiPath          = "/api/v1"
 	StaticDir        = "webapp"
-	Namespace        = "go.micro.web.platform"
+	namespace        = "go.micro.web"
 	registerTTL      = 30 * time.Second
 	registerInterval = 10 * time.Second
 	logger           = z.GetLogger()
@@ -45,9 +52,9 @@ func Init(ops ...modules.Option) {
 		run(c)
 	}
 
-	cmd.Init(
-		cmd.Name(name),
-	)
+	if err := cmd.Init(cmd.Name(name)); err != nil {
+		panic(err)
+	}
 }
 
 func run(ctx *cli.Context, srvOpts ...modules.Option) {
@@ -57,19 +64,23 @@ func run(ctx *cli.Context, srvOpts ...modules.Option) {
 	}
 
 	if len(ctx.GlobalString("server_version")) > 0 {
-		Version = ctx.GlobalString("server_version")
+		version = ctx.GlobalString("server_version")
+	}
+
+	if len(ctx.String("namespace")) > 0 {
+		namespace = ctx.String("namespace")
 	}
 
 	if len(ctx.GlobalString("address")) > 0 {
-		Version = ctx.GlobalString("address")
+		version = ctx.GlobalString("address")
 	}
 
 	if len(ctx.String("root_path")) > 0 {
-		RootPath = ctx.String("root_path")
+		rootPath = ctx.String("root_path")
 	}
 
 	if len(ctx.String("address")) > 0 {
-		Address = ctx.String("address")
+		address = ctx.String("address")
 	}
 
 	if len(ctx.GlobalString("register_ttl")) > 0 {
@@ -82,8 +93,8 @@ func run(ctx *cli.Context, srvOpts ...modules.Option) {
 
 	s := web.NewService(
 		web.Name(name),
-		web.Version(Version),
-		web.Address(Address),
+		web.Version(version),
+		web.Address(address),
 		web.RegisterTTL(registerTTL),
 		web.RegisterInterval(registerInterval),
 	)
@@ -92,7 +103,11 @@ func run(ctx *cli.Context, srvOpts ...modules.Option) {
 	s.HandleFunc("/favicon.ico", faviconHandler)
 
 	// static dir
-	s.Handle(RootPath+"/", http.StripPrefix(RootPath+"/", http.FileServer(http.Dir(StaticDir))))
+	s.Handle(rootPath+"/", http.StripPrefix(rootPath+"/", http.FileServer(http.Dir(StaticDir))))
+
+	webProxyPath := rootPath + "/web/"
+	s.Handle(webProxyPath, webProxy())
+	logger.Info("handler web at ：", zap.Any("path", webProxyPath))
 
 	// init modules
 	for _, m := range modules.Modules() {
@@ -104,7 +119,7 @@ func run(ctx *cli.Context, srvOpts ...modules.Option) {
 
 		for k, h := range m.Handlers() {
 
-			route := RootPath + apiPath + r + k
+			route := rootPath + apiPath + r + k
 
 			if h.IsFunc() {
 				logger.Info("handler Func", zap.Any("route", route))
@@ -132,4 +147,52 @@ func run(ctx *cli.Context, srvOpts ...modules.Option) {
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
 	return
+}
+
+func webProxy() http.Handler {
+	sel := selector.NewSelector(
+		selector.Registry(*cmd.DefaultOptions().Registry),
+	)
+
+	director := func(r *http.Request) {
+		kill := func() {
+			r.URL.Host = ""
+			r.URL.Path = ""
+			r.URL.Scheme = ""
+			r.Host = ""
+			r.RequestURI = ""
+		}
+
+		parts := strings.Split(r.URL.Path, "/web/")
+		if len(parts) < 2 {
+			kill()
+			return
+		}
+		if !re.MatchString(parts[1]) {
+			kill()
+			return
+		}
+		next, err := sel.Select(namespace + "." + parts[1])
+		if err != nil {
+			kill()
+			return
+		}
+
+		s, err := next()
+		if err != nil {
+			kill()
+			return
+		}
+
+		r.Header.Set(common.BasePathHeader, "/"+parts[1])
+		r.URL.Host = fmt.Sprintf("%s:%d", s.Address, s.Port)
+		r.URL.Path = "/" + strings.Join(parts[0:], "/")
+		r.URL.Scheme = "http"
+		r.Host = r.URL.Host
+	}
+
+	return &common.Proxy{
+		Default:  &httputil.ReverseProxy{Director: director},
+		Director: director,
+	}
 }

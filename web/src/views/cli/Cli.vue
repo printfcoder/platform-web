@@ -43,7 +43,7 @@
     import {Component, Vue} from "vue-property-decorator";
     import config from "@/config";
 
-    const baseURL = config.url.basicUrl + "/v1/b";
+    const baseURL = config.url.basicUrl + "/api/v1/b";
 
     @Component({
         components: {}

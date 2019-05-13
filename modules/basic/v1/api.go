@@ -2,7 +2,6 @@ package v1
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"github.com/micro-in-cn/platform-web/modules/internal/helper"
 	"github.com/micro/go-micro/cmd"
 	"github.com/micro/go-micro/registry"
@@ -149,10 +148,11 @@ func (api *api) serviceDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *api) service(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
 
-	if len(vars["name"]) > 0 {
-		s, err := (*cmd.DefaultOptions().Registry).GetService(vars["name"])
+	serviceName := r.URL.Query().Get("service")
+
+	if len(serviceName) > 0 {
+		s, err := (*cmd.DefaultOptions().Registry).GetService(serviceName)
 		if err != nil {
 			http.Error(w, "Error occurred:"+err.Error(), 500)
 			return

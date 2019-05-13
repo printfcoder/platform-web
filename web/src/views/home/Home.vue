@@ -67,8 +67,10 @@
 
 
     import {Service} from "@/store/basic/types";
+    import config from "@/config";
 
     const namespace: string = 'registry';
+    const baseURL = config.url.basicUrl + "/web";
 
     @Component({
         components: {}
@@ -101,7 +103,7 @@
         }
 
         showDetail(item: Service) {
-            window.open("/proxy/" + item.name)
+            window.open(baseURL + "/" + item.name)
         }
     }
 </script>

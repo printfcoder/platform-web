@@ -63,7 +63,7 @@ func (m *basicModule) Handlers() (mp map[string]*modules.Handler) {
 		Method: []string{"GET"},
 	}
 
-	mp["/service/{name:[a-zA-Z0-9/.]+}"] = &modules.Handler{
+	mp["/service"] = &modules.Handler{
 		Func:   m.api.service,
 		Method: []string{"GET"},
 	}
