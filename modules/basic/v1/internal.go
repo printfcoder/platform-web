@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/micro-in-cn/platform-web/internal/proxy"
 	"github.com/micro-in-cn/platform-web/modules"
 	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/cmd"
@@ -14,9 +15,7 @@ import (
 	"time"
 )
 
-var (
-
-)
+var ()
 
 func rpc(w http.ResponseWriter, ctx context.Context, rpcReq *rpcRequest) {
 
@@ -102,7 +101,7 @@ func apiProxy() http.Handler {
 		}
 
 		address := r.URL.Query().Get("address")
-		r.Header.Set(BasePathHeader, "/v1/api-stats")
+		r.Header.Set(proxy.BasePathHeader, "/v1/api-stats")
 		r.Header.Set("Content-Type", "application/json")
 		r.URL.Host = fmt.Sprintf("%s", address)
 		r.URL.Path = "/stats" + strings.Join(parts[2:], "/")
