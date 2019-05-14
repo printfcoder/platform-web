@@ -60,7 +60,7 @@ npm run serve
 npm run build
 ```
 
-# Thanks
+# Acknowledgments
 
 ## [elementUI](https://element.eleme.io/#/)
 ## [Baidu eCharts](https://github.com/apache/incubator-echarts)
