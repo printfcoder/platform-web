@@ -3,10 +3,10 @@ package v1
 import (
 	"encoding/json"
 	"github.com/micro-in-cn/platform-web/modules/internal/helper"
+	"github.com/micro-in-cn/platform-web/modules/internal/tools"
 	"github.com/micro/go-micro/cmd"
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-micro/selector"
-	"github.com/micro/micro/web/common"
 	"net/http"
 	"sort"
 	"strconv"
@@ -50,7 +50,7 @@ func (api *api) webServices(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	sort.Sort(common.SortedServices{Services: services})
+	sort.Sort(tools.SortedServices{Services: services})
 
 	writeJsonData(w, webServices)
 
@@ -79,7 +79,7 @@ func (api *api) services(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	sort.Sort(common.SortedServices{Services: services})
+	sort.Sort(tools.SortedServices{Services: services})
 
 	writeJsonData(w, services)
 	return
@@ -112,7 +112,7 @@ func (api *api) microServices(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	sort.Sort(common.SortedServices{Services: ret})
+	sort.Sort(tools.SortedServices{Services: ret})
 
 	writeJsonData(w, ret)
 	return
@@ -125,7 +125,7 @@ func (api *api) serviceDetails(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sort.Sort(common.SortedServices{Services: services})
+	sort.Sort(tools.SortedServices{Services: services})
 
 	serviceDetails := make([]*serviceAPIDetail, 0)
 	for _, service := range services {

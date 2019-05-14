@@ -2,13 +2,14 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/google/uuid"
+	"github.com/micro-in-cn/platform-web/internal/proxy"
 	z "github.com/micro-in-cn/platform-web/internal/zap"
 	"github.com/micro-in-cn/platform-web/modules"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro/cmd"
 	"github.com/micro/go-micro/selector"
 	"github.com/micro/go-web"
-	"github.com/micro/micro/web/common"
 	"go.uber.org/zap"
 	"net/http"
 	"net/http/httputil"
@@ -59,6 +60,74 @@ func Init(ops ...modules.Option) {
 
 func run(ctx *cli.Context, srvOpts ...modules.Option) {
 
+	parseFlags(ctx)
+
+	s := web.NewService(
+		web.Name(name),
+		web.Version(version),
+		web.Address(address),
+		web.RegisterTTL(registerTTL),
+		web.RegisterInterval(registerInterval),
+		web.Id(name+"-"+uuid.New().String()),
+	)
+
+	// favicon.ico
+	s.HandleFunc("/favicon.ico", faviconHandler)
+
+	// static dir
+	s.Handle(rootPath+"/", http.StripPrefix(rootPath+"/", http.FileServer(http.Dir(StaticDir))))
+
+	webProxyPath := rootPath + "/web/"
+	s.Handle(webProxyPath, webProxy())
+
+	logger.Info("handler web at ：", zap.Any("path", webProxyPath))
+
+	loadModules(ctx, s)
+
+	if err := s.Init(
+		web.Action(
+			func(c *cli.Context) {
+				// do something
+			}),
+	); err != nil {
+		panic(err)
+	}
+
+	if err := s.Run(); err != nil {
+		panic(err)
+	}
+}
+
+func faviconHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "./webapp/favicon.ico")
+	return
+}
+
+func loadModules(ctx *cli.Context, s web.Service) {
+	// init modules
+	for _, m := range modules.Modules() {
+
+		logger.Info("loading module：", zap.Any("module", m.Name()))
+
+		m.Init(ctx)
+		r := m.Path()
+
+		for k, h := range m.Handlers() {
+
+			route := rootPath + apiPath + r + k
+
+			if h.IsFunc() {
+				logger.Info("handler Func", zap.Any("route", route))
+				s.HandleFunc(route, h.Func)
+			} else {
+				logger.Info("handler Handle", zap.Any("route", route))
+				s.Handle(route, h.Hld)
+			}
+		}
+	}
+}
+
+func parseFlags(ctx *cli.Context) {
 	if len(ctx.GlobalString("server_name")) > 0 {
 		name = ctx.GlobalString("server_name")
 	}
@@ -90,63 +159,6 @@ func run(ctx *cli.Context, srvOpts ...modules.Option) {
 	if len(ctx.GlobalString("register_interval")) > 0 {
 		registerInterval = ctx.Duration("register_interval")
 	}
-
-	s := web.NewService(
-		web.Name(name),
-		web.Version(version),
-		web.Address(address),
-		web.RegisterTTL(registerTTL),
-		web.RegisterInterval(registerInterval),
-	)
-
-	// favicon.ico
-	s.HandleFunc("/favicon.ico", faviconHandler)
-
-	// static dir
-	s.Handle(rootPath+"/", http.StripPrefix(rootPath+"/", http.FileServer(http.Dir(StaticDir))))
-
-	webProxyPath := rootPath + "/web/"
-	s.Handle(webProxyPath, webProxy())
-	logger.Info("handler web at ：", zap.Any("path", webProxyPath))
-
-	// init modules
-	for _, m := range modules.Modules() {
-
-		logger.Info("loading module：", zap.Any("module", m.Name()))
-
-		m.Init(ctx)
-		r := m.Path()
-
-		for k, h := range m.Handlers() {
-
-			route := rootPath + apiPath + r + k
-
-			if h.IsFunc() {
-				logger.Info("handler Func", zap.Any("route", route))
-				s.HandleFunc(route, h.Func)
-			} else {
-				logger.Info("handler Handle", zap.Any("route", route))
-				s.Handle(route, h.Hld)
-			}
-		}
-	}
-
-	if err := s.Init(
-		web.Action(
-			func(c *cli.Context) {
-				// do something
-			}),
-	); err != nil {
-		panic(err)
-	}
-
-	if err := s.Run(); err != nil {
-		panic(err)
-	}
-}
-
-func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	return
 }
 
 func webProxy() http.Handler {
@@ -168,10 +180,12 @@ func webProxy() http.Handler {
 			kill()
 			return
 		}
+
 		if !re.MatchString(parts[1]) {
 			kill()
 			return
 		}
+
 		next, err := sel.Select(namespace + "." + parts[1])
 		if err != nil {
 			kill()
@@ -184,14 +198,18 @@ func webProxy() http.Handler {
 			return
 		}
 
-		r.Header.Set(common.BasePathHeader, "/"+parts[1])
+		path := "/" + strings.Join(parts[2:], "/")
+
+		logger.Debug("proxy to", zap.String("path", path))
+
+		r.Header.Set(proxy.BasePathHeader, "/"+parts[1])
 		r.URL.Host = fmt.Sprintf("%s:%d", s.Address, s.Port)
-		r.URL.Path = "/" + strings.Join(parts[0:], "/")
+		r.URL.Path = path
 		r.URL.Scheme = "http"
 		r.Host = r.URL.Host
 	}
 
-	return &common.Proxy{
+	return &proxy.Proxy{
 		Default:  &httputil.ReverseProxy{Director: director},
 		Director: director,
 	}

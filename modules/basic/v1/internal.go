@@ -8,11 +8,14 @@ import (
 	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/cmd"
 	"github.com/micro/go-micro/errors"
-	"github.com/micro/micro/web/common"
 	"net/http"
 	"net/http/httputil"
 	"strings"
 	"time"
+)
+
+var (
+
 )
 
 func rpc(w http.ResponseWriter, ctx context.Context, rpcReq *rpcRequest) {
@@ -99,7 +102,7 @@ func apiProxy() http.Handler {
 		}
 
 		address := r.URL.Query().Get("address")
-		r.Header.Set(common.BasePathHeader, "/v1/api-stats")
+		r.Header.Set(BasePathHeader, "/v1/api-stats")
 		r.Header.Set("Content-Type", "application/json")
 		r.URL.Host = fmt.Sprintf("%s", address)
 		r.URL.Path = "/stats" + strings.Join(parts[2:], "/")
@@ -107,7 +110,7 @@ func apiProxy() http.Handler {
 		r.Host = r.URL.Host
 	}
 
-	return &common.Proxy{
+	return &proxy.Proxy{
 		Default:  &httputil.ReverseProxy{Director: director},
 		Director: director,
 	}
