@@ -1,6 +1,6 @@
 micro:
-  micro_web:
-    name: go.micro.web
+  platform_web:
+    name: go.micro.web.platform_web
     address: 127.0.0.1
     port: 8082
     zap:

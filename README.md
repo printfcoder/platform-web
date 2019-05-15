@@ -14,12 +14,18 @@ The micro web dashboard provides simple access to services with the ability to e
 
 ![](./docs/img/1.architecture.png)
 
+![](./docs/img/3.architecture_srv.png)
+
 ## content
 
 - [benchmarks](./benchmarks) benchmark tests
+- [collector](./collector) a go-micro srv collecting statistic infos from exporters and saving data to db
 - [common](./common) common utils/libs
 - [docs](./docs) documents
-- [modules](./modules) module plugins
+- [exporters](./exporters) export infos to collector.
+  - [os](./exporters/os) a go-micro srv exporting os and machine runtime infos to collector.
+  - [micro](./exporters/micro) a plugin exporting infos of a running micro service to collector. It can be integrated into a micro service. 
+- [modules](./modules) module plugins including basic (same as micro web), auth, log, etc.
 - [srv](./srv) backend-api
 - [web](./web) basic front-page framework
 
