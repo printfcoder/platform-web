@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package protobuf.pb.cpu.cpu;
+
+option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu/cpu";
+
+
+message ProcStat {
+    string CPU = 1 [json_name = "cpu"];
+    float user = 2 [json_name = "user"];
+    float system = 3 [json_name = "system"];
+    float idle = 4 [json_name = "idle"];
+    float nice = 5 [json_name = "nice"];
+    float iowait = 6 [json_name = "iowait"];
+    float irq = 7 [json_name = "irq"];
+    float softirq = 8 [json_name = "softirq"];
+    float steal = 9 [json_name = "steal"];
+    float guest = 10 [json_name = "guest"];
+    float guestNice = 11 [json_name = "guestNice"];
+}

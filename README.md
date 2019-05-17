@@ -18,13 +18,14 @@ The micro web dashboard provides simple access to services with the ability to e
 
 ## content
 
+- [assembly-line](./assembly-line)
+  - [collector](./assembly-line/collector) a go-micro srv collecting statistic infos from exporters and saving data to db
+  - [exporters](./assembly-line/exporters) export infos to the [collector](./assembly-line/collector).
+    - [os](./assembly-line/exporters/os) a go-micro srv exporting os and machine runtime infos to collector.
+    - [micro](./assembly-line/exporters/micro) a plugin exporting infos of a running micro service to collector. It can be integrated into a micro service. 
 - [benchmarks](./benchmarks) benchmark tests
-- [collector](./collector) a go-micro srv collecting statistic infos from exporters and saving data to db
 - [common](./common) common utils/libs
 - [docs](./docs) documents
-- [exporters](./exporters) export infos to collector.
-  - [os](./exporters/os) a go-micro srv exporting os and machine runtime infos to collector.
-  - [micro](./exporters/micro) a plugin exporting infos of a running micro service to collector. It can be integrated into a micro service. 
 - [modules](./modules) module plugins including basic (same as micro web), auth, log, etc.
 - [srv](./srv) backend-api
 - [web](./web) basic front-page framework
@@ -64,6 +65,18 @@ you should keep the webapp dir and backend app in same path, like:
 - webapp
 
 ```
+
+## Acknowledgements
+
+Thanks for [prometheus](https://github.com/prometheus) and [gopsutil](https://github.com/shirou/gopsutil). 
+
+I am being influenced by their design, huge and full jobs, etc, etc.
+
+I reuse most of their good code, and make them more suitable in micro design philosophy.
+
+## docker
+
+coming soon...
 
 # 内容
 
