@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/basic";
+package protobuf.basic;
+
+message Error {
+    string code = 1 [json_name = "code"];
+    string msg = 2 [json_name = "msg"];
+}
+

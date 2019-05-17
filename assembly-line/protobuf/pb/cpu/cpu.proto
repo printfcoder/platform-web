@@ -4,6 +4,7 @@ package protobuf.pb.cpu.cpu;
 
 option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu/cpu";
 
+import "basic/error.proto";
 
 message ProcStat {
     string CPU = 1 [json_name = "cpu"];
@@ -17,4 +18,19 @@ message ProcStat {
     float steal = 9 [json_name = "steal"];
     float guest = 10 [json_name = "guest"];
     float guestNice = 11 [json_name = "guestNice"];
+}
+
+message CPURequest {
+    string IP = 1;
+    string nodeName = 2;
+    ProcStat procStat = 3;
+}
+
+message CPUResponse {
+    basic.Error error = 1;
+}
+
+service CPUService {
+    rpc PushCPUProcStat (CPURequest) returns (CPUResponse) {
+    }
 }
