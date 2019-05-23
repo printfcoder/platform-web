@@ -6,7 +6,7 @@ option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/
 
 import "basic/error.proto";
 
-message ProcStat {
+message TimesStat {
     string CPU = 1;
     double user = 2;
     double system = 3;
@@ -20,10 +20,38 @@ message ProcStat {
     double guestNice = 11;
 }
 
+message InfoStat {
+    int32 cpu = 1;
+    string vendorId = 2;
+    string family = 3;
+    string model = 4;
+    int32 stepping = 5;
+    string physicalId = 6;
+    string coreId = 7;
+    int32 cores = 8;
+    string modelName = 9;
+    double mhz = 10;
+    int32 cacheSize = 11;
+    repeated string flags = 12;
+    string microcode = 13;
+}
+
+message Percent {
+    double percent = 1;
+}
+
+message Counts {
+    int32 counts = 1;
+}
+
 message CPURequest {
-    string IP = 1;
-    string nodeName = 2;
-    ProcStat procStat = 3;
+    uint64 timestamp = 1;
+    string IP = 2;
+    string nodeName = 3;
+    TimesStat timesStat = 4;
+    InfoStat infoStat = 5;
+    Percent percent = 6;
+    Counts counts = 7;
 }
 
 message CPUResponse {
@@ -31,6 +59,12 @@ message CPUResponse {
 }
 
 service CPUService {
-    rpc PushCPUProcStat (CPURequest) returns (CPUResponse) {
+    rpc PushCPUTimesStat (CPURequest) returns (CPUResponse) {
+    }
+    rpc PushCPUInfoStat (CPURequest) returns (CPUResponse) {
+    }
+    rpc PushCPUPercent (CPURequest) returns (CPUResponse) {
+    }
+    rpc PushCPUCounts (CPURequest) returns (CPUResponse) {
     }
 }

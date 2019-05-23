@@ -35,7 +35,10 @@ var _ server.Option
 // Client API for CPUService service
 
 type CPUService interface {
-	PushCPUProcStat(ctx context.Context, in *CPURequest, opts ...client.CallOption) (*CPUResponse, error)
+	PushCPUTimesStat(ctx context.Context, in *CPURequest, opts ...client.CallOption) (*CPUResponse, error)
+	PushCPUInfoStat(ctx context.Context, in *CPURequest, opts ...client.CallOption) (*CPUResponse, error)
+	PushCPUPercent(ctx context.Context, in *CPURequest, opts ...client.CallOption) (*CPUResponse, error)
+	PushCPUCounts(ctx context.Context, in *CPURequest, opts ...client.CallOption) (*CPUResponse, error)
 }
 
 type cPUService struct {
@@ -56,8 +59,38 @@ func NewCPUService(name string, c client.Client) CPUService {
 	}
 }
 
-func (c *cPUService) PushCPUProcStat(ctx context.Context, in *CPURequest, opts ...client.CallOption) (*CPUResponse, error) {
-	req := c.c.NewRequest(c.name, "CPUService.PushCPUProcStat", in)
+func (c *cPUService) PushCPUTimesStat(ctx context.Context, in *CPURequest, opts ...client.CallOption) (*CPUResponse, error) {
+	req := c.c.NewRequest(c.name, "CPUService.PushCPUTimesStat", in)
+	out := new(CPUResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cPUService) PushCPUInfoStat(ctx context.Context, in *CPURequest, opts ...client.CallOption) (*CPUResponse, error) {
+	req := c.c.NewRequest(c.name, "CPUService.PushCPUInfoStat", in)
+	out := new(CPUResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cPUService) PushCPUPercent(ctx context.Context, in *CPURequest, opts ...client.CallOption) (*CPUResponse, error) {
+	req := c.c.NewRequest(c.name, "CPUService.PushCPUPercent", in)
+	out := new(CPUResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cPUService) PushCPUCounts(ctx context.Context, in *CPURequest, opts ...client.CallOption) (*CPUResponse, error) {
+	req := c.c.NewRequest(c.name, "CPUService.PushCPUCounts", in)
 	out := new(CPUResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -69,12 +102,18 @@ func (c *cPUService) PushCPUProcStat(ctx context.Context, in *CPURequest, opts .
 // Server API for CPUService service
 
 type CPUServiceHandler interface {
-	PushCPUProcStat(context.Context, *CPURequest, *CPUResponse) error
+	PushCPUTimesStat(context.Context, *CPURequest, *CPUResponse) error
+	PushCPUInfoStat(context.Context, *CPURequest, *CPUResponse) error
+	PushCPUPercent(context.Context, *CPURequest, *CPUResponse) error
+	PushCPUCounts(context.Context, *CPURequest, *CPUResponse) error
 }
 
 func RegisterCPUServiceHandler(s server.Server, hdlr CPUServiceHandler, opts ...server.HandlerOption) error {
 	type cPUService interface {
-		PushCPUProcStat(ctx context.Context, in *CPURequest, out *CPUResponse) error
+		PushCPUTimesStat(ctx context.Context, in *CPURequest, out *CPUResponse) error
+		PushCPUInfoStat(ctx context.Context, in *CPURequest, out *CPUResponse) error
+		PushCPUPercent(ctx context.Context, in *CPURequest, out *CPUResponse) error
+		PushCPUCounts(ctx context.Context, in *CPURequest, out *CPUResponse) error
 	}
 	type CPUService struct {
 		cPUService
@@ -87,6 +126,18 @@ type cPUServiceHandler struct {
 	CPUServiceHandler
 }
 
-func (h *cPUServiceHandler) PushCPUProcStat(ctx context.Context, in *CPURequest, out *CPUResponse) error {
-	return h.CPUServiceHandler.PushCPUProcStat(ctx, in, out)
+func (h *cPUServiceHandler) PushCPUTimesStat(ctx context.Context, in *CPURequest, out *CPUResponse) error {
+	return h.CPUServiceHandler.PushCPUTimesStat(ctx, in, out)
+}
+
+func (h *cPUServiceHandler) PushCPUInfoStat(ctx context.Context, in *CPURequest, out *CPUResponse) error {
+	return h.CPUServiceHandler.PushCPUInfoStat(ctx, in, out)
+}
+
+func (h *cPUServiceHandler) PushCPUPercent(ctx context.Context, in *CPURequest, out *CPUResponse) error {
+	return h.CPUServiceHandler.PushCPUPercent(ctx, in, out)
+}
+
+func (h *cPUServiceHandler) PushCPUCounts(ctx context.Context, in *CPURequest, out *CPUResponse) error {
+	return h.CPUServiceHandler.PushCPUCounts(ctx, in, out)
 }

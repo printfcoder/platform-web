@@ -1,22 +1,16 @@
 package cmd
 
 import (
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/cpu"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	"github.com/micro/cli"
+	"github.com/micro/go-micro"
 )
 
 func (app *c) load(ops []option.Option) {
 	app.ops = ops
-
 	app.flags()
-	app.action()
-    app.loadModules()
-}
-
-func (app *c) action() {
-	app.Action = func(c *cli.Context) {
-		app.run(c, app.ops...)
-	}
+	app.loadModules()
 }
 
 func (app *c) flags() {
@@ -64,10 +58,21 @@ func (app *c) flags() {
 	)
 }
 
-func (app *c) run(ctx *cli.Context, opts ...option.Option) {
-
-}
-
 func (app *c) loadModules() {
 
+	// cpu
+	cpu.Init(app.ops)
+}
+
+func (app *c) run() {
+	s := micro.NewService(
+		micro.Name(name),
+		micro.Version(version),
+	)
+
+	s.Init()
+
+	if err := s.Run(); err != nil {
+		panic(err)
+	}
 }

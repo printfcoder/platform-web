@@ -4,14 +4,15 @@ import (
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro/cmd"
+	"sync"
 )
 
 var (
-	name      = "go.micro.web.platform_exporter_os"
+	name      = "go.micro.srv.platform_exporter_os"
+	version   = "1.0.0"
 	collector = "go.micro.srv.platform_collector"
-	app       = &c{
-		App: cmd.App(),
-	}
+	app       = &c{App: cmd.App()}
+	once      sync.Once
 )
 
 type c struct {
@@ -22,13 +23,8 @@ type c struct {
 // Init app
 func Init(ops ...option.Option) {
 
-	app.load(ops)
-	
-	if err := cmd.Init(cmd.Name(name)); err != nil {
-		panic(err)
-	}
+	once.Do(func() {
+		app.load(ops)
+		app.run()
+	})
 }
-
-
-
-
