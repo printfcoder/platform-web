@@ -5,26 +5,47 @@ import (
 	"github.com/micro/cli"
 	"github.com/micro/go-micro/cmd"
 	"sync"
+	"time"
 )
 
 var (
-	name      = "go.micro.srv.platform_exporter_os"
-	version   = "1.0.0"
-	collector = "go.micro.srv.platform_collector"
-	app       = &c{App: cmd.App()}
-	once      sync.Once
+	name         = "go.micro.srv.platform_exporter_os"
+	version      = "v1"
+	collector    = "go.micro.srv.platform_collector"
+	pushInterval = time.Duration(3)
+	once         sync.Once
 )
 
 type c struct {
 	*cli.App
-	ops []option.Option
+	opts option.Options
 }
 
 // Init app
 func Init(ops ...option.Option) {
 
 	once.Do(func() {
-		app.load(ops)
+		app := newApp(ops...)
+		app.parseFlags()
 		app.run()
 	})
+}
+
+func newApp(ops ...option.Option) (app *c) {
+
+	app = &c{
+		App: cmd.App(),
+		opts: option.Options{
+			AppName:       name,
+			AppVersion:    version,
+			PushInterval:  pushInterval,
+			CollectorName: collector,
+		},
+	}
+
+	for _, o := range ops {
+		o(&app.opts)
+	}
+
+	return app
 }

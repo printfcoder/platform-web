@@ -2,18 +2,11 @@ package cmd
 
 import (
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/cpu"
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro"
 )
 
-func (app *c) load(ops []option.Option) {
-	app.ops = ops
-	app.flags()
-	app.loadModules()
-}
-
-func (app *c) flags() {
+func (app *c) advFlags() {
 	app.Flags = append(app.Flags,
 		cli.StringFlag{
 			Name:   "enable_cpu",
@@ -58,10 +51,12 @@ func (app *c) flags() {
 	)
 }
 
-func (app *c) loadModules() {
+func (app *c) loadModules(ctx *cli.Context) {
 
 	// cpu
-	cpu.Init(app.ops)
+	if ctx.Bool("enable_cpu") {
+		cpu.Init(app.opts)
+	}
 }
 
 func (app *c) run() {
@@ -70,7 +65,9 @@ func (app *c) run() {
 		micro.Version(version),
 	)
 
-	s.Init()
+	s.Init(micro.Action(func(ctx *cli.Context) {
+		app.loadModules(ctx)
+	}))
 
 	if err := s.Run(); err != nil {
 		panic(err)

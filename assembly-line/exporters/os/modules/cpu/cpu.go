@@ -1,29 +1,56 @@
 package cpu
 
 import (
-	"fmt"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/third_party/gopsutil/mem"
+	"github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
+	"github.com/micro/go-log"
+	"sync"
+	"time"
 )
 
-var ()
+var (
+	collectorName = "go.micro.srv.platform_collector"
+	p             *pusher
+	once          sync.Once
+	once2         sync.Once
+	cpuClient     cpu.CPUService
+)
 
-func Init(ops []option.Option) {
+type pusher struct {
+	interval     time.Duration
+	pushFucQueue []func()
+}
 
-	// cores
-	// v, _ := cpu.Counts(true)
+func Init(opts option.Options) {
 
-	// percent
+	once.Do(func() {
+		p = &pusher{
+			interval: opts.PushInterval,
+		}
 
-	// status
+	})
 
-	// times
+	prepareDo()
 
-	v, _ := mem.VirtualMemory()
+	go func() {
+		t := time.NewTicker(p.interval * time.Second)
+		for {
+			select {
+			case <-t.C:
+				log.Logf("push data, %s", time.Now())
+				p.push()
+			}
+		}
+	}()
+}
 
-	// almost every return value is a struct
-	fmt.Printf("Total: %v, Free:%v, UsedPercent:%f%%\n", v.Total, v.Free, v.UsedPercent)
+func prepareDo() {
 
-	// convert to JSON. String() is also implemented
-	fmt.Println(v)
+}
+
+func (p *pusher) push() {
+	p.pushInfo()
+	p.pushPercent()
+	p.pushStatus()
+	p.pushTimes()
 }
