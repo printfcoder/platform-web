@@ -1,5 +1,5 @@
 package cpu
 
-func (p *pusher) pushTimes() {
+func (p *Pusher) pushTimes() {
 
 }

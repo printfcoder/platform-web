@@ -1,56 +1,38 @@
 package cpu
 
 import (
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	"github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
-	"github.com/micro/go-log"
+	"github.com/micro/go-micro/client"
 	"sync"
-	"time"
 )
 
 var (
-	collectorName = "go.micro.srv.platform_collector"
-	p             *pusher
-	once          sync.Once
-	once2         sync.Once
-	cpuClient     cpu.CPUService
+	once sync.Once
 )
 
-type pusher struct {
-	interval     time.Duration
-	pushFucQueue []func()
+type Pusher struct {
+	modules.BasePusher
+	cpuClient cpu.CPUService
 }
 
-func Init(opts option.Options) {
+func (p *Pusher) Init(opts modules.Options) error {
 
-	once.Do(func() {
-		p = &pusher{
-			interval: opts.PushInterval,
-		}
+	p.CollectorName = opts.CollectorName
+	p.cpuClient = cpu.NewCPUService(p.CollectorName, client.DefaultClient)
 
-	})
-
-	prepareDo()
-
-	go func() {
-		t := time.NewTicker(p.interval * time.Second)
-		for {
-			select {
-			case <-t.C:
-				log.Logf("push data, %s", time.Now())
-				p.push()
-			}
-		}
-	}()
+	return nil
 }
 
-func prepareDo() {
+func (p *Pusher) Push() (err error) {
 
-}
+	if err = p.pushInfo(); err != nil {
+		return err
+	}
 
-func (p *pusher) push() {
-	p.pushInfo()
 	p.pushPercent()
 	p.pushStatus()
 	p.pushTimes()
+
+	return err
 }

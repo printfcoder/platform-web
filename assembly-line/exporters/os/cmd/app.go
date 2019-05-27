@@ -1,12 +1,16 @@
 package cmd
 
 import (
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/cpu"
 	"github.com/micro/cli"
+	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
+	"time"
 )
 
 func (app *c) advFlags() {
+
 	app.Flags = append(app.Flags,
 		cli.StringFlag{
 			Name:   "enable_cpu",
@@ -48,14 +52,74 @@ func (app *c) advFlags() {
 			Usage:  "enables exporter to export process info",
 			EnvVar: "MICRO_WEB_PLATFORM_ENABLE_PROCESS",
 		},
+		cli.StringFlag{
+			Name:   "push_interval",
+			Usage:  "Push interval in seconds",
+			EnvVar: "MICRO_WEB_PLATFORM_PUSH_INTERVAL",
+		},
+		cli.StringFlag{
+			Name:   "collector",
+			Usage:  "name of collector service",
+			EnvVar: "MICRO_WEB_PLATFORM_COLLECTOR",
+		},
 	)
 }
 
-func (app *c) loadModules(ctx *cli.Context) {
+func (app *c) parseFlags(ctx *cli.Context) {
+
+	if len(ctx.String("enable_cpu")) > 0 && !ctx.Bool("enable_cpu") {
+		app.opts.EnableCPU = false
+	}
+
+	if len(ctx.String("enable_disk")) > 0 && !ctx.Bool("enable_disk") {
+		app.opts.EnableDisk = false
+	}
+
+	if len(ctx.String("enable_docker")) > 0 && !ctx.Bool("enable_docker") {
+		app.opts.EnableDocker = false
+	}
+
+	if len(ctx.String("enable_host")) > 0 && !ctx.Bool("enable_host") {
+		app.opts.EnableHost = false
+	}
+
+	if len(ctx.String("enable_load")) > 0 && !ctx.Bool("enable_load") {
+		app.opts.EnableLoad = false
+	}
+
+	if len(ctx.String("enable_mem")) > 0 && !ctx.Bool("enable_mem") {
+		app.opts.EnableMem = false
+	}
+
+	if len(ctx.String("enable_net")) > 0 && !ctx.Bool("enable_net") {
+		app.opts.EnableNet = false
+	}
+
+	if len(ctx.String("enable_process")) > 0 && !ctx.Bool("enable_process") {
+		app.opts.EnableProcess = false
+	}
+
+	if ctx.Int("push_interval") > 0 {
+		app.opts.PushInterval = time.Duration(ctx.Int("push_interval"))
+	}
+
+	if ctx.Int("collector") > 0 {
+		app.opts.CollectorName = ctx.String("collector")
+	}
+
+}
+
+func (app *c) loadModules() {
 
 	// cpu
-	if ctx.Bool("enable_cpu") {
-		cpu.Init(app.opts)
+	if app.opts.EnableCPU {
+		p := cpu.Pusher{}
+		opts := modules.Options{
+			CollectorName: app.opts.CollectorName,
+		}
+		p.Init(opts)
+
+		app.modules = append(app.modules, &p)
 	}
 }
 
@@ -66,10 +130,30 @@ func (app *c) run() {
 	)
 
 	s.Init(micro.Action(func(ctx *cli.Context) {
-		app.loadModules(ctx)
+		app.parseFlags(ctx)
+		app.loadModules()
+
+		go func() {
+			t := time.NewTicker(app.opts.PushInterval * time.Second)
+			for {
+				select {
+				case <-t.C:
+					log.Logf("push data, %s", time.Now())
+					app.push()
+				}
+			}
+		}()
 	}))
 
 	if err := s.Run(); err != nil {
 		panic(err)
+	}
+}
+
+func (app *c) push() {
+	for _, m := range app.modules {
+		if err := m.Push(); err != nil {
+			log.Logf("[push] error, %s", err)
+		}
 	}
 }

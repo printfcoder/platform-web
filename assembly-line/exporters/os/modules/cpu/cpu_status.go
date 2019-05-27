@@ -1,5 +1,5 @@
 package cpu
 
-func (p *pusher) pushStatus() {
+func (p *Pusher) pushStatus() {
 
 }

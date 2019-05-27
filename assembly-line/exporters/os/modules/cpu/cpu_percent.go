@@ -1,5 +1,5 @@
 package cpu
 
-func (p *pusher) pushPercent() {
+func (p *Pusher) pushPercent() {
 
 }
