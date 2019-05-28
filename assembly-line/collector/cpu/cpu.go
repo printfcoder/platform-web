@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
 	"github.com/micro/cli"
-	"github.com/micro/go-log"
 	"github.com/micro/go-micro/server"
 )
 
@@ -17,7 +16,6 @@ func (c *cpuCollector) PushCPUTimesStat(ctx context.Context, req *cpu.CPURequest
 
 func (c *cpuCollector) PushCPUInfoStat(ctx context.Context, req *cpu.CPURequest, rsp *cpu.CPUResponse) (err error) {
 
-	log.Log(req.InfoStat.Family)
 	return
 }
 
@@ -32,3 +30,4 @@ func (c *cpuCollector) PushCPUCounts(ctx context.Context, req *cpu.CPURequest, r
 func Init(server server.Server, ctx *cli.Context) {
 	cpu.RegisterCPUServiceHandler(server, new(cpuCollector))
 }
+
