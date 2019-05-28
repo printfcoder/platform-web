@@ -39,7 +39,7 @@ cd srv
 go run main.go module.go
 ```
 
-then you can click [http://127.0.0.0:9082/platform][http://127.0.0.0:9082/platform] to open platform dashboard.
+then you can click [http://127.0.0.0:9082/platform](http://127.0.0.0:9082/platform) to open platform dashboard.
 
 ### go build
 
