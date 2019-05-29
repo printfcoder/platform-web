@@ -7,51 +7,55 @@ option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/
 import "basic/error.proto";
 
 message TimesStat {
-    string CPU = 1;
-    double user = 2;
-    double system = 3;
-    double idle = 4;
-    double nice = 5;
-    double iowait = 6;
-    double irq = 7;
-    double softirq = 8;
-    double steal = 9;
-    double guest = 10;
-    double guestNice = 11;
+    int64 timestamp = 1;
+    string CPU = 2;
+    double user = 3;
+    double system = 4;
+    double idle = 5;
+    double nice = 6;
+    double iowait = 7;
+    double irq = 8;
+    double softirq = 9;
+    double steal = 10;
+    double guest = 11;
+    double guestNice = 12;
 }
 
 message InfoStat {
-    int32 cpu = 1;
-    string vendorId = 2;
-    string family = 3;
-    string model = 4;
-    int32 stepping = 5;
-    string physicalId = 6;
-    string coreId = 7;
-    int32 cores = 8;
-    string modelName = 9;
-    double mhz = 10;
-    int32 cacheSize = 11;
-    repeated string flags = 12;
-    string microcode = 13;
+    int64 timestamp = 1;
+    int32 cpu = 2;
+    string vendorId = 3;
+    string family = 4;
+    string model = 5;
+    int32 stepping = 6;
+    string physicalId = 7;
+    string coreId = 8;
+    int32 cores = 9;
+    string modelName = 10;
+    double mhz = 11;
+    int32 cacheSize = 12;
+    repeated string flags = 13;
+    string microcode = 14;
 }
 
 message Percent {
-    double percent = 1;
+    int64 timestamp = 1;
+    double percent = 2;
 }
 
 message Counts {
-    int32 counts = 1;
+    int64 timestamp = 1;
+    int32 counts = 2;
 }
 
 message CPURequest {
     int64 timestamp = 1;
     string IP = 2;
     string nodeName = 3;
-    TimesStat timesStat = 4;
-    InfoStat infoStat = 5;
-    Percent percent = 6;
-    Counts counts = 7;
+    repeated TimesStat timesStat = 4;
+    repeated InfoStat infoStat = 5;
+    repeated Percent percent = 6;
+    repeated Counts counts = 7;
 }
 
 message CPUResponse {

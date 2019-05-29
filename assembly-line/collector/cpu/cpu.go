@@ -2,9 +2,15 @@ package cpu
 
 import (
 	"context"
+	"database/sql"
+	"github.com/micro-in-cn/platform-web/assembly-line/collector/db"
 	"github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro/server"
+)
+
+var (
+	o *sql.DB
 )
 
 type cpuCollector struct {
@@ -29,5 +35,5 @@ func (c *cpuCollector) PushCPUCounts(ctx context.Context, req *cpu.CPURequest, r
 
 func Init(server server.Server, ctx *cli.Context) {
 	cpu.RegisterCPUServiceHandler(server, new(cpuCollector))
+	o = db.GetPG()
 }
-
