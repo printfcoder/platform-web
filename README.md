@@ -88,9 +88,3 @@ Platform Web是Micro的控制台。
 - [modules](./modules) 模块插件目录
 - [srv](./srv) 后台api代码
 - [web](./web) 前端基础框架及基础组件
-
-
-
-.
-├── blog
-│   └── cn
