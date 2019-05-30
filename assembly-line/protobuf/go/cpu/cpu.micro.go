@@ -6,6 +6,7 @@ package cpu
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	_ "github.com/golang/protobuf/ptypes/timestamp"
 	_ "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/basic"
 	math "math"
 )

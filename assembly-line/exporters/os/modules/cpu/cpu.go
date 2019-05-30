@@ -18,7 +18,9 @@ type Pusher struct {
 
 func (p *Pusher) Init(opts modules.Options) error {
 
+	p.InitB()
 	p.CollectorName = opts.CollectorName
+	p.Interval = opts.Interval
 	p.cpuClient = cpu.NewCPUService(p.CollectorName, client.DefaultClient)
 
 	return nil

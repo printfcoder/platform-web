@@ -5,9 +5,11 @@ package protobuf.pb.cpu.cpu;
 option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu/cpu";
 
 import "basic/error.proto";
+import "google/protobuf/timestamp.proto";
+
 
 message TimesStat {
-    int64 timestamp = 1;
+    google.protobuf.Timestamp timestamp = 1;
     string CPU = 2;
     double user = 3;
     double system = 4;
@@ -22,7 +24,7 @@ message TimesStat {
 }
 
 message InfoStat {
-    int64 timestamp = 1;
+    google.protobuf.Timestamp timestamp = 1;
     int32 cpu = 2;
     string vendorId = 3;
     string family = 4;
@@ -39,17 +41,17 @@ message InfoStat {
 }
 
 message Percent {
-    int64 timestamp = 1;
+    google.protobuf.Timestamp timestamp = 1;
     double percent = 2;
 }
 
 message Counts {
-    int64 timestamp = 1;
+    google.protobuf.Timestamp timestamp = 1;
     int32 counts = 2;
 }
 
 message CPURequest {
-    int64 timestamp = 1;
+    google.protobuf.Timestamp timestamp = 1;
     string IP = 2;
     string nodeName = 3;
     repeated TimesStat timesStat = 4;

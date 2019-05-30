@@ -10,7 +10,8 @@ import (
 )
 
 var (
-	o *sql.DB
+	o  *sql.DB
+	cs *cpuStorage
 )
 
 type cpuCollector struct {
@@ -21,7 +22,7 @@ func (c *cpuCollector) PushCPUTimesStat(ctx context.Context, req *cpu.CPURequest
 }
 
 func (c *cpuCollector) PushCPUInfoStat(ctx context.Context, req *cpu.CPURequest, rsp *cpu.CPUResponse) (err error) {
-
+	err = cs.saveInfoStat(req.InfoStat, req.IP, req.NodeName)
 	return
 }
 
@@ -36,4 +37,5 @@ func (c *cpuCollector) PushCPUCounts(ctx context.Context, req *cpu.CPURequest, r
 func Init(server server.Server, ctx *cli.Context) {
 	cpu.RegisterCPUServiceHandler(server, new(cpuCollector))
 	o = db.GetPG()
+	cs = new(cpuStorage)
 }

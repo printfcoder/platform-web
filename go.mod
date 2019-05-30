@@ -14,6 +14,8 @@ require (
 	github.com/micro/go-log v0.1.0
 	github.com/micro/go-micro v1.2.0
 	github.com/micro/go-web v1.0.0
+	github.com/micro/util v0.2.0
 	go.uber.org/zap v1.10.0
+	golang.org/x/sys v0.0.0-20190522044717-8097e1b27ff5
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 )

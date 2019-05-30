@@ -116,6 +116,7 @@ func (app *c) loadModules() {
 		p := cpu.Pusher{}
 		opts := modules.Options{
 			CollectorName: app.opts.CollectorName,
+			Interval:      app.opts.PushInterval,
 		}
 		p.Init(opts)
 

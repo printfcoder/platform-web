@@ -3,9 +3,9 @@ package cpu
 import (
 	"context"
 	"fmt"
+	"github.com/golang/protobuf/ptypes"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/third_party/gopsutil/cpu"
 	cpu2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
-	"time"
 )
 
 func (p *Pusher) pushInfo() (err error) {
@@ -15,12 +15,14 @@ func (p *Pusher) pushInfo() (err error) {
 		return fmt.Errorf("[pushInfo] get infos error: %s", err)
 	}
 
+	t := ptypes.TimestampNow()
 	for _, v := range vv {
 		req := &cpu2.CPURequest{
-			Timestamp: time.Now().UnixNano(),
-			IP:        "",
-			NodeName:  "",
-			InfoStat: &cpu2.InfoStat{
+			Timestamp: t,
+			IP:        p.IP,
+			NodeName:  p.NodeName,
+			InfoStat: []*cpu2.InfoStat{{
+				Timestamp:  t,
 				Cpu:        v.CPU,
 				VendorId:   v.VendorID,
 				Family:     v.Family,
@@ -34,7 +36,7 @@ func (p *Pusher) pushInfo() (err error) {
 				CacheSize:  v.CacheSize,
 				Flags:      v.Flags,
 				Microcode:  v.Microcode,
-			},
+			}},
 		}
 
 		_, err = p.cpuClient.PushCPUInfoStat(context.Background(), req)
