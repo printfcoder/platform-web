@@ -28,12 +28,15 @@ func (p *Pusher) Init(opts modules.Options) error {
 
 func (p *Pusher) Push() (err error) {
 
-	if err = p.pushInfo(); err != nil {
-		return err
-	}
+	once.Do(func() {
+		for {
+			if err = p.pushInfo(); err == nil {
+				break
+			}
+		}
+	})
 
 	p.pushPercent()
-	p.pushStatus()
 	p.pushTimes()
 
 	return err

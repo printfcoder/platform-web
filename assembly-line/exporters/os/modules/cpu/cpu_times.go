@@ -10,7 +10,7 @@ import (
 
 func (p *Pusher) pushTimes() (err error) {
 
-	vv, err := cpu.Times(false)
+	vv, err := cpu.Times(true)
 	if err != nil {
 		return fmt.Errorf("[pushTimes] get infos error: %s", err)
 	}

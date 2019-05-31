@@ -10,7 +10,7 @@ import (
 
 func (p *Pusher) pushPercent() (err error) {
 
-	vv, err := cpu.Percent(p.Interval, false)
+	vv, err := cpu.Percent(p.Interval, true)
 	if err != nil {
 		return fmt.Errorf("[pushPercent] get infos error: %s", err)
 	}
