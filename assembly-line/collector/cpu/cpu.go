@@ -18,6 +18,7 @@ type cpuCollector struct {
 }
 
 func (c *cpuCollector) PushCPUTimesStat(ctx context.Context, req *cpu.CPURequest, rsp *cpu.CPUResponse) (err error) {
+	err = cs.saveTimesStat(req.TimesStat, req.IP, req.NodeName)
 	return
 }
 
@@ -27,10 +28,12 @@ func (c *cpuCollector) PushCPUInfoStat(ctx context.Context, req *cpu.CPURequest,
 }
 
 func (c *cpuCollector) PushCPUPercent(ctx context.Context, req *cpu.CPURequest, rsp *cpu.CPUResponse) (err error) {
+	err = cs.savePercent(req.Percent, req.IP, req.NodeName)
 	return
 }
 
 func (c *cpuCollector) PushCPUCounts(ctx context.Context, req *cpu.CPURequest, rsp *cpu.CPUResponse) (err error) {
+	err = cs.saveCounts(req.Counts, req.IP, req.NodeName)
 	return
 }
 
