@@ -14,7 +14,6 @@ type cpuStorage struct {
 }
 
 func (c *cpuStorage) saveTimesStat(times []*cpu.TimesStat, ip, nodeName string) (err error) {
-
 	o := db.GetPG()
 
 	// transaction is no need here
@@ -57,7 +56,6 @@ func (c *cpuStorage) saveTimesStat(times []*cpu.TimesStat, ip, nodeName string) 
 }
 
 func (c *cpuStorage) saveInfoStat(infos []*cpu.InfoStat, ip, nodeName string) (err error) {
-
 	o := db.GetPG()
 
 	// transaction is no need here
@@ -101,7 +99,6 @@ func (c *cpuStorage) saveInfoStat(infos []*cpu.InfoStat, ip, nodeName string) (e
 }
 
 func (c *cpuStorage) savePercent(percents []*cpu.Percent, ip, nodeName string) (err error) {
-
 	o := db.GetPG()
 
 	// transaction is no need here
