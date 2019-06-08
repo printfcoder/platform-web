@@ -4,12 +4,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/golang/protobuf/ptypes"
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/third_party/gopsutil/cpu"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/third_party/gopsutil/disk"
-	cpu2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
+	disk2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk"
 )
 
-func (p *Pusher) pushPercent() (err error) {
+func (p *Pusher) pushPartition() (err error) {
 
 	vv, err := disk.Partitions(true)
 	if err != nil {
@@ -17,21 +16,28 @@ func (p *Pusher) pushPercent() (err error) {
 	}
 
 	t := ptypes.TimestampNow()
-	for _, v := range vv {
-		req := &cpu2.CPURequest{
-			Timestamp: t,
-			IP:        p.IP,
-			NodeName:  p.NodeName,
-			Percent: []*cpu2.Percent{{
-				Timestamp: t,
-				Percent:   v,
-			}},
-		}
+	data := make([]*disk2.PartitionStat, len(vv))
 
-		_, err = p.diskClient.PushDiskCounts(context.Background(), req)
-		if err != nil {
-			return fmt.Errorf("[pushPercent] push error: %s", err)
-		}
+	for _, v := range vv {
+		data = append(data, &disk2.PartitionStat{
+			Timestamp:  t,
+			Device:     v.Device,
+			Mountpoint: v.Mountpoint,
+			Fstype:     v.Fstype,
+			Opts:       v.Opts,
+		})
+	}
+
+	req := &disk2.DiskRequest{
+		Timestamp:     t,
+		IP:            p.IP,
+		NodeName:      p.NodeName,
+		PartitionStat: data,
+	}
+
+	_, err = p.diskClient.PushPartitionStat(context.Background(), req)
+	if err != nil {
+		return fmt.Errorf("[pushPercent] push error: %s", err)
 	}
 
 	return

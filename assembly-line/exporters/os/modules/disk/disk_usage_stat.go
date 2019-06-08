@@ -4,43 +4,46 @@ import (
 	"context"
 	"fmt"
 	"github.com/golang/protobuf/ptypes"
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/third_party/gopsutil/cpu"
-	cpu2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/third_party/gopsutil/disk"
+	disk2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk"
 )
 
-func (p *Pusher) pushTimes() (err error) {
+func (p *Pusher) pushUsage() (err error) {
 
-	vv, err := cpu.Times(true)
-	if err != nil {
-		return fmt.Errorf("[pushTimes] get infos error: %s", err)
+	data := make([]*disk2.UsageStat, len(p.path))
+	t := ptypes.TimestampNow()
+
+	for _, path := range p.path {
+		v, err := disk.Usage(path)
+		if err != nil {
+			return fmt.Errorf("[pushUsage] get usage error: %s", err)
+		}
+
+		data = append(data, &disk2.UsageStat{
+			Timestamp:         t,
+			Path:              v.Path,
+			Fstype:            v.Fstype,
+			Total:             v.Total,
+			Free:              v.Free,
+			Used:              v.Used,
+			UsedPercent:       v.UsedPercent,
+			InodesTotal:       v.InodesTotal,
+			InodesUsed:        v.InodesUsed,
+			InodesFree:        v.InodesFree,
+			InodesUsedPercent: v.InodesUsedPercent,
+		})
 	}
 
-	t := ptypes.TimestampNow()
-	for _, v := range vv {
-		req := &cpu2.CPURequest{
-			Timestamp: t,
-			IP:        p.IP,
-			NodeName:  p.NodeName,
-			TimesStat: []*cpu2.TimesStat{{
-				Timestamp: t,
-				CPU:       v.CPU,
-				User:      v.User,
-				System:    v.System,
-				Idle:      v.Idle,
-				Nice:      v.Nice,
-				Iowait:    v.Iowait,
-				Irq:       v.Irq,
-				Softirq:   v.Softirq,
-				Steal:     v.Steal,
-				Guest:     v.Guest,
-				GuestNice: v.GuestNice,
-			}},
-		}
+	req := &disk2.DiskRequest{
+		Timestamp: t,
+		IP:        p.IP,
+		NodeName:  p.NodeName,
+		UsageStat: data,
+	}
 
-		_, err = p.cpuClient.PushCPUTimesStat(context.Background(), req)
-		if err != nil {
-			return fmt.Errorf("[pushInfo] push error: %s", err)
-		}
+	_, err = p.diskClient.PushDiskUsageStat(context.Background(), req)
+	if err != nil {
+		return fmt.Errorf("[pushUsage] push error: %s", err)
 	}
 
 	return
