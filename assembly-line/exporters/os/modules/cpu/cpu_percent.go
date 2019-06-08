@@ -16,21 +16,25 @@ func (p *Pusher) pushPercent() (err error) {
 	}
 
 	t := ptypes.TimestampNow()
-	for _, v := range vv {
-		req := &cpu2.CPURequest{
-			Timestamp: t,
-			IP:        p.IP,
-			NodeName:  p.NodeName,
-			Percent: []*cpu2.Percent{{
-				Timestamp: t,
-				Percent:   v,
-			}},
-		}
+	data := make([]*cpu2.Percent, len(vv))
 
-		_, err = p.cpuClient.PushCPUPercent(context.Background(), req)
-		if err != nil {
-			return fmt.Errorf("[pushPercent] push error: %s", err)
-		}
+	for _, v := range vv {
+		data = append(data, &cpu2.Percent{
+			Timestamp: t,
+			Percent:   v,
+		})
+	}
+
+	req := &cpu2.CPURequest{
+		Timestamp: t,
+		IP:        p.IP,
+		NodeName:  p.NodeName,
+		Percent:   data,
+	}
+
+	_, err = p.cpuClient.PushCPUPercent(context.Background(), req)
+	if err != nil {
+		return fmt.Errorf("[pushPercent] push error: %s", err)
 	}
 
 	return
