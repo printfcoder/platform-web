@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/cpu"
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/db"
+	"github.com/micro-in-cn/platform-web/assembly-line/collector/disk"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro"
 )
@@ -29,6 +30,7 @@ func main() {
 		micro.Action(func(ctx *cli.Context) {
 			db.Init(ctx)
 			cpu.Init(s.Server(), ctx)
+			disk.Init(s.Server(), ctx)
 		}),
 	)
 
