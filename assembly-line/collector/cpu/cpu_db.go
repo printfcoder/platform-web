@@ -2,6 +2,7 @@ package cpu
 
 import (
 	"database/sql"
+
 	"github.com/lib/pq"
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/db"
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/util"
