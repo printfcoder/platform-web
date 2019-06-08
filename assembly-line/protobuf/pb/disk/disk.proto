@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package protobuf.pb.cpu.cpu;
 
-option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu/cpu";
+option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk/disk";
 
 import "basic/error.proto";
 import "google/protobuf/timestamp.proto";
