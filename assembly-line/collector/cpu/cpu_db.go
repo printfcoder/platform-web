@@ -6,7 +6,7 @@ import (
 	"github.com/lib/pq"
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/db"
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/util"
-	"github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
+	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
 	"github.com/micro/go-log"
 )
 
@@ -14,7 +14,7 @@ type cpuStorage struct {
 	db *sql.DB
 }
 
-func (c *cpuStorage) saveTimesStat(times []*cpu.TimesStat, ip, nodeName string) (err error) {
+func (c *cpuStorage) saveTimesStat(times []*proto.TimesStat, ip, nodeName string) (err error) {
 	o := db.GetPG()
 
 	// transaction is no need here
@@ -56,7 +56,7 @@ func (c *cpuStorage) saveTimesStat(times []*cpu.TimesStat, ip, nodeName string) 
 	return
 }
 
-func (c *cpuStorage) saveInfoStat(infos []*cpu.InfoStat, ip, nodeName string) (err error) {
+func (c *cpuStorage) saveInfoStat(infos []*proto.InfoStat, ip, nodeName string) (err error) {
 	o := db.GetPG()
 
 	// transaction is no need here
@@ -99,7 +99,7 @@ func (c *cpuStorage) saveInfoStat(infos []*cpu.InfoStat, ip, nodeName string) (e
 	return
 }
 
-func (c *cpuStorage) savePercent(percents []*cpu.Percent, ip, nodeName string) (err error) {
+func (c *cpuStorage) savePercent(percents []*proto.Percent, ip, nodeName string) (err error) {
 	o := db.GetPG()
 
 	// transaction is no need here
@@ -134,6 +134,6 @@ func (c *cpuStorage) savePercent(percents []*cpu.Percent, ip, nodeName string) (
 	return
 }
 
-func (c *cpuStorage) saveCounts(data []*cpu.Counts, ip, nodeName string) (err error) {
+func (c *cpuStorage) saveCounts(data []*proto.Counts, ip, nodeName string) (err error) {
 	return
 }

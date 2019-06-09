@@ -52,7 +52,7 @@ func NewCPUService(name string, c client.Client) CPUService {
 		c = client.NewClient()
 	}
 	if len(name) == 0 {
-		name = "protobuf.pb.cpu.cpu"
+		name = "protobuf.pb.cpu"
 	}
 	return &cPUService{
 		c:    c,

@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package protobuf.pb.cpu.cpu;
+package protobuf.pb.disk;
 
-option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk/disk";
+option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk";
 
 import "basic/error.proto";
 import "google/protobuf/timestamp.proto";

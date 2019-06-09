@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package protobuf.pb.net;
+
+option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/net";
+
+import "basic/error.proto";
+import "google/protobuf/timestamp.proto";
+
+message IOCountersStat {
+    google.protobuf.Timestamp timestamp = 1;
+    string Name = 2;
+    uint64 BytesSent = 3;
+    uint64 BytesRecv = 4;
+    uint64 PacketsSent = 5;
+    uint64 PacketsRecv = 6;
+    uint64 Errin = 7;
+    uint64 Errout = 8;
+    uint64 Dropin = 9;
+    uint64 Dropout = 10;
+    uint64 Fifoin = 11;
+    uint64 Fifoout = 12;
+}
+
+// coming soon
+message ProtoCountersStat {
+    google.protobuf.Timestamp timestamp = 1;
+}
+
+message Addr {
+    string IP = 1;
+    uint32 Port = 2;
+}
+
+
+message ConnectionStat {
+    google.protobuf.Timestamp timestamp = 1;
+    uint32 Fd = 2;
+    uint32 Family = 3;
+    uint32 Type = 4;
+    Addr Laddr = 5;
+    Addr Raddr = 6;
+    string Status = 7;
+    repeated int32 Uids = 8;
+    int32 Pid = 9;
+}
+
+// coming soon
+message FilterStat {
+    google.protobuf.Timestamp timestamp = 1;
+}
+
+
+message NetRequest {
+    google.protobuf.Timestamp timestamp = 1;
+    string IP = 2;
+    string nodeName = 3;
+    repeated IOCountersStat iOCountersStat = 4;
+    repeated ConnectionStat connectionStat = 5;
+}
+
+message NetResponse {
+    basic.Error error = 1;
+}
+
+service NetService {
+    rpc PushIOCountersStat (NetRequest) returns (NetResponse) {
+    }
+    rpc PushConnectionStat (NetRequest) returns (NetResponse) {
+    }
+}
