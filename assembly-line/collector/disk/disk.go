@@ -19,14 +19,17 @@ type collector struct {
 }
 
 func (c *collector) PushDiskUsageStat(ctx context.Context, req *proto.DiskRequest, rsp *proto.DiskResponse) (err error) {
+	err = ds.saveDiskUsageStat(req.UsageStat, req.IP, req.NodeName)
 	return
 }
 
 func (c *collector) PushPartitionStat(ctx context.Context, req *proto.DiskRequest, rsp *proto.DiskResponse) (err error) {
+	err = ds.savePartitionStat(req.PartitionStat, req.IP, req.NodeName)
 	return
 }
 
 func (c *collector) PushIOCountersStat(ctx context.Context, req *proto.DiskRequest, rsp *proto.DiskResponse) (err error) {
+	err = ds.saveIOCountersStat(req.IoCountersStat, req.IP, req.NodeName)
 	return
 }
 
