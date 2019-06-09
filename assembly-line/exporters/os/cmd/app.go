@@ -1,16 +1,30 @@
 package cmd
 
 import (
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/disk"
+	"runtime"
+	"time"
+
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/cpu"
 	"github.com/micro/cli"
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
-	"time"
 )
 
-func (app *c) advFlags() {
+var (
+	diskPath []string
+)
 
+func init() {
+	path := "/"
+	if runtime.GOOS == "windows" {
+		path = "C:"
+	}
+	diskPath = []string{path}
+}
+
+func (app *c) advFlags() {
 	app.Flags = append(app.Flags,
 		cli.StringFlag{
 			Name:   "enable_cpu",
@@ -107,6 +121,10 @@ func (app *c) parseFlags(ctx *cli.Context) {
 		app.opts.CollectorName = ctx.String("collector")
 	}
 
+	if app.opts.EnableDisk && len(ctx.StringSlice("disk_path")) != 0 {
+		diskPath = ctx.StringSlice("disk_path")
+	}
+
 }
 
 func (app *c) loadModules() {
@@ -118,7 +136,21 @@ func (app *c) loadModules() {
 			CollectorName: app.opts.CollectorName,
 			Interval:      app.opts.PushInterval,
 		}
-		p.Init(opts)
+		_ = p.Init(opts)
+
+		app.modules = append(app.modules, &p)
+	}
+
+	// disk
+	if app.opts.EnableDisk {
+
+		p := disk.Pusher{}
+		opts := modules.Options{
+			CollectorName: app.opts.CollectorName,
+			Interval:      app.opts.PushInterval,
+			DiskPath:      diskPath,
+		}
+		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
 	}

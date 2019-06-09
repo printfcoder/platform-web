@@ -2,9 +2,10 @@ package db
 
 import (
 	"database/sql"
+	"sync"
+
 	"github.com/micro/cli"
 	"github.com/micro/go-config"
-	"sync"
 )
 
 var (

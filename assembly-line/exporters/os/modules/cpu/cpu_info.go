@@ -15,34 +15,38 @@ func (p *Pusher) pushInfo() (err error) {
 		return fmt.Errorf("[pushInfo] get infos error: %s", err)
 	}
 
+	data := make([]*cpu2.InfoStat, len(vv))
 	t := ptypes.TimestampNow()
-	for _, v := range vv {
-		req := &cpu2.CPURequest{
-			Timestamp: t,
-			IP:        p.IP,
-			NodeName:  p.NodeName,
-			InfoStat: []*cpu2.InfoStat{{
-				Timestamp:  t,
-				Cpu:        v.CPU,
-				VendorId:   v.VendorID,
-				Family:     v.Family,
-				Model:      v.Model,
-				Stepping:   v.Stepping,
-				PhysicalId: v.PhysicalID,
-				CoreId:     v.CoreID,
-				Cores:      v.Cores,
-				ModelName:  v.ModelName,
-				Mhz:        v.Mhz,
-				CacheSize:  v.CacheSize,
-				Flags:      v.Flags,
-				Microcode:  v.Microcode,
-			}},
-		}
 
-		_, err = p.cpuClient.PushCPUInfoStat(context.Background(), req)
-		if err != nil {
-			return fmt.Errorf("[pushInfo] push error: %s", err)
-		}
+	for _, v := range vv {
+		data = append(data, &cpu2.InfoStat{
+			Timestamp:  t,
+			Cpu:        v.CPU,
+			VendorId:   v.VendorID,
+			Family:     v.Family,
+			Model:      v.Model,
+			Stepping:   v.Stepping,
+			PhysicalId: v.PhysicalID,
+			CoreId:     v.CoreID,
+			Cores:      v.Cores,
+			ModelName:  v.ModelName,
+			Mhz:        v.Mhz,
+			CacheSize:  v.CacheSize,
+			Flags:      v.Flags,
+			Microcode:  v.Microcode,
+		})
+	}
+
+	req := &cpu2.CPURequest{
+		Timestamp: t,
+		IP:        p.IP,
+		NodeName:  p.NodeName,
+		InfoStat:  data,
+	}
+
+	_, err = p.cpuClient.PushCPUInfoStat(context.Background(), req)
+	if err != nil {
+		return fmt.Errorf("[pushInfo] push error: %s", err)
 	}
 
 	return

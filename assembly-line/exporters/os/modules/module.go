@@ -63,6 +63,7 @@ func (b *BasePusher) InitB() {
 type Options struct {
 	CollectorName string
 	Interval      time.Duration
+	DiskPath      []string
 }
 
 type Option func(*Options)
