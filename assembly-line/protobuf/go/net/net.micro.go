@@ -50,7 +50,7 @@ func NewNetService(name string, c client.Client) NetService {
 		c = client.NewClient()
 	}
 	if len(name) == 0 {
-		name = "protobuf.pb.net.net"
+		name = "protobuf.pb.net"
 	}
 	return &netService{
 		c:    c,
