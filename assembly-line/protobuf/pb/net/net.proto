@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package protobuf.pb.net.net;
+package protobuf.pb.net;
 
 option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/net";
 

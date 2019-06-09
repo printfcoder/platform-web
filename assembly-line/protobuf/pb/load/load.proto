@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package protobuf.pb.load;
+
+option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/load";
+
+import "basic/error.proto";
+import "google/protobuf/timestamp.proto";
+
+message LoadAvgStat {
+    google.protobuf.Timestamp timestamp = 1;
+    double Load1 = 2;
+    double Load5 = 3;
+    double Load15 = 4;
+}
+
+message LoadRequest {
+    google.protobuf.Timestamp timestamp = 1;
+    string IP = 2;
+    string nodeName = 3;
+    repeated LoadAvgStat loadAvgStat = 4;
+}
+
+message LoadResponse {
+    basic.Error error = 1;
+}
+
+service LoadService {
+    rpc PushLoadAvgStat (LoadRequest) returns (LoadResponse) {
+    }
+}
