@@ -1,4 +1,4 @@
-package load
+package mem
 
 import (
 	"context"
@@ -12,24 +12,24 @@ import (
 
 var (
 	o  *sql.DB
-	ds *memStorage
+	ms *memStorage
 )
 
 type collector struct {
 }
 
 func (c *collector) PushVirtualMemoryStat(ctx context.Context, req *proto.MemRequest, rsp *proto.MemResponse) (err error) {
-	err = ds.saveVirtualMemoryStat(req.VirtualMemoryStat, req.IP, req.NodeName)
+	err = ms.saveVirtualMemoryStat(req.VirtualMemoryStat, req.IP, req.NodeName)
 	return
 }
 
 func (c *collector) PushSwapMemoryStat(ctx context.Context, req *proto.MemRequest, rsp *proto.MemResponse) (err error) {
-	err = ds.saveSwapMemoryStat(req.SwapMemoryStat, req.IP, req.NodeName)
+	err = ms.saveSwapMemoryStat(req.SwapMemoryStat, req.IP, req.NodeName)
 	return
 }
 
 func Init(server server.Server, ctx *cli.Context) {
 	proto.RegisterDiskServiceHandler(server, new(collector))
 	o = db.GetPG()
-	ds = new(memStorage)
+	ms = new(memStorage)
 }

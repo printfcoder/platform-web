@@ -1,4 +1,4 @@
-package load
+package mem
 
 import (
 	"database/sql"
@@ -9,10 +9,10 @@ type memStorage struct {
 	db *sql.DB
 }
 
-func (c *memStorage) saveVirtualMemoryStat(usageStat []*proto.VirtualMemoryStat, ip, nodeName string) (err error) {
+func (c *memStorage) saveVirtualMemoryStat(memStat []*proto.VirtualMemoryStat, ip, nodeName string) (err error) {
 	return
 }
 
-func (c *memStorage) saveSwapMemoryStat(usageStat []*proto.SwapMemoryStat, ip, nodeName string) (err error) {
+func (c *memStorage) saveSwapMemoryStat(swapMemStat []*proto.SwapMemoryStat, ip, nodeName string) (err error) {
 	return
 }

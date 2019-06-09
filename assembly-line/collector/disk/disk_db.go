@@ -13,10 +13,10 @@ func (c *diskStorage) saveDiskUsageStat(usageStat []*proto.UsageStat, ip, nodeNa
 	return
 }
 
-func (c *diskStorage) savePartitionStat(usageStat []*proto.PartitionStat, ip, nodeName string) (err error) {
+func (c *diskStorage) savePartitionStat(partitionStat []*proto.PartitionStat, ip, nodeName string) (err error) {
 	return
 }
 
-func (c *diskStorage) saveIOCountersStat(usageStat []*proto.IOCountersStat, ip, nodeName string) (err error) {
+func (c *diskStorage) saveIOCountersStat(ioCountersStat []*proto.IOCountersStat, ip, nodeName string) (err error) {
 	return
 }

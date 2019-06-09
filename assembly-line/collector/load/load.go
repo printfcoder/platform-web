@@ -12,19 +12,19 @@ import (
 
 var (
 	o  *sql.DB
-	ds *loadStorage
+	ls *loadStorage
 )
 
 type collector struct {
 }
 
 func (c *collector) PushLoadAvgStat(ctx context.Context, req *proto.LoadRequest, rsp *proto.LoadResponse) (err error) {
-	err = ds.saveLoadAvgStat(req.LoadAvgStat, req.IP, req.NodeName)
+	err = ls.saveLoadAvgStat(req.LoadAvgStat, req.IP, req.NodeName)
 	return
 }
 
 func Init(server server.Server, ctx *cli.Context) {
 	proto.RegisterLoadServiceHandler(server, new(collector))
 	o = db.GetPG()
-	ds = new(loadStorage)
+	ls = new(loadStorage)
 }

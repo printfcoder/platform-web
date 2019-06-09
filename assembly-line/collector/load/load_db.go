@@ -9,6 +9,6 @@ type loadStorage struct {
 	db *sql.DB
 }
 
-func (c *loadStorage) saveLoadAvgStat(usageStat []*proto.LoadAvgStat, ip, nodeName string) (err error) {
+func (c *loadStorage) saveLoadAvgStat(loadAvgStat []*proto.LoadAvgStat, ip, nodeName string) (err error) {
 	return
 }
