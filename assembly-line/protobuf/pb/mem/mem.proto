@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package protobuf.pb.cpu.cpu;
+package protobuf.pb.mem;
 
 option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/mem/mem";
 

@@ -51,7 +51,7 @@ func NewDiskService(name string, c client.Client) DiskService {
 		c = client.NewClient()
 	}
 	if len(name) == 0 {
-		name = "protobuf.pb.cpu.cpu"
+		name = "protobuf.pb.disk"
 	}
 	return &diskService{
 		c:    c,
