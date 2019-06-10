@@ -41,7 +41,7 @@ message ConnectionStat {
     Addr Laddr = 5;
     Addr Raddr = 6;
     string Status = 7;
-    repeated int32 Uids = 8;
+    repeated int64 Uids = 8;
     int32 Pid = 9;
 }
 
