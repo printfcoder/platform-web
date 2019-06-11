@@ -4,6 +4,9 @@ import (
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/cpu"
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/db"
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/disk"
+	"github.com/micro-in-cn/platform-web/assembly-line/collector/load"
+	"github.com/micro-in-cn/platform-web/assembly-line/collector/mem"
+	"github.com/micro-in-cn/platform-web/assembly-line/collector/net"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro"
 )
@@ -31,6 +34,9 @@ func main() {
 			db.Init(ctx)
 			cpu.Init(s.Server(), ctx)
 			disk.Init(s.Server(), ctx)
+			load.Init(s.Server(), ctx)
+			mem.Init(s.Server(), ctx)
+			net.Init(s.Server(), ctx)
 		}),
 	)
 

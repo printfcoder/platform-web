@@ -12,7 +12,7 @@ func (p *Pusher) pushPartition() (err error) {
 
 	vv, err := disk.Partitions(true)
 	if err != nil {
-		return fmt.Errorf("[pushPercent] get infos error: %s", err)
+		return fmt.Errorf("[pushPartition] get infos error: %s", err)
 	}
 
 	t := ptypes.TimestampNow()
@@ -37,7 +37,7 @@ func (p *Pusher) pushPartition() (err error) {
 
 	_, err = p.diskClient.PushPartitionStat(context.Background(), req)
 	if err != nil {
-		return fmt.Errorf("[pushPercent] push error: %s", err)
+		return fmt.Errorf("[pushPartition] push error: %s", err)
 	}
 
 	return

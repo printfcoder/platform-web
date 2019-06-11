@@ -2,6 +2,7 @@ package modules
 
 import (
 	"github.com/micro/go-log"
+	"github.com/micro/go-micro/client"
 	"github.com/micro/util/go/lib/addr"
 	"os"
 	"strings"
@@ -27,9 +28,7 @@ type BasePusher struct {
 }
 
 func (b *BasePusher) InitB() {
-
 	once.Do(func() {
-
 		var err error
 		nodeName, err = os.Hostname()
 		if err != nil {
@@ -57,13 +56,14 @@ func (b *BasePusher) InitB() {
 
 	b.IP = ip
 	b.NodeName = nodeName
-
 }
 
 type Options struct {
 	CollectorName string
+	Client        client.Client
 	Interval      time.Duration
-	DiskPath      []string
+	DiskPaths     []string
+	NetKinds      []string
 }
 
 type Option func(*Options)

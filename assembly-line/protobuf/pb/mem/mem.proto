@@ -70,7 +70,7 @@ message MemResponse {
     basic.Error error = 1;
 }
 
-service DiskService {
+service MemService {
     rpc PushVirtualMemoryStat (MemRequest) returns (MemResponse) {
     }
     rpc PushSwapMemoryStat (MemRequest) returns (MemResponse) {

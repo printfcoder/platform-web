@@ -21,21 +21,13 @@ func (p *Pusher) Init(opts modules.Options) error {
 	p.InitB()
 	p.CollectorName = opts.CollectorName
 	p.Interval = opts.Interval
-	p.path = opts.DiskPath
+	p.path = opts.DiskPaths
 	p.diskClient = disk2.NewDiskService(p.CollectorName, client.DefaultClient)
 
 	return nil
 }
 
 func (p *Pusher) Push() (err error) {
-	once.Do(func() {
-		for {
-			if err = p.pushInfo(); err == nil {
-				break
-			}
-		}
-	})
-
 	p.pushPartition()
 	p.pushUsage()
 
