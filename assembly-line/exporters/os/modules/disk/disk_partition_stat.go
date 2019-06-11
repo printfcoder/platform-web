@@ -9,14 +9,13 @@ import (
 )
 
 func (p *Pusher) pushPartition() (err error) {
-
 	vv, err := disk.Partitions(true)
 	if err != nil {
 		return fmt.Errorf("[pushPartition] get infos error: %s", err)
 	}
 
 	t := ptypes.TimestampNow()
-	data := make([]*disk2.PartitionStat, len(vv))
+	data := make([]*disk2.PartitionStat, 0, len(vv))
 
 	for _, v := range vv {
 		data = append(data, &disk2.PartitionStat{

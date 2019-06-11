@@ -9,8 +9,7 @@ import (
 )
 
 func (p *Pusher) pushUsage() (err error) {
-
-	data := make([]*disk2.UsageStat, len(p.path))
+	data := make([]*disk2.UsageStat, 0, len(p.path))
 	t := ptypes.TimestampNow()
 
 	for _, path := range p.path {

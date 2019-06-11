@@ -15,7 +15,7 @@ func (p *Pusher) pushTimes() (err error) {
 	}
 
 	t := ptypes.TimestampNow()
-	data := make([]*cpu2.TimesStat, len(vv))
+	data := make([]*cpu2.TimesStat, 0, len(vv))
 
 	for _, v := range vv {
 		data = append(data, &cpu2.TimesStat{

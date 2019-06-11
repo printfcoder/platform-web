@@ -33,9 +33,9 @@ func (c *diskStorage) saveDiskUsageStat(usageStats []*proto.UsageStat, ip, nodeN
 
 	for _, usageStat := range usageStats {
 		_, err = stmt.Exec(
-			util.PTimestamp(usageStat.Timestamp), ip, nodeName, usageStat.Fstype, usageStat.Total, usageStat.Free,
-			usageStat.Used, usageStat.UsedPercent, usageStat.InodesTotal, usageStat.InodesUsed, usageStat.InodesFree,
-			usageStat.InodesUsedPercent, usageStat.InodesFree, usageStat.InodesUsedPercent,
+			util.PTimestamp(usageStat.Timestamp), ip, nodeName, usageStat.Fstype, usageStat.Path,
+			usageStat.Total, usageStat.Free, usageStat.Used, usageStat.UsedPercent, usageStat.InodesTotal,
+			usageStat.InodesUsed, usageStat.InodesFree, usageStat.InodesUsedPercent,
 		)
 
 		if err != nil {
@@ -64,7 +64,7 @@ func (c *diskStorage) saveIOCountersStat(ioCountersStats []*proto.IOCountersStat
 	// transaction is no need here
 
 	stmt, err := o.Prepare(`INSERT INTO disk_io_counters_stat (
-                                   time, ip, nodename, read_count, merged_read_count,
+                                   time, ip, node_name, read_count, merged_read_count,
                                    write_count, merged_write_count, read_bytes, write_bytes, read_time,
                                    write_time, iops_in_progress, io_time, weighted_io, name,
                                    serial_number, label)

@@ -3,6 +3,7 @@ package net
 import (
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/net"
+	"github.com/micro/go-log"
 	"github.com/micro/go-micro/client"
 	"sync"
 )
@@ -28,6 +29,13 @@ func (p *Pusher) Init(opts modules.Options) error {
 }
 
 func (p *Pusher) Push() (err error) {
-	err = p.pushConnectionStat()
+	if err = p.pushConnectionStat(); err != nil {
+		log.Logf("[Push] pushConnectionStat err: %s", err)
+	}
+
+	if err = p.pushIOCountersStat(); err != nil {
+		log.Logf("[Push] pushIOCountersStat err: %s", err)
+	}
+
 	return err
 }

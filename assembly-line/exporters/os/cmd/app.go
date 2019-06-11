@@ -126,7 +126,7 @@ func (app *c) parseFlags(ctx *cli.Context) {
 	}
 
 	if app.opts.EnableDisk && len(ctx.StringSlice("disk_paths")) != 0 {
-		diskPath = ctx.StringSlice("disk_paths")
+		diskPaths = ctx.StringSlice("disk_paths")
 	}
 
 	if app.opts.EnableNet && len(ctx.StringSlice("net_kinds")) != 0 {
@@ -148,6 +148,7 @@ func (app *c) loadModules(client client.Client) {
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
+		log.Logf("[loadModules] cpu module loaded")
 	}
 
 	// disk
@@ -157,6 +158,7 @@ func (app *c) loadModules(client client.Client) {
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
+		log.Logf("[loadModules] disk module loaded")
 	}
 
 	// load
@@ -165,6 +167,7 @@ func (app *c) loadModules(client client.Client) {
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
+		log.Logf("[loadModules] load module loaded")
 	}
 
 	// mem
@@ -173,6 +176,7 @@ func (app *c) loadModules(client client.Client) {
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
+		log.Logf("[loadModules] mem module loaded")
 	}
 
 	// net
@@ -182,6 +186,7 @@ func (app *c) loadModules(client client.Client) {
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
+		log.Logf("[loadModules] net module loaded")
 	}
 }
 

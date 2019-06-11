@@ -3,7 +3,6 @@ package cpu
 import (
 	"context"
 	"database/sql"
-
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/db"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
 	"github.com/micro/cli"

@@ -18,7 +18,7 @@ func (c *loadStorage) saveLoadAvgStat(loadAvgStats []*proto.LoadAvgStat, ip, nod
 	// transaction is no need here
 
 	stmt, err := o.Prepare(`INSERT INTO load_avg_stat (
-                           time, ip, nodeName, load1, load5, 
+                           time, ip, node_name, load1, load5, 
                            load15)
             VALUES (
             $1, $2, $3, $4, $5,

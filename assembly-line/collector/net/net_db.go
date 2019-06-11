@@ -36,7 +36,7 @@ func (c *netStorage) saveConnectionStat(connectionStats []*proto.ConnectionStat,
 		_, err = stmt.Exec(
 			util.PTimestamp(item.Timestamp), ip, nodeName, item.Fd, item.Family,
 			item.Type, item.Laddr.IP, item.Laddr.Port, item.Raddr.IP, item.Raddr.Port,
-			item.Status, pq.Int64Array(item.Uids), item.Pid,
+			item.Status, pq.Int64Array(util.Int32ArrayTo64(item.Uids)), item.Pid,
 		)
 
 		if err != nil {
