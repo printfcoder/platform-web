@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/disk"
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/host"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/load"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/mem"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/net"
@@ -148,7 +149,6 @@ func (app *c) loadModules(client client.Client) {
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
-		log.Logf("[loadModules] cpu module loaded")
 	}
 
 	// disk
@@ -158,7 +158,14 @@ func (app *c) loadModules(client client.Client) {
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
-		log.Logf("[loadModules] disk module loaded")
+	}
+
+	// host
+	if app.opts.EnableHost {
+		p := host.Pusher{}
+		_ = p.Init(opts)
+
+		app.modules = append(app.modules, &p)
 	}
 
 	// load
@@ -167,7 +174,6 @@ func (app *c) loadModules(client client.Client) {
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
-		log.Logf("[loadModules] load module loaded")
 	}
 
 	// mem
@@ -176,7 +182,6 @@ func (app *c) loadModules(client client.Client) {
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
-		log.Logf("[loadModules] mem module loaded")
 	}
 
 	// net
@@ -186,7 +191,6 @@ func (app *c) loadModules(client client.Client) {
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
-		log.Logf("[loadModules] net module loaded")
 	}
 }
 
