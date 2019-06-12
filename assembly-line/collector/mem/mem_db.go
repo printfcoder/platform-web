@@ -8,11 +8,11 @@ import (
 	"github.com/micro/go-log"
 )
 
-type memStorage struct {
+type storage struct {
 	db *sql.DB
 }
 
-func (c *memStorage) saveVirtualMemoryStat(memStats []*proto.VirtualMemoryStat, ip, nodeName string) (err error) {
+func (s *storage) saveVirtualMemoryStat(memStats []*proto.VirtualMemoryStat, ip, nodeName string) (err error) {
 	o := db.GetPG()
 
 	// transaction is no need here
@@ -68,7 +68,7 @@ func (c *memStorage) saveVirtualMemoryStat(memStats []*proto.VirtualMemoryStat, 
 	return
 }
 
-func (c *memStorage) saveSwapMemoryStat(swapMemStats []*proto.SwapMemoryStat, ip, nodeName string) (err error) {
+func (s *storage) saveSwapMemoryStat(swapMemStats []*proto.SwapMemoryStat, ip, nodeName string) (err error) {
 	o := db.GetPG()
 
 	// transaction is no need here

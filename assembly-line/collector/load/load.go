@@ -12,7 +12,7 @@ import (
 
 var (
 	o  *sql.DB
-	ls *loadStorage
+	ls *storage
 )
 
 type collector struct {
@@ -26,5 +26,5 @@ func (c *collector) PushLoadAvgStat(ctx context.Context, req *proto.LoadRequest,
 func Init(server server.Server, ctx *cli.Context) {
 	proto.RegisterLoadServiceHandler(server, new(collector))
 	o = db.GetPG()
-	ls = new(loadStorage)
+	ls = new(storage)
 }

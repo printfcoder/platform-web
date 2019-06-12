@@ -12,7 +12,7 @@ import (
 
 var (
 	o  *sql.DB
-	ns *netStorage
+	ns *storage
 )
 
 type collector struct {
@@ -31,5 +31,5 @@ func (c *collector) PushConnectionStat(ctx context.Context, req *proto.NetReques
 func Init(server server.Server, ctx *cli.Context) {
 	proto.RegisterNetServiceHandler(server, new(collector))
 	o = db.GetPG()
-	ns = new(netStorage)
+	ns = new(storage)
 }

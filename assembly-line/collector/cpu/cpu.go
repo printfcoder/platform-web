@@ -11,7 +11,7 @@ import (
 
 var (
 	o  *sql.DB
-	cs *cpuStorage
+	cs *storage
 )
 
 type cpuCollector struct {
@@ -40,5 +40,5 @@ func (c *cpuCollector) PushCPUCounts(ctx context.Context, req *proto.CPURequest,
 func Init(server server.Server, ctx *cli.Context) {
 	proto.RegisterCPUServiceHandler(server, new(cpuCollector))
 	o = db.GetPG()
-	cs = new(cpuStorage)
+	cs = new(storage)
 }

@@ -8,11 +8,11 @@ import (
 	"github.com/micro/go-log"
 )
 
-type loadStorage struct {
+type storage struct {
 	db *sql.DB
 }
 
-func (c *loadStorage) saveLoadAvgStat(loadAvgStats []*proto.LoadAvgStat, ip, nodeName string) (err error) {
+func (s *storage) saveLoadAvgStat(loadAvgStats []*proto.LoadAvgStat, ip, nodeName string) (err error) {
 	o := db.GetPG()
 
 	// transaction is no need here

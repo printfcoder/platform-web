@@ -9,11 +9,11 @@ import (
 	"github.com/micro/go-log"
 )
 
-type netStorage struct {
+type storage struct {
 	db *sql.DB
 }
 
-func (c *netStorage) saveConnectionStat(connectionStats []*proto.ConnectionStat, ip, nodeName string) (err error) {
+func (s *storage) saveConnectionStat(connectionStats []*proto.ConnectionStat, ip, nodeName string) (err error) {
 	o := db.GetPG()
 
 	// transaction is no need here
@@ -54,7 +54,7 @@ func (c *netStorage) saveConnectionStat(connectionStats []*proto.ConnectionStat,
 	return
 }
 
-func (c *netStorage) saveIOCountersStat(ioCountersStats []*proto.IOCountersStat, ip, nodeName string) (err error) {
+func (s *storage) saveIOCountersStat(ioCountersStats []*proto.IOCountersStat, ip, nodeName string) (err error) {
 	o := db.GetPG()
 
 	// transaction is no need here

@@ -10,11 +10,11 @@ import (
 	"github.com/micro/go-log"
 )
 
-type cpuStorage struct {
+type storage struct {
 	db *sql.DB
 }
 
-func (c *cpuStorage) saveTimesStat(times []*proto.TimesStat, ip, nodeName string) (err error) {
+func (s *storage) saveTimesStat(times []*proto.TimesStat, ip, nodeName string) (err error) {
 	o := db.GetPG()
 
 	// transaction is no need here
@@ -56,7 +56,7 @@ func (c *cpuStorage) saveTimesStat(times []*proto.TimesStat, ip, nodeName string
 	return
 }
 
-func (c *cpuStorage) saveInfoStat(infos []*proto.InfoStat, ip, nodeName string) (err error) {
+func (s *storage) saveInfoStat(infos []*proto.InfoStat, ip, nodeName string) (err error) {
 	o := db.GetPG()
 
 	// transaction is no need here
@@ -99,7 +99,7 @@ func (c *cpuStorage) saveInfoStat(infos []*proto.InfoStat, ip, nodeName string) 
 	return
 }
 
-func (c *cpuStorage) savePercent(percents []*proto.Percent, ip, nodeName string) (err error) {
+func (s *storage) savePercent(percents []*proto.Percent, ip, nodeName string) (err error) {
 	o := db.GetPG()
 
 	// transaction is no need here
@@ -134,6 +134,6 @@ func (c *cpuStorage) savePercent(percents []*proto.Percent, ip, nodeName string)
 	return
 }
 
-func (c *cpuStorage) saveCounts(data []*proto.Counts, ip, nodeName string) (err error) {
+func (s *storage) saveCounts(data []*proto.Counts, ip, nodeName string) (err error) {
 	return
 }

@@ -12,7 +12,7 @@ import (
 
 var (
 	o  *sql.DB
-	ds *diskStorage
+	ds *storage
 )
 
 type collector struct {
@@ -36,5 +36,5 @@ func (c *collector) PushIOCountersStat(ctx context.Context, req *proto.DiskReque
 func Init(server server.Server, ctx *cli.Context) {
 	proto.RegisterDiskServiceHandler(server, new(collector))
 	o = db.GetPG()
-	ds = new(diskStorage)
+	ds = new(storage)
 }

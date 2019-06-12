@@ -8,11 +8,11 @@ import (
 	"github.com/micro/go-log"
 )
 
-type diskStorage struct {
+type storage struct {
 	db *sql.DB
 }
 
-func (c *diskStorage) saveDiskUsageStat(usageStats []*proto.UsageStat, ip, nodeName string) (err error) {
+func (s *storage) saveDiskUsageStat(usageStats []*proto.UsageStat, ip, nodeName string) (err error) {
 	o := db.GetPG()
 
 	// transaction is no need here
@@ -53,12 +53,12 @@ func (c *diskStorage) saveDiskUsageStat(usageStats []*proto.UsageStat, ip, nodeN
 	return
 }
 
-func (c *diskStorage) savePartitionStat(partitionStats []*proto.PartitionStat, ip, nodeName string) (err error) {
+func (s *storage) savePartitionStat(partitionStats []*proto.PartitionStat, ip, nodeName string) (err error) {
 	// do nothing
 	return
 }
 
-func (c *diskStorage) saveIOCountersStat(ioCountersStats []*proto.IOCountersStat, ip, nodeName string) (err error) {
+func (s *storage) saveIOCountersStat(ioCountersStats []*proto.IOCountersStat, ip, nodeName string) (err error) {
 	o := db.GetPG()
 
 	// transaction is no need here
