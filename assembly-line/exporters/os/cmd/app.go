@@ -2,6 +2,10 @@ package cmd
 
 import (
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/disk"
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/load"
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/mem"
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/net"
+	"github.com/micro/go-micro/client"
 	"runtime"
 	"time"
 
@@ -13,7 +17,8 @@ import (
 )
 
 var (
-	diskPath []string
+	diskPaths []string
+	netKinds  = []string{"all"}
 )
 
 func init() {
@@ -21,7 +26,7 @@ func init() {
 	if runtime.GOOS == "windows" {
 		path = "C:"
 	}
-	diskPath = []string{path}
+	diskPaths = []string{path}
 }
 
 func (app *c) advFlags() {
@@ -80,7 +85,6 @@ func (app *c) advFlags() {
 }
 
 func (app *c) parseFlags(ctx *cli.Context) {
-
 	if len(ctx.String("enable_cpu")) > 0 && !ctx.Bool("enable_cpu") {
 		app.opts.EnableCPU = false
 	}
@@ -121,38 +125,68 @@ func (app *c) parseFlags(ctx *cli.Context) {
 		app.opts.CollectorName = ctx.String("collector")
 	}
 
-	if app.opts.EnableDisk && len(ctx.StringSlice("disk_path")) != 0 {
-		diskPath = ctx.StringSlice("disk_path")
+	if app.opts.EnableDisk && len(ctx.StringSlice("disk_paths")) != 0 {
+		diskPaths = ctx.StringSlice("disk_paths")
+	}
+
+	if app.opts.EnableNet && len(ctx.StringSlice("net_kinds")) != 0 {
+		netKinds = ctx.StringSlice("net_kinds")
 	}
 
 }
 
-func (app *c) loadModules() {
+func (app *c) loadModules(client client.Client) {
+	opts := modules.Options{
+		CollectorName: app.opts.CollectorName,
+		Interval:      app.opts.PushInterval,
+		Client:        client,
+	}
 
 	// cpu
 	if app.opts.EnableCPU {
 		p := cpu.Pusher{}
-		opts := modules.Options{
-			CollectorName: app.opts.CollectorName,
-			Interval:      app.opts.PushInterval,
-		}
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
+		log.Logf("[loadModules] cpu module loaded")
 	}
 
 	// disk
 	if app.opts.EnableDisk {
-
 		p := disk.Pusher{}
-		opts := modules.Options{
-			CollectorName: app.opts.CollectorName,
-			Interval:      app.opts.PushInterval,
-			DiskPath:      diskPath,
-		}
+		opts.DiskPaths = diskPaths
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
+		log.Logf("[loadModules] disk module loaded")
+	}
+
+	// load
+	if app.opts.EnableLoad {
+		p := load.Pusher{}
+		_ = p.Init(opts)
+
+		app.modules = append(app.modules, &p)
+		log.Logf("[loadModules] load module loaded")
+	}
+
+	// mem
+	if app.opts.EnableMem {
+		p := mem.Pusher{}
+		_ = p.Init(opts)
+
+		app.modules = append(app.modules, &p)
+		log.Logf("[loadModules] mem module loaded")
+	}
+
+	// net
+	if app.opts.EnableNet {
+		p := net.Pusher{}
+		opts.NetKinds = netKinds
+		_ = p.Init(opts)
+
+		app.modules = append(app.modules, &p)
+		log.Logf("[loadModules] net module loaded")
 	}
 }
 
@@ -164,7 +198,7 @@ func (app *c) run() {
 
 	s.Init(micro.Action(func(ctx *cli.Context) {
 		app.parseFlags(ctx)
-		app.loadModules()
+		app.loadModules(s.Client())
 
 		go func() {
 			t := time.NewTicker(app.opts.PushInterval * time.Second)

@@ -33,33 +33,33 @@ var _ context.Context
 var _ client.Option
 var _ server.Option
 
-// Client API for DiskService service
+// Client API for MemService service
 
-type DiskService interface {
+type MemService interface {
 	PushVirtualMemoryStat(ctx context.Context, in *MemRequest, opts ...client.CallOption) (*MemResponse, error)
 	PushSwapMemoryStat(ctx context.Context, in *MemRequest, opts ...client.CallOption) (*MemResponse, error)
 }
 
-type diskService struct {
+type memService struct {
 	c    client.Client
 	name string
 }
 
-func NewDiskService(name string, c client.Client) DiskService {
+func NewMemService(name string, c client.Client) MemService {
 	if c == nil {
 		c = client.NewClient()
 	}
 	if len(name) == 0 {
 		name = "protobuf.pb.mem"
 	}
-	return &diskService{
+	return &memService{
 		c:    c,
 		name: name,
 	}
 }
 
-func (c *diskService) PushVirtualMemoryStat(ctx context.Context, in *MemRequest, opts ...client.CallOption) (*MemResponse, error) {
-	req := c.c.NewRequest(c.name, "DiskService.PushVirtualMemoryStat", in)
+func (c *memService) PushVirtualMemoryStat(ctx context.Context, in *MemRequest, opts ...client.CallOption) (*MemResponse, error) {
+	req := c.c.NewRequest(c.name, "MemService.PushVirtualMemoryStat", in)
 	out := new(MemResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -68,8 +68,8 @@ func (c *diskService) PushVirtualMemoryStat(ctx context.Context, in *MemRequest,
 	return out, nil
 }
 
-func (c *diskService) PushSwapMemoryStat(ctx context.Context, in *MemRequest, opts ...client.CallOption) (*MemResponse, error) {
-	req := c.c.NewRequest(c.name, "DiskService.PushSwapMemoryStat", in)
+func (c *memService) PushSwapMemoryStat(ctx context.Context, in *MemRequest, opts ...client.CallOption) (*MemResponse, error) {
+	req := c.c.NewRequest(c.name, "MemService.PushSwapMemoryStat", in)
 	out := new(MemResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -78,33 +78,33 @@ func (c *diskService) PushSwapMemoryStat(ctx context.Context, in *MemRequest, op
 	return out, nil
 }
 
-// Server API for DiskService service
+// Server API for MemService service
 
-type DiskServiceHandler interface {
+type MemServiceHandler interface {
 	PushVirtualMemoryStat(context.Context, *MemRequest, *MemResponse) error
 	PushSwapMemoryStat(context.Context, *MemRequest, *MemResponse) error
 }
 
-func RegisterDiskServiceHandler(s server.Server, hdlr DiskServiceHandler, opts ...server.HandlerOption) error {
-	type diskService interface {
+func RegisterMemServiceHandler(s server.Server, hdlr MemServiceHandler, opts ...server.HandlerOption) error {
+	type memService interface {
 		PushVirtualMemoryStat(ctx context.Context, in *MemRequest, out *MemResponse) error
 		PushSwapMemoryStat(ctx context.Context, in *MemRequest, out *MemResponse) error
 	}
-	type DiskService struct {
-		diskService
+	type MemService struct {
+		memService
 	}
-	h := &diskServiceHandler{hdlr}
-	return s.Handle(s.NewHandler(&DiskService{h}, opts...))
+	h := &memServiceHandler{hdlr}
+	return s.Handle(s.NewHandler(&MemService{h}, opts...))
 }
 
-type diskServiceHandler struct {
-	DiskServiceHandler
+type memServiceHandler struct {
+	MemServiceHandler
 }
 
-func (h *diskServiceHandler) PushVirtualMemoryStat(ctx context.Context, in *MemRequest, out *MemResponse) error {
-	return h.DiskServiceHandler.PushVirtualMemoryStat(ctx, in, out)
+func (h *memServiceHandler) PushVirtualMemoryStat(ctx context.Context, in *MemRequest, out *MemResponse) error {
+	return h.MemServiceHandler.PushVirtualMemoryStat(ctx, in, out)
 }
 
-func (h *diskServiceHandler) PushSwapMemoryStat(ctx context.Context, in *MemRequest, out *MemResponse) error {
-	return h.DiskServiceHandler.PushSwapMemoryStat(ctx, in, out)
+func (h *memServiceHandler) PushSwapMemoryStat(ctx context.Context, in *MemRequest, out *MemResponse) error {
+	return h.MemServiceHandler.PushSwapMemoryStat(ctx, in, out)
 }

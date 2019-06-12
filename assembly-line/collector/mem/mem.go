@@ -29,7 +29,7 @@ func (c *collector) PushSwapMemoryStat(ctx context.Context, req *proto.MemReques
 }
 
 func Init(server server.Server, ctx *cli.Context) {
-	proto.RegisterDiskServiceHandler(server, new(collector))
+	proto.RegisterMemServiceHandler(server, new(collector))
 	o = db.GetPG()
 	ms = new(memStorage)
 }

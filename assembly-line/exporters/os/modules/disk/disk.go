@@ -3,7 +3,7 @@ package disk
 import (
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	disk2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk"
-	"github.com/micro/go-micro/client"
+	"github.com/micro/go-log"
 	"sync"
 )
 
@@ -21,23 +21,24 @@ func (p *Pusher) Init(opts modules.Options) error {
 	p.InitB()
 	p.CollectorName = opts.CollectorName
 	p.Interval = opts.Interval
-	p.path = opts.DiskPath
-	p.diskClient = disk2.NewDiskService(p.CollectorName, client.DefaultClient)
+	p.path = opts.DiskPaths
+	p.diskClient = disk2.NewDiskService(p.CollectorName, opts.Client)
 
 	return nil
 }
 
 func (p *Pusher) Push() (err error) {
-	once.Do(func() {
-		for {
-			if err = p.pushInfo(); err == nil {
-				break
-			}
-		}
-	})
+	if err = p.pushIOCounters(); err != nil {
+		log.Logf("[Push] pushIOCounters err: %s", err)
+	}
 
-	p.pushPartition()
-	p.pushUsage()
+	if err = p.pushUsage(); err != nil {
+		log.Logf("[Push] pushUsage err: %s", err)
+	}
+
+	if err = p.pushPartition(); err != nil {
+		log.Logf("[Push] pushPartition err: %s", err)
+	}
 
 	return err
 }

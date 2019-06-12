@@ -9,14 +9,13 @@ import (
 )
 
 func (p *Pusher) pushPercent() (err error) {
-
 	vv, err := cpu.Percent(p.Interval, true)
 	if err != nil {
 		return fmt.Errorf("[pushPercent] get infos error: %s", err)
 	}
 
 	t := ptypes.TimestampNow()
-	data := make([]*cpu2.Percent, len(vv))
+	data := make([]*cpu2.Percent, 0, len(vv))
 
 	for _, v := range vv {
 		data = append(data, &cpu2.Percent{

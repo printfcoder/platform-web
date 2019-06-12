@@ -14,7 +14,7 @@ func (p *Pusher) pushIOCounters() (err error) {
 		return fmt.Errorf("[pushIOCounters] get infos error: %s", err)
 	}
 
-	data := make([]*disk2.IOCountersStat, len(vv))
+	data := make([]*disk2.IOCountersStat, 0, len(vv))
 
 	t := ptypes.TimestampNow()
 	for _, v := range vv {
