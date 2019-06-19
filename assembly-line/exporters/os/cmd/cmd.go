@@ -1,12 +1,13 @@
 package cmd
 
 import (
+	"sync"
+	"time"
+
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro/cmd"
-	"sync"
-	"time"
 )
 
 var (
@@ -25,7 +26,6 @@ type c struct {
 
 // Init app
 func Init(ops ...option.Option) {
-
 	once.Do(func() {
 		app := newApp(ops...)
 		app.advFlags()
@@ -34,7 +34,6 @@ func Init(ops ...option.Option) {
 }
 
 func newApp(ops ...option.Option) (app *c) {
-
 	app = &c{
 		App: cmd.App(),
 		opts: option.Options{
@@ -42,14 +41,30 @@ func newApp(ops ...option.Option) (app *c) {
 			AppVersion:    version,
 			PushInterval:  pushInterval,
 			CollectorName: collector,
-			EnableCPU:     true,
-			EnableDisk:    true,
-			EnableDocker:  true,
-			EnableHost:    true,
-			EnableLoad:    true,
-			EnableMem:     true,
-			EnableNet:     true,
-			EnableProcess: true,
+			CPU: &option.CPUOptions{
+				Enabled: true,
+			},
+			Disk: &option.DiskOptions{
+				Enabled: true,
+			},
+			Docker: &option.DockerOptions{
+				Enabled: true,
+			},
+			Host: &option.HostOptions{
+				Enabled: true,
+			},
+			Load: &option.LoadOptions{
+				Enabled: true,
+			},
+			Mem: &option.MemOptions{
+				Enabled: true,
+			},
+			Net: &option.NetOptions{
+				Enabled: true,
+			},
+			Process: &option.ProcessOptions{
+				Enabled: true,
+			},
 		},
 	}
 

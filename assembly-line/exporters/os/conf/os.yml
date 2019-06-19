@@ -1,0 +1,25 @@
+micro:
+  platform-web:
+    assembly-line:
+      exporters:
+        collector:
+          name:
+        push-interval: 2
+        cpu:
+          enable: true
+        disk:
+          enable: true
+          paths:
+        docker:
+          enable: true
+        host:
+          enable: true
+        load:
+          enable: true
+        mem:
+          enable: true
+        net:
+          enable: true
+          kinds:
+        process:
+          enable: true
