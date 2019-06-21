@@ -37,10 +37,12 @@ func newApp(ops ...option.Option) (app *c) {
 	app = &c{
 		App: cmd.App(),
 		opts: option.Options{
-			AppName:       name,
-			AppVersion:    version,
-			PushInterval:  pushInterval,
-			CollectorName: collector,
+			AppName:      name,
+			AppVersion:   version,
+			PushInterval: pushInterval,
+			Collector: &option.Collector{
+				Name: collector,
+			},
 			CPU: &option.CPUOptions{
 				Enabled: true,
 			},

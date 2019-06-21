@@ -5,18 +5,22 @@ import (
 )
 
 type Options struct {
-	PushInterval  time.Duration   `json:"push-interval"`
-	AppName       string          `json:"app-name"`
-	AppVersion    string          `json:"app-version"`
-	CollectorName string          `json:"collector-name"`
-	CPU           *CPUOptions     `json:"cpu"`
-	Disk          *DiskOptions    `json:"disk"`
-	Docker        *DockerOptions  `json:"docker"`
-	Host          *HostOptions    `json:"host"`
-	Load          *LoadOptions    `json:"load"`
-	Mem           *MemOptions     `json:"mem"`
-	Net           *NetOptions     `json:"net"`
-	Process       *ProcessOptions `json:"process"`
+	PushInterval time.Duration   `json:"push-interval"`
+	AppName      string          `json:"app-name"`
+	AppVersion   string          `json:"app-version"`
+	Collector    *Collector      `json:"collector"`
+	CPU          *CPUOptions     `json:"cpu"`
+	Disk         *DiskOptions    `json:"disk"`
+	Docker       *DockerOptions  `json:"docker"`
+	Host         *HostOptions    `json:"host"`
+	Load         *LoadOptions    `json:"load"`
+	Mem          *MemOptions     `json:"mem"`
+	Net          *NetOptions     `json:"net"`
+	Process      *ProcessOptions `json:"process"`
+}
+
+type Collector struct {
+	Name string `json:"name"`
 }
 
 type CPUOptions struct {

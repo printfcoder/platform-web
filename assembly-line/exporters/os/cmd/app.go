@@ -20,8 +20,9 @@ import (
 )
 
 var (
-	diskPaths []string
-	netKinds  = []string{"all"}
+	diskPaths  []string
+	netKinds   = []string{"all"}
+	configFile = "./conf/os.yml"
 )
 
 func init() {
@@ -33,13 +34,23 @@ func init() {
 }
 
 func (app *c) loadConfig(ctx *cli.Context) {
+
 	if len(ctx.String("config_file")) > 0 {
-		if err := config.Load(file.NewSource(file.WithPath(ctx.String("config_file")))); err != nil {
-			panic(err)
-		}
-
-
+		configFile = ctx.String("config_file")
 	}
+
+	if err := config.Load(file.NewSource(file.WithPath(configFile))); err != nil {
+		panic(err)
+	}
+
+	v := config.Get("micro", "platform-web", "assembly-line", "exporters")
+	log.Log(string(v.Bytes()))
+	err := v.Scan(&app.opts)
+	if err != nil {
+		panic(err)
+	}
+	log.Log(app.opts.PushInterval)
+	log.Log(app.opts.Collector.Name)
 }
 
 func (app *c) advFlags() {
@@ -140,7 +151,7 @@ func (app *c) parseFlags(ctx *cli.Context) {
 	}
 
 	if ctx.Int("collector") > 0 {
-		app.opts.CollectorName = ctx.String("collector")
+		app.opts.Collector.Name = ctx.String("collector")
 	}
 
 	if app.opts.Disk.Enabled && len(ctx.StringSlice("disk_paths")) != 0 {
@@ -154,7 +165,7 @@ func (app *c) parseFlags(ctx *cli.Context) {
 
 func (app *c) loadModules(client client.Client) {
 	opts := modules.Options{
-		CollectorName: app.opts.CollectorName,
+		CollectorName: app.opts.Collector.Name,
 		Interval:      app.opts.PushInterval,
 		Client:        client,
 	}

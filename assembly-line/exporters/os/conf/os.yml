@@ -3,23 +3,23 @@ micro:
     assembly-line:
       exporters:
         collector:
-          name:
-        push-interval: 2
+          name: go.micro.srv.platform_collector
+        push-interval: 10
         cpu:
-          enable: true
+          enable: false
         disk:
-          enable: true
+          enable: false
           paths:
         docker:
-          enable: true
+          enable: false
         host:
-          enable: true
+          enable: false
         load:
-          enable: true
+          enable: false
         mem:
-          enable: true
+          enable: false
         net:
-          enable: true
+          enable: false
           kinds:
         process:
-          enable: true
+          enable: false
