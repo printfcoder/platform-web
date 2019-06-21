@@ -2,6 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"net/http"
+	"net/http/httputil"
+	"regexp"
+	"strings"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/micro-in-cn/platform-web/internal/proxy"
 	z "github.com/micro-in-cn/platform-web/internal/zap"
@@ -10,12 +16,8 @@ import (
 	"github.com/micro/go-micro/cmd"
 	"github.com/micro/go-micro/selector"
 	"github.com/micro/go-web"
+
 	"go.uber.org/zap"
-	"net/http"
-	"net/http/httputil"
-	"regexp"
-	"strings"
-	"time"
 )
 
 var (
@@ -34,7 +36,6 @@ var (
 
 // Init app
 func Init(ops ...modules.Option) {
-
 	app := cmd.App()
 	app.Flags = append(app.Flags,
 		cli.StringFlag{
@@ -59,7 +60,6 @@ func Init(ops ...modules.Option) {
 }
 
 func run(ctx *cli.Context, srvOpts ...modules.Option) {
-
 	parseFlags(ctx)
 
 	s := web.NewService(

@@ -34,9 +34,7 @@ func parseConnectStr() string {
 	log.Logf("[initPG] pg connected %s", str)
 
 	str = fmt.Sprintf("%ssslmode=%s", str, pgConfig.SSLMode)
-
 	if pgConfig.SSLMode != "disable" {
-
 		if pgConfig.SSLCert != "" {
 			str += "&sslcert=" + pgConfig.SSLCert
 		}

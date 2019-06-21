@@ -22,6 +22,15 @@ The micro web dashboard provides simple access to services with the ability to e
   - [collector](./assembly-line/collector) a go-micro srv collecting statistic infos from exporters and saving data to db
   - [exporters](./assembly-line/exporters) export infos to the [collector](./assembly-line/collector).
     - [os](./assembly-line/exporters/os) a go-micro srv exporting os and machine runtime infos to collector.
+      - [cpu] doing
+      - [disk] doing
+      - [docker] todo
+      - [host] doing
+      - [load] doing
+      - [mem] doing
+      - [net] doing
+    - [rabbitMQ] todo
+    - [kafka] todo
     - [micro](./assembly-line/exporters/micro) a plugin exporting infos of a running micro service to collector. It can be integrated into a micro service. 
 - [benchmarks](./benchmarks) benchmark tests
 - [common](./common) common utils/libs

@@ -12,7 +12,7 @@ import (
 
 var (
 	o  *sql.DB
-	ms *memStorage
+	ms *storage
 )
 
 type collector struct {
@@ -31,5 +31,5 @@ func (c *collector) PushSwapMemoryStat(ctx context.Context, req *proto.MemReques
 func Init(server server.Server, ctx *cli.Context) {
 	proto.RegisterMemServiceHandler(server, new(collector))
 	o = db.GetPG()
-	ms = new(memStorage)
+	ms = new(storage)
 }

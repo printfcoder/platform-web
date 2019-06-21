@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package protobuf.pb.host;
+
+option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/host";
+
+import "basic/error.proto";
+import "google/protobuf/timestamp.proto";
+
+message HostInfo {
+    google.protobuf.Timestamp timestamp = 1;
+    string hostname = 2;
+    uint64 uptime = 3;
+    uint64 bootTime = 4;
+    uint64 procs = 5;
+    string oS = 6;
+    string platform = 7;
+    string platformFamily = 8;
+    string platformVersion = 9;
+    string kernelVersion = 10;
+    string virtualizationSystem = 11;
+    string virtualizationRole = 12;
+    string hostID = 13;
+}
+
+message HostRequest {
+    google.protobuf.Timestamp timestamp = 1;
+    string IP = 2;
+    string nodeName = 3;
+    repeated HostInfo hostInfo = 4;
+}
+
+message HostResponse {
+    basic.Error error = 1;
+}
+
+service HostService {
+    rpc PushHostInfo (HostRequest) returns (HostResponse) {
+    }
+}

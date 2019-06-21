@@ -1,0 +1,25 @@
+micro:
+  platform-web:
+    assembly-line:
+      exporters:
+        collector:
+          name: go.micro.srv.platform_collector
+        push-interval: 10
+        cpu:
+          enable: false
+        disk:
+          enable: false
+          paths:
+        docker:
+          enable: false
+        host:
+          enable: false
+        load:
+          enable: false
+        mem:
+          enable: false
+        net:
+          enable: false
+          kinds:
+        process:
+          enable: false

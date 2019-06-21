@@ -1,24 +1,28 @@
 package cmd
 
 import (
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/disk"
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/load"
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/mem"
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/net"
-	"github.com/micro/go-micro/client"
+	"github.com/micro/go-micro/config"
+	"github.com/micro/go-micro/config/source/file"
 	"runtime"
 	"time"
 
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/cpu"
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/disk"
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/host"
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/load"
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/mem"
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules/net"
 	"github.com/micro/cli"
-	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
+	"github.com/micro/go-micro/client"
+	"github.com/micro/go-micro/util/log"
 )
 
 var (
-	diskPaths []string
-	netKinds  = []string{"all"}
+	diskPaths  []string
+	netKinds   = []string{"all"}
+	configFile = "./conf/os.yml"
 )
 
 func init() {
@@ -29,8 +33,33 @@ func init() {
 	diskPaths = []string{path}
 }
 
+func (app *c) loadConfig(ctx *cli.Context) {
+
+	if len(ctx.String("config_file")) > 0 {
+		configFile = ctx.String("config_file")
+	}
+
+	if err := config.Load(file.NewSource(file.WithPath(configFile))); err != nil {
+		panic(err)
+	}
+
+	v := config.Get("micro", "platform-web", "assembly-line", "exporters")
+	log.Log(string(v.Bytes()))
+	err := v.Scan(&app.opts)
+	if err != nil {
+		panic(err)
+	}
+	log.Log(app.opts.PushInterval)
+	log.Log(app.opts.Collector.Name)
+}
+
 func (app *c) advFlags() {
 	app.Flags = append(app.Flags,
+		cli.StringFlag{
+			Name:   "config_file",
+			Usage:  "path to config file, but the configs in file are less weight than those passed on command",
+			EnvVar: "MICRO_WEB_PLATFORM_CONFIG_FILE",
+		},
 		cli.StringFlag{
 			Name:   "enable_cpu",
 			Usage:  "enables exporter to export CPU info",
@@ -86,35 +115,35 @@ func (app *c) advFlags() {
 
 func (app *c) parseFlags(ctx *cli.Context) {
 	if len(ctx.String("enable_cpu")) > 0 && !ctx.Bool("enable_cpu") {
-		app.opts.EnableCPU = false
+		app.opts.CPU.Enabled = false
 	}
 
 	if len(ctx.String("enable_disk")) > 0 && !ctx.Bool("enable_disk") {
-		app.opts.EnableDisk = false
+		app.opts.Disk.Enabled = false
 	}
 
 	if len(ctx.String("enable_docker")) > 0 && !ctx.Bool("enable_docker") {
-		app.opts.EnableDocker = false
+		app.opts.Docker.Enabled = false
 	}
 
 	if len(ctx.String("enable_host")) > 0 && !ctx.Bool("enable_host") {
-		app.opts.EnableHost = false
+		app.opts.Host.Enabled = false
 	}
 
 	if len(ctx.String("enable_load")) > 0 && !ctx.Bool("enable_load") {
-		app.opts.EnableLoad = false
+		app.opts.Load.Enabled = false
 	}
 
 	if len(ctx.String("enable_mem")) > 0 && !ctx.Bool("enable_mem") {
-		app.opts.EnableMem = false
+		app.opts.Mem.Enabled = false
 	}
 
 	if len(ctx.String("enable_net")) > 0 && !ctx.Bool("enable_net") {
-		app.opts.EnableNet = false
+		app.opts.Net.Enabled = false
 	}
 
 	if len(ctx.String("enable_process")) > 0 && !ctx.Bool("enable_process") {
-		app.opts.EnableProcess = false
+		app.opts.Process.Enabled = false
 	}
 
 	if ctx.Int("push_interval") > 0 {
@@ -122,71 +151,73 @@ func (app *c) parseFlags(ctx *cli.Context) {
 	}
 
 	if ctx.Int("collector") > 0 {
-		app.opts.CollectorName = ctx.String("collector")
+		app.opts.Collector.Name = ctx.String("collector")
 	}
 
-	if app.opts.EnableDisk && len(ctx.StringSlice("disk_paths")) != 0 {
+	if app.opts.Disk.Enabled && len(ctx.StringSlice("disk_paths")) != 0 {
 		diskPaths = ctx.StringSlice("disk_paths")
 	}
 
-	if app.opts.EnableNet && len(ctx.StringSlice("net_kinds")) != 0 {
+	if app.opts.Net.Enabled && len(ctx.StringSlice("net_kinds")) != 0 {
 		netKinds = ctx.StringSlice("net_kinds")
 	}
-
 }
 
 func (app *c) loadModules(client client.Client) {
 	opts := modules.Options{
-		CollectorName: app.opts.CollectorName,
+		CollectorName: app.opts.Collector.Name,
 		Interval:      app.opts.PushInterval,
 		Client:        client,
 	}
 
 	// cpu
-	if app.opts.EnableCPU {
+	if app.opts.CPU.Enabled {
 		p := cpu.Pusher{}
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
-		log.Logf("[loadModules] cpu module loaded")
 	}
 
 	// disk
-	if app.opts.EnableDisk {
+	if app.opts.Disk.Enabled {
 		p := disk.Pusher{}
 		opts.DiskPaths = diskPaths
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
-		log.Logf("[loadModules] disk module loaded")
+	}
+
+	// host
+	if app.opts.Host.Enabled {
+		p := host.Pusher{}
+		_ = p.Init(opts)
+
+		app.modules = append(app.modules, &p)
 	}
 
 	// load
-	if app.opts.EnableLoad {
+	if app.opts.Load.Enabled {
 		p := load.Pusher{}
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
-		log.Logf("[loadModules] load module loaded")
 	}
 
 	// mem
-	if app.opts.EnableMem {
+	if app.opts.Mem.Enabled {
 		p := mem.Pusher{}
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
-		log.Logf("[loadModules] mem module loaded")
 	}
 
 	// net
-	if app.opts.EnableNet {
+	if app.opts.Net.Enabled {
 		p := net.Pusher{}
 		opts.NetKinds = netKinds
 		_ = p.Init(opts)
 
 		app.modules = append(app.modules, &p)
-		log.Logf("[loadModules] net module loaded")
 	}
 }
 
@@ -197,6 +228,7 @@ func (app *c) run() {
 	)
 
 	s.Init(micro.Action(func(ctx *cli.Context) {
+		app.loadConfig(ctx)
 		app.parseFlags(ctx)
 		app.loadModules(s.Client())
 
