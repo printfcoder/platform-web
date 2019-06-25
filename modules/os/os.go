@@ -1,12 +1,106 @@
 package os
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/micro-in-cn/platform-web/modules"
+	"github.com/micro/cli"
+)
+
+var (
+	m *module
+)
 
 // module includes cpu, disk, docker, host, load, mem, net
 type module struct {
+	name string
+	path string
 	sync.RWMutex
 	api *api
 }
 
-type api struct {
+func (m *module) Name() string {
+	return m.name
+}
+
+func (m *module) Path() string {
+	return m.path
+}
+
+func (m *module) Init(*cli.Context) error {
+	return nil
+}
+
+func (m *module) Flags() []cli.Flag {
+	return nil
+}
+
+func (m *module) Handlers() (mp map[string]*modules.Handler) {
+
+	m.Lock()
+	mp = make(map[string]*modules.Handler)
+	defer m.Unlock()
+
+	mp["/cpu"] = &modules.Handler{
+		Func:   m.api.cpu,
+		Method: []string{"GET"},
+	}
+
+	mp["/disk"] = &modules.Handler{
+		Func:   m.api.disk,
+		Method: []string{"GET"},
+	}
+
+	mp["/host"] = &modules.Handler{
+		Func:   m.api.host,
+		Method: []string{"GET"},
+	}
+
+	mp["/load"] = &modules.Handler{
+		Func:   m.api.load,
+		Method: []string{"GET"},
+	}
+
+	mp["/mem"] = &modules.Handler{
+		Func:   m.api.mem,
+		Method: []string{"GET"},
+	}
+
+	mp["/net"] = &modules.Handler{
+		Func:   m.api.net,
+		Method: []string{"GET"},
+	}
+
+	return
+}
+
+func (m *module) Commands(options ...modules.Option) []cli.Command {
+	command := cli.Command{
+		Action: func(c *cli.Context) {
+			err := m.Init(c)
+			if err != nil {
+				panic(err)
+			}
+		},
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:   "enable_os",
+				Usage:  "set os module enabled",
+				EnvVar: "MICRO_PLATFORM_WEB_ENABLE_OS",
+				Value:  "true",
+			},
+		},
+	}
+
+	return []cli.Command{command}
+}
+
+func init() {
+	m = &module{
+		name: "basic",
+		path: "/os",
+		api:  newAPI(),
+	}
+
+	modules.Registry(m)
 }

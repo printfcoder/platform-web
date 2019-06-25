@@ -2,9 +2,10 @@ package load
 
 import (
 	"database/sql"
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/db"
+
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/util"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/load"
+	"github.com/micro-in-cn/platform-web/internal/db"
 	"github.com/micro/go-log"
 )
 

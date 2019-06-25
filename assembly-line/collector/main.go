@@ -2,11 +2,11 @@ package main
 
 import (
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/cpu"
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/db"
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/disk"
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/load"
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/mem"
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/net"
+	"github.com/micro-in-cn/platform-web/internal/db"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro"
 )

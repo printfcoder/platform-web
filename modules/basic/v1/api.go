@@ -2,15 +2,17 @@ package v1
 
 import (
 	"encoding/json"
-	"github.com/micro-in-cn/platform-web/internal/tools"
-	"github.com/micro-in-cn/platform-web/modules/internal/helper"
-	"github.com/micro/go-micro/cmd"
-	"github.com/micro/go-micro/registry"
-	"github.com/micro/go-micro/selector"
 	"net/http"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/micro-in-cn/platform-web/internal/tools"
+	"github.com/micro-in-cn/platform-web/modules/internal/helper"
+	"github.com/micro-in-cn/platform-web/modules/internal/nosj"
+	"github.com/micro/go-micro/cmd"
+	"github.com/micro/go-micro/registry"
+	"github.com/micro/go-micro/selector"
 )
 
 type api struct {
@@ -52,7 +54,7 @@ func (api *api) webServices(w http.ResponseWriter, r *http.Request) {
 
 	sort.Sort(tools.SortedServices{Services: services})
 
-	writeJsonData(w, webServices)
+	nosj.WriteJsonData(w, webServices)
 
 	return
 }
@@ -81,7 +83,7 @@ func (api *api) services(w http.ResponseWriter, r *http.Request) {
 
 	sort.Sort(tools.SortedServices{Services: services})
 
-	writeJsonData(w, services)
+	nosj.WriteJsonData(w, services)
 	return
 }
 
@@ -114,7 +116,7 @@ func (api *api) microServices(w http.ResponseWriter, r *http.Request) {
 
 	sort.Sort(tools.SortedServices{Services: ret})
 
-	writeJsonData(w, ret)
+	nosj.WriteJsonData(w, ret)
 	return
 }
 
@@ -143,7 +145,7 @@ func (api *api) serviceDetails(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	writeJsonData(w, serviceDetails)
+	nosj.WriteJsonData(w, serviceDetails)
 	return
 }
 
@@ -159,11 +161,11 @@ func (api *api) service(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if len(s) == 0 {
-			writeError(w, "Service Is Not found")
+			nosj.WriteError(w, "Service Is Not found")
 			return
 		}
 
-		writeJsonData(w, s)
+		nosj.WriteJsonData(w, s)
 		return
 	}
 
@@ -204,7 +206,7 @@ func (api *api) apiGatewayServices(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	writeJsonData(w, ret)
+	nosj.WriteJsonData(w, ret)
 	return
 
 }
@@ -218,7 +220,7 @@ func (api *api) rpc(w http.ResponseWriter, r *http.Request) {
 	d.UseNumber()
 
 	if err := d.Decode(&rpcReq); err != nil {
-		writeError(w, err.Error())
+		nosj.WriteError(w, err.Error())
 		return
 	}
 

@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/db"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/mem"
+	"github.com/micro-in-cn/platform-web/internal/db"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro/server"
 )

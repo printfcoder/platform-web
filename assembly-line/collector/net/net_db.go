@@ -3,9 +3,10 @@ package net
 import (
 	"database/sql"
 	"github.com/lib/pq"
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/db"
+
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/util"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/net"
+	"github.com/micro-in-cn/platform-web/internal/db"
 	"github.com/micro/go-log"
 )
 
