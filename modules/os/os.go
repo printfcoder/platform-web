@@ -27,7 +27,8 @@ func (m *module) Path() string {
 	return m.path
 }
 
-func (m *module) Init(*cli.Context) error {
+func (m *module) Init(ctx *cli.Context) error {
+	m.api.init(ctx)
 	return nil
 }
 
@@ -41,8 +42,16 @@ func (m *module) Handlers() (mp map[string]*modules.Handler) {
 	mp = make(map[string]*modules.Handler)
 	defer m.Unlock()
 
-	mp["/cpu"] = &modules.Handler{
-		Func:   m.api.cpu,
+	mp["/cpu/infos"] = &modules.Handler{
+		Func:   m.api.cpuInfos,
+		Method: []string{"GET"},
+	}
+	mp["/cpu/percent"] = &modules.Handler{
+		Func:   m.api.cpuPercent,
+		Method: []string{"GET"},
+	}
+	mp["/cpu/times"] = &modules.Handler{
+		Func:   m.api.cpuTimes,
 		Method: []string{"GET"},
 	}
 
@@ -97,7 +106,7 @@ func (m *module) Commands(options ...modules.Option) []cli.Command {
 
 func init() {
 	m = &module{
-		name: "basic",
+		name: "os",
 		path: "/os",
 		api:  newAPI(),
 	}

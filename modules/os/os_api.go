@@ -1,7 +1,8 @@
 package os
 
 import (
-	"database/sql"
+	"github.com/micro-in-cn/platform-web/internal/db"
+	"github.com/micro/cli"
 	"sync"
 )
 
@@ -10,13 +11,12 @@ var (
 )
 
 type api struct {
-	db *sql.DB
 }
 
 func newAPI() *api {
 	return &api{}
 }
 
-func (o *api) init() {
-
+func (o *api) init(ctx *cli.Context) {
+	db.Init(ctx)
 }

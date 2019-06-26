@@ -52,8 +52,6 @@ func (s *storage) saveTimesStat(times []*proto.TimesStat, ip, nodeName string) (
 	}
 
 	return
-
-	return
 }
 
 func (s *storage) saveInfoStat(infos []*proto.InfoStat, ip, nodeName string) (err error) {

@@ -4,8 +4,9 @@ package nosj
 
 import (
 	"encoding/json"
-	"github.com/micro-in-cn/platform-web/modules"
 	"net/http"
+
+	"github.com/micro-in-cn/platform-web/modules"
 )
 
 func WriteJsonData(w http.ResponseWriter, data interface{}) {
@@ -25,7 +26,7 @@ func WriteJsonData(w http.ResponseWriter, data interface{}) {
 	w.Write(b)
 }
 
-func WriteError(w http.ResponseWriter, msg string) {
+func WriteError(w http.ResponseWriter, msg interface{}) {
 
 	rsp := &modules.Rsp{
 		Error:   msg,

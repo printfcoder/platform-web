@@ -37,7 +37,9 @@ func Init(ctx *cli.Context) {
 	pgConfig = newPGConfig()
 
 	if pgConfigFile := ctx.String("pg_config_file"); len(pgConfigFile) > 0 {
-		config.Get(pgConfigFile).Scan(&pgConfig)
+		if err := config.Get(pgConfigFile).Scan(&pgConfig); err != nil {
+			panic(err)
+		}
 	}
 
 	initDB()
