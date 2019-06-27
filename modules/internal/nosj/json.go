@@ -10,7 +10,6 @@ import (
 )
 
 func WriteJsonData(w http.ResponseWriter, data interface{}) {
-
 	rsp := &modules.Rsp{
 		Data:    data,
 		Success: true,
@@ -26,10 +25,9 @@ func WriteJsonData(w http.ResponseWriter, data interface{}) {
 	w.Write(b)
 }
 
-func WriteError(w http.ResponseWriter, msg interface{}) {
-
+func WriteError(w http.ResponseWriter, err error) {
 	rsp := &modules.Rsp{
-		Error:   msg,
+		Error:   err.Error(),
 		Success: false,
 	}
 

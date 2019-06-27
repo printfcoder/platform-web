@@ -2,6 +2,7 @@ package v1
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"sort"
 	"strconv"
@@ -161,7 +162,7 @@ func (api *api) service(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if len(s) == 0 {
-			nosj.WriteError(w, "Service Is Not found")
+			nosj.WriteError(w, fmt.Errorf("Service Is Not found %s: ", serviceName))
 			return
 		}
 
@@ -220,7 +221,7 @@ func (api *api) rpc(w http.ResponseWriter, r *http.Request) {
 	d.UseNumber()
 
 	if err := d.Decode(&rpcReq); err != nil {
-		nosj.WriteError(w, err.Error())
+		nosj.WriteError(w, fmt.Errorf("rpc decode err %s: ", err))
 		return
 	}
 

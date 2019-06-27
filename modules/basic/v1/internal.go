@@ -18,12 +18,12 @@ import (
 func rpc(w http.ResponseWriter, ctx context.Context, rpcReq *rpcRequest) {
 
 	if len(rpcReq.Service) == 0 {
-		nosj.WriteError(w, "Service Is Not found")
+		nosj.WriteError(w, fmt.Errorf("Service Is Not found "))
 		return
 	}
 
 	if len(rpcReq.Endpoint) == 0 {
-		nosj.WriteError(w, "Endpoint Is Not found")
+		nosj.WriteError(w, fmt.Errorf("Endpoint Is Not found err "))
 		return
 	}
 
@@ -33,7 +33,7 @@ func rpc(w http.ResponseWriter, ctx context.Context, rpcReq *rpcRequest) {
 		d.UseNumber()
 
 		if err := d.Decode(&rpcReq.Request); err != nil {
-			nosj.WriteError(w, "error decoding request string: "+err.Error())
+			nosj.WriteError(w, fmt.Errorf("error decoding request string err: %s", err))
 			return
 		}
 	}
