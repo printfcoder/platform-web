@@ -9,7 +9,7 @@
                 <div class="layout column align-center">
                   <img src="static/m.png" alt="Vue Material Admin" width="120" height="120">
                   <h1 class="flex my-4 primary--text">Material Admin Template</h1>
-                </div>                
+                </div>
                 <v-form>
                   <v-text-field append-icon="person" name="login" label="Login" type="text" v-model="model.username"></v-text-field>
                   <v-text-field append-icon="lock" name="password" label="Password" id="password" type="password" v-model="model.password"></v-text-field>
@@ -38,23 +38,23 @@
 
 <script>
 export default {
-  data: () => ({
-    loading: false,
-    model: {
-      username: "admin@isockde.com",
-      password: "password"
-    }
-  }),
+    data: () => ({
+        loading: false,
+        model: {
+            username: 'admin@isockde.com',
+            password: 'password'
+        }
+    }),
 
-  methods: {
-    login() {
-      this.loading = true;
-      setTimeout(() => {
-        this.$router.push("/dashboard");
-      }, 1000);
+    methods: {
+        login () {
+            this.loading = true
+            setTimeout(() => {
+                this.$router.push('/dashboard')
+            }, 1000)
+        }
     }
-  }
-};
+}
 </script>
 <style scoped lang="css">
   #login {

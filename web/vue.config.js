@@ -19,12 +19,15 @@ module.exports = {
       },
     },
   },
+
   transpileDependencies: [
     'vue-echarts',
     'resize-detector',
   ],
+
   publicPath: '/platform/',
   outputDir: '../srv/webapp',
   assetsDir: 'static',
   productionSourceMap: false,
+  lintOnSave: undefined
 };

@@ -6,11 +6,11 @@ const cn = {
         address: '地址',
         endpoint: '服务端点',
         endpoints: '服务端点',
-        metadata: "元数据",
-        noDataText: "未查询到数据",
+        metadata: '元数据',
+        noDataText: '未查询到数据',
         node: '节点',
         nodes: '节点列表',
-        noResultsText: "无满足条件数据",
+        noResultsText: '无满足条件数据',
         otherEndpoint: '其它端口',
         port: '端口',
         refresh: '刷新',
@@ -18,16 +18,18 @@ const cn = {
         service: '服务',
         serviceId: 'ID',
         serviceName: '服务名',
-        version: "版本号",
+        version: '版本号'
     },
     menu: {
         callService: '服务调用',
         cliTerminal: 'cli终端',
         homePage: '主页',
+        monitor: '监控',
+        os: '系统',
         registryInfo: '服务注册情况',
         stats: '统计',
         statsAPI: 'API网关统计',
-        statsService: '服务统计',
+        statsService: '服务统计'
     },
     rpc: {
         copy: '复制',
@@ -47,12 +49,12 @@ const cn = {
         '40x': '40x',
         '50x': '50x',
         gc: 'GC',
-        lastUpdated: "最后更新时间：",
+        lastUpdated: '最后更新时间：',
         memory: '占用内存',
         started: '启动时间',
         threads: '线程数',
         total: '总计',
-        uptime: '运行时间',
+        uptime: '运行时间'
     },
     table: {
         operation: '操作',
@@ -60,4 +62,4 @@ const cn = {
     }
 }
 
-export default cn;
+export default cn

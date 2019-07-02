@@ -6,11 +6,11 @@ const en = {
         address: 'Address',
         endpoint: 'Endpoint',
         endpoints: 'Endpoints',
-        metadata: "Metadata",
-        noDataText: "No data available",
+        metadata: 'Metadata',
+        noDataText: 'No data available',
         node: 'Node',
         nodes: 'Nodes',
-        noResultsText: "No matching records found",
+        noResultsText: 'No matching records found',
         otherEndpoint: 'OtherEndpoint',
         port: 'Port',
         refresh: 'Refresh',
@@ -18,16 +18,18 @@ const en = {
         service: 'Service',
         serviceId: 'ID',
         serviceName: 'Name',
-        version: "Version",
+        version: 'Version'
     },
     menu: {
         callService: 'Call',
         cliTerminal: 'CLI',
         homePage: 'Home',
+        monitor: 'Monitor',
+        os: 'OS',
         registryInfo: 'Registry',
         stats: 'Stats',
         statsAPI: 'API Gateway Statistics',
-        statsService: 'Service Statistics',
+        statsService: 'Service Statistics'
     },
     rpc: {
         copy: 'Copy',
@@ -46,7 +48,7 @@ const en = {
         '40x': '40x',
         '50x': '50x',
         gc: 'GC',
-        lastUpdated: "Last updated: ",
+        lastUpdated: 'Last updated: ',
         started: 'Started',
         uptime: 'Uptime',
         memory: 'Memory',
@@ -56,7 +58,7 @@ const en = {
     table: {
         operation: 'Operation',
         registry: {}
-    },
+    }
 }
 
-export default en;
+export default en

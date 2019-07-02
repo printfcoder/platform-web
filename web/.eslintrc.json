@@ -3,11 +3,7 @@
     "browser": true,
     "es6": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:vue/essential",
-    "@vue/typescript"
-  ],
+  "extends": "standard",
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
@@ -20,5 +16,9 @@
     "vue"
   ],
   "rules": {
+    "indent": [
+      "error",
+      4
+    ]
   }
 }

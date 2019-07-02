@@ -39,9 +39,9 @@
               <v-btn flat value="light">
                 Light
               </v-btn>
-            </v-btn-toggle>   
+            </v-btn-toggle>
           </div>
-        </div>        
+        </div>
       </v-flex>
     </v-layout>
   </v-container>
@@ -49,118 +49,118 @@
 </template>
 
 <script>
-import colors from "vuetify/es5/util/colors";
+import colors from 'vuetify/es5/util/colors'
 export default {
-  data() {
-    return {
-      themeColor: "indigo",
-      sideBarOption: "light",
-      colors: colors
-    };
-  },
-  computed: {
-    themeColorOptions() {
-      return [
-        {
-          key: "blue",
-          value: {
-            sideNav: "blue",
-            mainNav: "blue",
-            sideManu: "white"
-          }
-        },
-        {
-          key: "teal",
-          value: {
-            sideNav: "teal",
-            mainNav: "teal",
-            sideManu: "white"
-          }
-        },
-        {
-          key: "red",
-          value: {
-            sideNav: "red",
-            mainNav: "red",
-            sideManu: "white"
-          }
-        },
-        {
-          key: "orange",
-          value: {
-            sideNav: "orange",
-            mainNav: "orange",
-            sideManu: "white"
-          }
-        },
-        {
-          key: "purple",
-          value: {
-            sideNav: "purple",
-            mainNav: "purple",
-            sideManu: "white"
-          }
-        },
-        {
-          key: "indigo",
-          value: {
-            sideNav: "indigo",
-            mainNav: "indigo",
-            sideManu: "white"
-          }
-        },
-        {
-          key: "cyan",
-          value: {
-            sideNav: "cyan",
-            mainNav: "cyan",
-            sideManu: "white"
-          }
-        },
-        {
-          key: "pink",
-          value: {
-            sideNav: "pink",
-            mainNav: "pink",
-            sideManu: "white"
-          }
-        },
-        {
-          key: "green",
-          value: {
-            sideNav: "green",
-            mainNav: "green",
-            sideManu: "white"
-          }
+    data () {
+        return {
+            themeColor: 'indigo',
+            sideBarOption: 'light',
+            colors: colors
         }
-      ];
-    }
-  },
-  watch: {
-    themeColor: {
-      handler(val) {
-        this.$vuetify.theme.primary = this.colors[val].base;
-      },
-      immediate: true
     },
-    sideBarOption: {
-      handler(val) {
-        this.$vuetify.dark = val === "dark";
-      },
-      immediate: true
+    computed: {
+        themeColorOptions () {
+            return [
+                {
+                    key: 'blue',
+                    value: {
+                        sideNav: 'blue',
+                        mainNav: 'blue',
+                        sideManu: 'white'
+                    }
+                },
+                {
+                    key: 'teal',
+                    value: {
+                        sideNav: 'teal',
+                        mainNav: 'teal',
+                        sideManu: 'white'
+                    }
+                },
+                {
+                    key: 'red',
+                    value: {
+                        sideNav: 'red',
+                        mainNav: 'red',
+                        sideManu: 'white'
+                    }
+                },
+                {
+                    key: 'orange',
+                    value: {
+                        sideNav: 'orange',
+                        mainNav: 'orange',
+                        sideManu: 'white'
+                    }
+                },
+                {
+                    key: 'purple',
+                    value: {
+                        sideNav: 'purple',
+                        mainNav: 'purple',
+                        sideManu: 'white'
+                    }
+                },
+                {
+                    key: 'indigo',
+                    value: {
+                        sideNav: 'indigo',
+                        mainNav: 'indigo',
+                        sideManu: 'white'
+                    }
+                },
+                {
+                    key: 'cyan',
+                    value: {
+                        sideNav: 'cyan',
+                        mainNav: 'cyan',
+                        sideManu: 'white'
+                    }
+                },
+                {
+                    key: 'pink',
+                    value: {
+                        sideNav: 'pink',
+                        mainNav: 'pink',
+                        sideManu: 'white'
+                    }
+                },
+                {
+                    key: 'green',
+                    value: {
+                        sideNav: 'green',
+                        mainNav: 'green',
+                        sideManu: 'white'
+                    }
+                }
+            ]
+        }
+    },
+    watch: {
+        themeColor: {
+            handler (val) {
+                this.$vuetify.theme.primary = this.colors[val].base
+            },
+            immediate: true
+        },
+        sideBarOption: {
+            handler (val) {
+                this.$vuetify.dark = val === 'dark'
+            },
+            immediate: true
+        }
     }
-  }
-};
+}
 </script>
 <style lang="stylus" scoped>
 .color-option
   &--label
     position: relative
     display: block
-    cursor: pointer  
-    & input[type="radio"] 
+    cursor: pointer
+    & input[type="radio"]
       display:none
-      &+span 
+      &+span
         position: relative
         &>.overlay
           display: none;
@@ -174,21 +174,21 @@ export default {
           background-color: rgba(0,0,0,.3);
           text-align: center;
           line-height: 30px;
-          color: #fff;                
+          color: #fff;
       &:checked+span>.overlay
-        display:block  
-    & .bg        
+        display:block
+    & .bg
       background-color: #f1f1f1
   &--item
     overflow: hidden;
     display: block;
     box-shadow: 0 0 2px rgba(0,0,0,.1);
-    margin-bottom: 15px;      
+    margin-bottom: 15px;
     &--header
       height: 10px
-    &>span 
+    &>span
       display: block;
       float: left;
       width: 50%;
-      height: 20px;          
+      height: 20px;
 </style>
