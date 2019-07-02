@@ -13,7 +13,8 @@
     "sourceType": "module"
   },
   "plugins": [
-    "vue"
+    "vue",
+    "typescript"
   ],
   "rules": {
     "indent": [
