@@ -1,6 +1,6 @@
 export interface State {
 }
 
-const state: State = {};
+const state: State = {}
 
-export default state;
+export default state

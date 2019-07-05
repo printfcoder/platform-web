@@ -6,5 +6,4 @@ const i18nMsg: any = {
     cn: cn
 }
 
-
 export default i18nMsg

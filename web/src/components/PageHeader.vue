@@ -1,13 +1,19 @@
 <template>
-    <v-layout row class="align-center layout app--page-header">
-        <div class="page-header-left">
-            <h3 class="pr-3">{{title}}</h3>
-        </div>
-        <v-breadcrumbs :items="breadcrumbs" divider=">">
-        </v-breadcrumbs>
-        <v-spacer></v-spacer>
-
-    </v-layout>
+  <v-layout
+    row
+    class="align-center layout app--page-header"
+  >
+    <div class="page-header-left">
+      <h3 class="pr-3">
+        {{ title }}
+      </h3>
+    </div>
+    <v-breadcrumbs
+      :items="breadcrumbs"
+      divider=">"
+    />
+    <v-spacer />
+  </v-layout>
 </template>
 
 <script>

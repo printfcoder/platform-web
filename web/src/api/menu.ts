@@ -3,25 +3,25 @@ const Menu = [
         title: 'homePage',
         group: 'apps',
         icon: 'home',
-        name: 'home',
+        name: 'home'
     },
     {
         title: 'cliTerminal',
         group: 'apps',
         icon: 'tune',
-        name: 'cli',
+        name: 'cli'
     },
     {
         title: 'registryInfo',
         component: 'apps',
         icon: 'cloud',
-        name: 'registry',
+        name: 'registry'
     },
     {
         title: 'callService',
         component: 'apps',
         icon: 'train',
-        name: 'call',
+        name: 'call'
     },
     {
         title: 'stats',
@@ -30,8 +30,8 @@ const Menu = [
         name: 'statistics',
         items: [
             { name: 'apiStatistics', title: 'statsAPI', component: 'apiStatistics' },
-            { name: 'serviceStatistics', title: 'statsService', component: 'serviceStatistics' },
-        ],
+            { name: 'serviceStatistics', title: 'statsService', component: 'serviceStatistics' }
+        ]
     },
     {
         title: 'monitor',
@@ -39,20 +39,20 @@ const Menu = [
         icon: 'bar_chart',
         name: 'monitor',
         items: [
-            { name: 'os', title: 'os', component: 'apiStatistics' },
-        ],
+            { name: 'os', title: 'os', component: 'apiStatistics' }
+        ]
     },
-    { divider: true },
-];
+    { divider: true }
+]
 // reorder menu
 Menu.forEach((item: any) => {
     if (item.items) {
         item.items.sort((x: any, y: any) => {
-            let textA = x.title.toUpperCase();
-            let textB = y.title.toUpperCase();
-            return textA < textB ? -1 : textA > textB ? 1 : 0;
-        });
+            let textA = x.title.toUpperCase()
+            let textB = y.title.toUpperCase()
+            return textA < textB ? -1 : textA > textB ? 1 : 0
+        })
     }
-});
+})
 
-export default Menu;
+export default Menu

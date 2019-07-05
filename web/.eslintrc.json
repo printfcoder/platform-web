@@ -19,7 +19,11 @@
       "experimentalObjectRestSpread": true
     },
     "sourceType": "module",
-    "parser": "babel-eslint"
+    "parser": "babel-eslint",
+    "variable-name": [
+      true,
+      "allow-leading-underscore"
+    ]
   },
   "plugins": [
     "vue",

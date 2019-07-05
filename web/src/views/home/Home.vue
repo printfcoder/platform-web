@@ -33,6 +33,7 @@
                     <template slot-scope="scope">
                         <el-button
                                 type="text"
+                                v-if="scope.row.name != 'platform'"
                                 size="mini"
                                 @click="showDetail(scope.row)">Detail
                         </el-button>
@@ -41,11 +42,9 @@
             </el-table>
         </el-container>
     </el-container>
-
 </template>
 
 <style scoped>
-
     .el-container .el-container {
         margin-right: 20px;
     }
@@ -75,7 +74,6 @@
         components: {},
     })
     export default class RegistryPage extends Vue {
-
         private search: string = '';
 
         @State(state => state.registry.webServices)
@@ -87,14 +85,11 @@
         @Action('getWebServices', { namespace })
         getWebServices: any;
 
-
         created() {
             this.getWebServices();
         }
 
-        mounted() {
-
-        }
+        mounted() {}
 
         searchFilter(s: Service) {
             return !this.search
