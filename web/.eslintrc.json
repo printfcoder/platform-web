@@ -3,18 +3,28 @@
     "browser": true,
     "es6": true
   },
-  "extends": "standard",
+  "extends": [
+    "standard",
+    "plugin:vue/base",
+    "plugin:vue/recommended"
+  ],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
   },
   "parserOptions": {
     "ecmaVersion": 2018,
-    "sourceType": "module"
+    "ecmaFeatures": {
+      "legacyDecorators": true,
+      "experimentalObjectRestSpread": true
+    },
+    "sourceType": "module",
+    "parser": "babel-eslint"
   },
   "plugins": [
     "vue",
-    "typescript"
+    "typescript",
+    "json"
   ],
   "rules": {
     "indent": [

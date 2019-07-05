@@ -51,13 +51,7 @@
         },
     })
     export default class Home extends Vue {
-        private expanded = true;
         private rightDrawer = false;
-        private snackbar = {
-            show: false,
-            text: '',
-            color: '',
-        };
 
         computed() {
         }
