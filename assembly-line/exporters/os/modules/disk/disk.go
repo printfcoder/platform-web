@@ -1,10 +1,11 @@
 package disk
 
 import (
+	"sync"
+
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	disk2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk"
 	"github.com/micro/go-log"
-	"sync"
 )
 
 var (
