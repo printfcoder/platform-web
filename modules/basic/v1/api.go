@@ -44,7 +44,6 @@ func (api *api) webServices(w http.ResponseWriter, r *http.Request) {
 
 	webServices := make([]*registry.Service, 0)
 	for _, s := range services {
-
 		for _, webN := range WebNamespacePrefix {
 			if strings.Index(s.Name, webN) == 0 && len(strings.TrimPrefix(s.Name, webN)) > 0 {
 				s.Name = strings.Replace(s.Name, webN+".", "", 1)

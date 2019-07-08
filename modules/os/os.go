@@ -37,10 +37,14 @@ func (m *module) Flags() []cli.Flag {
 }
 
 func (m *module) Handlers() (mp map[string]*modules.Handler) {
-
 	m.Lock()
 	mp = make(map[string]*modules.Handler)
 	defer m.Unlock()
+
+	mp["/ip-group"] = &modules.Handler{
+		Func:   m.api.ipGroup,
+		Method: []string{"GET"},
+	}
 
 	mp["/cpu/infos"] = &modules.Handler{
 		Func:   m.api.cpuInfos,

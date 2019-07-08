@@ -4,9 +4,9 @@ import (
 	"database/sql"
 
 	"github.com/lib/pq"
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/util"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
 	"github.com/micro-in-cn/platform-web/internal/db"
+	"github.com/micro-in-cn/platform-web/internal/tools"
 	"github.com/micro/go-log"
 )
 
@@ -20,12 +20,12 @@ func (s *storage) saveTimesStat(times []*proto.TimesStat, ip, nodeName string) (
 	// transaction is no need here
 
 	stmt, err := o.Prepare(`INSERT INTO cpu_times (
-                       time, ip, node_name, cpu, x_user, 
-                       system, idle, nice, iowait, irq,
-                       softirq, steal, guest, guest_nice)
+                       time, ip, node_name, cpu, 
+                       x_user, system, idle, nice, iowait, 
+                       irq, softirq, steal, guest, guest_nice)
 	VALUES ($1, $2, $3, $4, $5, 
 	        $6, $7, $8, $9, $10,
-	        $11, $12, $13, $14)`)
+	        $11, $12, $13, $14, $15)`)
 
 	if err != nil {
 		log.Logf("[saveTimesStat] db prepare error, %s", err)
@@ -34,7 +34,7 @@ func (s *storage) saveTimesStat(times []*proto.TimesStat, ip, nodeName string) (
 
 	for _, time := range times {
 		_, err = stmt.Exec(
-			util.PTimestamp(time.Timestamp), ip, nodeName, time.CPU, time.User,
+			tools.PTimestamp(time.Timestamp), ip, nodeName, time.CPU, time.User,
 			time.System, time.Idle, time.Nice, time.Iowait, time.Irq,
 			time.Softirq, time.Steal, time.Guest, time.GuestNice,
 		)
@@ -76,7 +76,7 @@ func (s *storage) saveInfoStat(infos []*proto.InfoStat, ip, nodeName string) (er
 
 	for _, info := range infos {
 		_, err = stmt.Exec(
-			util.PTimestamp(info.Timestamp), ip, nodeName, info.Cpu, info.VendorId,
+			tools.PTimestamp(info.Timestamp), ip, nodeName, info.Cpu, info.VendorId,
 			info.Family, info.Model, info.Stepping, info.PhysicalId, info.CoreId,
 			info.Cores, info.ModelName, info.Mhz, info.CacheSize, pq.StringArray(info.Flags),
 			info.Microcode,
@@ -114,7 +114,7 @@ func (s *storage) savePercent(percents []*proto.Percent, ip, nodeName string) (e
 
 	for _, percent := range percents {
 		_, err = stmt.Exec(
-			util.PTimestamp(percent.Timestamp), ip, nodeName, percent.Percent,
+			tools.PTimestamp(percent.Timestamp), ip, nodeName, percent.Percent,
 		)
 
 		if err != nil {

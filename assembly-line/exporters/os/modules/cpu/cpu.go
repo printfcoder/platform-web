@@ -1,11 +1,12 @@
 package cpu
 
 import (
+	"sync"
+	"time"
+
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	"github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
 	"github.com/micro/go-log"
-	"sync"
-	"time"
 )
 
 var (

@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"github.com/micro/go-micro/config"
-	"github.com/micro/go-micro/config/source/file"
 	"runtime"
 	"time"
 
@@ -16,6 +14,8 @@ import (
 	"github.com/micro/cli"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/client"
+	"github.com/micro/go-micro/config"
+	"github.com/micro/go-micro/config/source/file"
 	"github.com/micro/go-micro/util/log"
 )
 
@@ -34,7 +34,6 @@ func init() {
 }
 
 func (app *c) loadConfig(ctx *cli.Context) {
-
 	if len(ctx.String("config_file")) > 0 {
 		configFile = ctx.String("config_file")
 	}
@@ -109,6 +108,11 @@ func (app *c) advFlags() {
 			Name:   "collector",
 			Usage:  "name of collector service",
 			EnvVar: "MICRO_WEB_PLATFORM_COLLECTOR",
+		},
+		cli.StringFlag{
+			Name:   "group_name",
+			Usage:  "name of server group",
+			EnvVar: "MICRO_WEB_PLATFORM_GROUP",
 		},
 	)
 }

@@ -2,6 +2,7 @@ micro:
   platform-web:
     assembly-line:
       exporters:
+        group-name: [go.micro.web.platform]
         collector:
           name: go.micro.srv.platform_collector
         push-interval: 10

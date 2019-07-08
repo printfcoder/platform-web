@@ -36,10 +36,10 @@ const Menu = [
     {
         title: 'monitor',
         component: 'monitor',
-        icon: 'bar_chart',
+        icon: 'web',
         name: 'monitor',
         items: [
-            { name: 'os', title: 'os', component: 'apiStatistics' }
+            { name: 'os', title: 'os', component: 'monitor-os' }
         ]
     },
     { divider: true }

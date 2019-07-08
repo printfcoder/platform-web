@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/micro/go-micro/util/log"
 	"net/http"
 	"net/http/httputil"
 	"regexp"
@@ -14,6 +15,8 @@ import (
 	"github.com/micro-in-cn/platform-web/modules"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro/cmd"
+	"github.com/micro/go-micro/config"
+	"github.com/micro/go-micro/config/source/file"
 	"github.com/micro/go-micro/selector"
 	"github.com/micro/go-web"
 
@@ -27,6 +30,7 @@ var (
 	version          = "1.0.1-beta"
 	rootPath         = "/platform"
 	apiPath          = "/api/v1"
+	configFile       = "./conf/micro.yml"
 	StaticDir        = "webapp"
 	namespace        = "go.micro.web"
 	registerTTL      = 30 * time.Second
@@ -36,6 +40,7 @@ var (
 
 // Init app
 func Init(ops ...modules.Option) {
+	logger.Info("handler web at ")
 	app := cmd.App()
 	app.Flags = append(app.Flags,
 		cli.StringFlag{
@@ -48,9 +53,15 @@ func Init(ops ...modules.Option) {
 			Usage:  "Set the static dir of micro web",
 			EnvVar: "MICRO_WEB_STATIC_DIR",
 		},
+		cli.StringFlag{
+			Name:   "config_file",
+			Usage:  "path to config file",
+			EnvVar: "MICRO_WEB_PLATFORM_CONFIG_FILE",
+		},
 	)
 
 	app.Action = func(c *cli.Context) {
+		loadConfig(c)
 		run(c)
 	}
 
@@ -103,17 +114,26 @@ func faviconHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func loadConfig(ctx *cli.Context) {
+	if len(ctx.String("config_file")) > 0 {
+		configFile = ctx.String("config_file")
+	}
+	log.Logf("[loadConfig] load config file: %s", configFile)
+
+	if err := config.Load(file.NewSource(file.WithPath(configFile))); err != nil {
+		panic(err)
+	}
+}
+
 func loadModules(ctx *cli.Context, s web.Service) {
 	// init modules
 	for _, m := range modules.Modules() {
-
 		logger.Info("loading module：", zap.Any("module", m.Name()))
 
 		m.Init(ctx)
 		r := m.Path()
 
 		for k, h := range m.Handlers() {
-
 			route := rootPath + apiPath + r + k
 
 			if h.IsFunc() {
