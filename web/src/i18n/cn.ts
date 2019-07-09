@@ -6,6 +6,8 @@ const cn = {
         address: '地址',
         endpoint: '服务端点',
         endpoints: '服务端点',
+        group: '分组',
+        ip: 'IP',
         metadata: '元数据',
         noDataText: '未查询到数据',
         node: '节点',

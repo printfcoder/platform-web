@@ -1,11 +1,13 @@
 const en = {
     message: {
-        hello: 'hello world'
+        hello: 'hello world',
     },
     base: {
         address: 'Address',
         endpoint: 'Endpoint',
         endpoints: 'Endpoints',
+        group: 'group',
+        ip: 'IP',
         metadata: 'Metadata',
         noDataText: 'No data available',
         node: 'Node',
@@ -18,7 +20,7 @@ const en = {
         service: 'Service',
         serviceId: 'ID',
         serviceName: 'Name',
-        version: 'Version'
+        version: 'Version',
     },
     menu: {
         callService: 'Call',
@@ -29,7 +31,7 @@ const en = {
         registryInfo: 'Registry',
         stats: 'Stats',
         statsAPI: 'API Gateway Statistics',
-        statsService: 'Service Statistics'
+        statsService: 'Service Statistics',
     },
     rpc: {
         copy: 'Copy',
@@ -40,7 +42,7 @@ const en = {
         inputOtherEndpoint: 'Endpoint',
         request: 'Request',
         result: 'Result',
-        postRequest: 'Request'
+        postRequest: 'Request',
     },
     stats: {
         '20x': '20x',
@@ -53,12 +55,12 @@ const en = {
         uptime: 'Uptime',
         memory: 'Memory',
         threads: 'Threads',
-        total: 'Total'
+        total: 'Total',
     },
     table: {
         operation: 'Operation',
-        registry: {}
-    }
-}
+        registry: {},
+    },
+};
 
-export default en
+export default en;
