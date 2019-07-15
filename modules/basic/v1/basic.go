@@ -1,9 +1,10 @@
 package v1
 
 import (
+	"sync"
+
 	"github.com/micro-in-cn/platform-web/modules"
 	"github.com/micro/cli"
-	"sync"
 )
 
 func init() {
@@ -17,8 +18,8 @@ func init() {
 
 var (
 	m *basicModule
-	// Default address to bind to
 
+	// Default address to bind to
 	GatewayNamespaces  = []string{"go.micro.api"}
 	WebNamespacePrefix = []string{"go.micro.web"}
 )

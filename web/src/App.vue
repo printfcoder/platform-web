@@ -33,13 +33,13 @@
 </template>
 
 <script lang="ts">
-    import AppDrawer from "@/views/home/AppDrawer.vue";
-    import AppToolbar from "@/components/AppToolbar.vue";
-    import AppFab from "@/components/AppFab.vue";
-    import PageHeader from "@/components/PageHeader.vue";
+    import AppDrawer from '@/views/home/AppDrawer.vue';
+    import AppToolbar from '@/components/AppToolbar.vue';
+    import AppFab from '@/components/AppFab.vue';
+    import PageHeader from '@/components/PageHeader.vue';
     // import ThemeSettings from "@/components/ThemeSettings.vue";
 
-    import {Vue, Component, Watch} from "vue-property-decorator";
+    import { Vue, Component, Watch } from 'vue-property-decorator';
 
     @Component({
         components: {
@@ -48,16 +48,10 @@
             AppFab,
             PageHeader,
             // ThemeSettings
-        }
+        },
     })
     export default class Home extends Vue {
-        private expanded = true;
         private rightDrawer = false;
-        private snackbar = {
-            show: false,
-            text: "",
-            color: ""
-        };
 
         computed() {
         }

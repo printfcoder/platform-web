@@ -1,6 +1,5 @@
-import Vue from 'vue';
-import XTools from '@/utils/index';
+import Vue from 'vue'
+import XTools from '@/utils/index'
 
 // @ts-ignore
-Vue.use(XTools.XTools);
-
+Vue.use(XTools.XTools)

@@ -1,5 +1,4 @@
-import {Service} from "@/store/basic/types";
-
+import { Service } from '@/store/basic/types'
 
 export interface RegistryState {
     services: Service[];

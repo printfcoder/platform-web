@@ -1,104 +1,110 @@
-import Vue from "vue";
-import Router from "vue-router";
+import Vue from 'vue'
+import Router from 'vue-router'
 
-let NProgress = require("nprogress");
+import 'nprogress/nprogress.css'
 
-import "nprogress/nprogress.css";
+let NProgress = require('nprogress')
 
-Vue.use(Router);
+Vue.use(Router)
 const router = new Router({
-    base: "/",
-    mode: "hash",
-    linkActiveClass: "active",
+    base: '/',
+    mode: 'hash',
+    linkActiveClass: 'active',
     routes: [
         {
-            path: "*",
+            path: '*',
             meta: {
                 public: true
             },
             redirect: {
-                path: "/404"
+                path: '/404'
             }
         },
         {
-            path: "/404",
+            path: '/404',
             meta: {
                 public: true
             },
-            name: "NotFound",
+            name: 'NotFound',
             component: () => import(`@/views/NotFound.vue`)
         },
         {
-            path: "/403",
+            path: '/403',
             meta: {
                 public: true
             },
-            name: "AccessDenied",
-            component: () => import(  `@/views/Deny.vue`)
+            name: 'AccessDenied',
+            component: () => import(`@/views/Deny.vue`)
         },
         {
-            path: "/500",
+            path: '/500',
             meta: {
                 public: true
             },
-            name: "ServerError",
+            name: 'ServerError',
             component: () => import(`@/views/Error.vue`)
         },
         {
-            path: "/",
+            path: '/',
             meta: {},
-            name: "Root",
+            name: 'Root',
             redirect: {
-                name: "registry"
+                name: 'registry'
             }
         },
         {
-            path: "/call",
-            meta: {breadcrumb: true},
-            name: "call",
+            path: '/call',
+            meta: { breadcrumb: true },
+            name: 'call',
             component: () => import(`@/views/call/Call.vue`)
         },
         {
-            path: "/cli",
-            meta: {breadcrumb: true},
-            name: "cli",
+            path: '/cli',
+            meta: { breadcrumb: true },
+            name: 'cli',
             component: () => import(`@/views/cli/Cli.vue`)
         },
         {
-            path: "/home",
-            meta: {breadcrumb: true},
-            name: "home",
+            path: '/home',
+            meta: { breadcrumb: true },
+            name: 'home',
             component: () => import(`@/views/home/Home.vue`)
         },
         {
-            path: "/registry",
-            meta: {breadcrumb: true},
-            name: "registry",
+            path: '/monitor/os',
+            meta: { breadcrumb: true },
+            name: 'monitor-os',
+            component: () => import(`@/views/monitor/OS.vue`)
+        },
+        {
+            path: '/registry',
+            meta: { breadcrumb: true },
+            name: 'registry',
             component: () => import(`@/views/registry/RegistryPage.vue`)
         },
         {
-            path: "/stats/api",
-            meta: {breadcrumb: true},
-            name: "apiStatistics",
-            component: () => import(`@/views/statistics/APIStatistics.vue`),
+            path: '/stats/api',
+            meta: { breadcrumb: true },
+            name: 'apiStatistics',
+            component: () => import(`@/views/statistics/APIStatistics.vue`)
         },
         {
-            path: "/stats/service",
-            meta: {breadcrumb: true},
-            name: "serviceStatistics",
-            component: () => import(`@/views/statistics/ServiceStatistics.vue`),
+            path: '/stats/service',
+            meta: { breadcrumb: true },
+            name: 'serviceStatistics',
+            component: () => import(`@/views/statistics/ServiceStatistics.vue`)
         }
     ]
-});
+})
 // router gards
 router.beforeEach((to, from, next) => {
-    NProgress.start();
-    next();
-});
+    NProgress.start()
+    next()
+})
 
 router.afterEach((to, from) => {
     // ...
-    NProgress.done();
-});
+    NProgress.done()
+})
 
-export default router;
+export default router

@@ -2,7 +2,6 @@
 
 Micro web is the dashboard for visualising and exploring services.
 
-
 ## Overview
 
 Run the micro web app like so

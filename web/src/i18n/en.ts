@@ -1,16 +1,18 @@
 const en = {
     message: {
-        hello: 'hello world'
+        hello: 'hello world',
     },
     base: {
         address: 'Address',
         endpoint: 'Endpoint',
         endpoints: 'Endpoints',
-        metadata: "Metadata",
-        noDataText: "No data available",
+        group: 'group',
+        ip: 'IP',
+        metadata: 'Metadata',
+        noDataText: 'No data available',
         node: 'Node',
         nodes: 'Nodes',
-        noResultsText: "No matching records found",
+        noResultsText: 'No matching records found',
         otherEndpoint: 'OtherEndpoint',
         port: 'Port',
         refresh: 'Refresh',
@@ -18,12 +20,14 @@ const en = {
         service: 'Service',
         serviceId: 'ID',
         serviceName: 'Name',
-        version: "Version",
+        version: 'Version',
     },
     menu: {
         callService: 'Call',
         cliTerminal: 'CLI',
         homePage: 'Home',
+        monitor: 'Monitor',
+        os: 'OS',
         registryInfo: 'Registry',
         stats: 'Stats',
         statsAPI: 'API Gateway Statistics',
@@ -38,7 +42,7 @@ const en = {
         inputOtherEndpoint: 'Endpoint',
         request: 'Request',
         result: 'Result',
-        postRequest: 'Request'
+        postRequest: 'Request',
     },
     stats: {
         '20x': '20x',
@@ -46,17 +50,17 @@ const en = {
         '40x': '40x',
         '50x': '50x',
         gc: 'GC',
-        lastUpdated: "Last updated: ",
+        lastUpdated: 'Last updated: ',
         started: 'Started',
         uptime: 'Uptime',
         memory: 'Memory',
         threads: 'Threads',
-        total: 'Total'
+        total: 'Total',
     },
     table: {
         operation: 'Operation',
-        registry: {}
+        registry: {},
     },
-}
+};
 
 export default en;

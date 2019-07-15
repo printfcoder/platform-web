@@ -7,7 +7,7 @@
                         <el-input v-model="search" :placeholder="$t('base.search')"/>
                     </el-col>
                     <el-col :span="3" style="float: right;">
-                        <el-button style="float: right;" @click="getServices">{{$t("base.refresh")}}
+                        <el-button style="float: right;" @click="getServices">{{$t('base.refresh')}}
                         </el-button>
                     </el-col>
                 </el-row>
@@ -79,28 +79,27 @@
 </style>
 
 <script lang="ts">
-    import {Component, Vue} from "vue-property-decorator";
-    import {State, Action} from 'vuex-class';
+    import { Component, Vue } from 'vue-property-decorator';
+    import { State, Action } from 'vuex-class';
 
 
-    import {Service, Node} from "@/store/basic/types";
-    import {mergeAddressAndPort} from '@/store/basic/funcs'
-    import ServiceDetail from "@/views/common/ServiceDetail.vue"
+    import { Service, Node } from '@/store/basic/types';
+    import { mergeAddressAndPort } from '@/store/basic/funcs';
+    import ServiceDetail from '@/views/common/ServiceDetail.vue';
 
     const namespace: string = 'registry';
 
     @Component({
-        components: {ServiceDetail}
+        components: { ServiceDetail },
     })
     export default class RegistryPage extends Vue {
-
         private search: string = '';
 
         private serviceDetailDialog: boolean = false;
 
-        private detailTitle = ""
+        private detailTitle = '';
 
-        private detailBoxKey = 0
+        private detailBoxKey = 0;
 
         @State(state => state.registry.services)
         services?: Service[];
@@ -111,10 +110,10 @@
         @State(state => state.registry.pageLoading)
         loading?: boolean;
 
-        @Action('getServices', {namespace})
+        @Action('getServices', { namespace })
         getServices: any;
 
-        @Action('getService', {namespace})
+        @Action('getService', { namespace })
         getService: any;
 
         created() {
@@ -128,7 +127,7 @@
         searchFilter(s: Service) {
             return !this.search
                 || s.name.toLowerCase().includes(this.search.toLowerCase())
-                || this.parseNodes(s.nodes).includes(this.search.toLowerCase())
+                || this.parseNodes(s.nodes).includes(this.search.toLowerCase());
         }
 
         parseNodes(nodes: Node[]) {
@@ -136,21 +135,21 @@
             if (nodes) {
                 let nodesStr: any[] = [];
                 nodes.forEach(node => {
-                    nodesStr.push(mergeAddressAndPort(node.address, node.port))
-                })
-                return nodesStr.join(", ") + ' | ' + nodesStr.length
+                    nodesStr.push(mergeAddressAndPort(node.address, node.port));
+                });
+                return nodesStr.join(', ') + ' | ' + nodesStr.length;
             }
             return '';
         }
 
         destroyDetail() {
-            this.detailBoxKey = new Date().getTime()
+            this.detailBoxKey = new Date().getTime();
         }
 
         showDetail(item: Service) {
             this.detailTitle = item.name;
             this.getService(item.name);
-            this.serviceDetailDialog = true
+            this.serviceDetailDialog = true;
         }
     }
 </script>

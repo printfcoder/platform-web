@@ -1,13 +1,14 @@
 package modules
 
 import (
-	"github.com/micro/go-log"
-	"github.com/micro/go-micro/client"
-	"github.com/micro/util/go/lib/addr"
 	"os"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/micro/go-log"
+	"github.com/micro/go-micro/client"
+	"github.com/micro/util/go/lib/addr"
 )
 
 var (

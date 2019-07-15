@@ -1,12 +1,12 @@
-package main
+package collector
 
 import (
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/cpu"
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/db"
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/disk"
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/load"
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/mem"
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/net"
+	"github.com/micro-in-cn/platform-web/assembly-line/collector/os/cpu"
+	"github.com/micro-in-cn/platform-web/assembly-line/collector/os/disk"
+	"github.com/micro-in-cn/platform-web/assembly-line/collector/os/load"
+	"github.com/micro-in-cn/platform-web/assembly-line/collector/os/mem"
+	"github.com/micro-in-cn/platform-web/assembly-line/collector/os/net"
+	"github.com/micro-in-cn/platform-web/internal/db"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro"
 )

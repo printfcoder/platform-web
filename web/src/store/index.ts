@@ -1,32 +1,33 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import state from './state';
+import Vue from 'vue'
+import Vuex from 'vuex'
+import state from './state'
 
-import call from './modules/call';
-import registry from './modules/registry';
-import servicesStats from './modules/stats/services';
-import apiStats from './modules/stats/api';
-
+import call from './modules/call'
+import registry from './modules/registry'
+import servicesStats from './modules/stats/services'
+import apiStats from './modules/stats/api'
+import monitorOS from './modules/os'
 
 // index.js or main.js
-import 'vuetify/dist/vuetify.min.css';
+import 'vuetify/dist/vuetify.min.css'
 
-import Vuetify from 'vuetify';
+import Vuetify from 'vuetify'
 
-Vue.use(Vuetify);
-Vue.use(Vuex);
+Vue.use(Vuetify)
+Vue.use(Vuex)
 
 export default new Vuex.Store({
     state,
     mutations: {},
     actions: {
         init: () => {
-        },
+        }
     },
     modules: {
         apiStats,
         call,
+        monitorOS,
         registry,
         servicesStats
-    },
-});
+    }
+})

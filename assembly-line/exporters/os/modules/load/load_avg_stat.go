@@ -3,6 +3,7 @@ package load
 import (
 	"context"
 	"fmt"
+
 	"github.com/golang/protobuf/ptypes"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/third_party/gopsutil/load"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/load"

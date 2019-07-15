@@ -1,5 +1,4 @@
 <template>
-
     <el-container v-loading="loading">
         <el-header>
             <el-card :height="60" :body-style="{ padding: '10px 10px 10px 20px'}">
@@ -8,7 +7,7 @@
                         <el-input v-model="search" :placeholder="$t('base.search')"/>
                     </el-col>
                     <el-col :span="3" style="float: right;">
-                        <el-button style="float: right;" @click="getWebServices">{{$t("base.refresh")}}
+                        <el-button style="float: right;" @click="getWebServices">{{$t('base.refresh')}}
                         </el-button>
                     </el-col>
                 </el-row>
@@ -34,6 +33,7 @@
                     <template slot-scope="scope">
                         <el-button
                                 type="text"
+                                v-if="scope.row.name != 'platform'"
                                 size="mini"
                                 @click="showDetail(scope.row)">Detail
                         </el-button>
@@ -42,11 +42,9 @@
             </el-table>
         </el-container>
     </el-container>
-
 </template>
 
 <style scoped>
-
     .el-container .el-container {
         margin-right: 20px;
     }
@@ -62,21 +60,20 @@
 </style>
 
 <script lang="ts">
-    import {Component, Vue} from "vue-property-decorator";
-    import {State, Action} from 'vuex-class';
+    import { Component, Vue } from 'vue-property-decorator';
+    import { State, Action } from 'vuex-class';
 
 
-    import {Service} from "@/store/basic/types";
-    import config from "@/config";
+    import { Service } from '@/store/basic/types';
+    import config from '@/config';
 
     const namespace: string = 'registry';
-    const baseURL = config.url.basicUrl + "/web";
+    const baseURL = config.url.basicUrl + '/web';
 
     @Component({
-        components: {}
+        components: {},
     })
     export default class RegistryPage extends Vue {
-
         private search: string = '';
 
         @State(state => state.registry.webServices)
@@ -85,25 +82,22 @@
         @State(state => state.registry.pageLoading)
         loading?: boolean;
 
-        @Action('getWebServices', {namespace})
+        @Action('getWebServices', { namespace })
         getWebServices: any;
-
 
         created() {
             this.getWebServices();
         }
 
-        mounted() {
-
-        }
+        mounted() {}
 
         searchFilter(s: Service) {
             return !this.search
-                || s.name.toLowerCase().includes(this.search.toLowerCase())
+                || s.name.toLowerCase().includes(this.search.toLowerCase());
         }
 
         showDetail(item: Service) {
-            window.open(baseURL + "/" + item.name)
+            window.open(baseURL + '/' + item.name);
         }
     }
 </script>

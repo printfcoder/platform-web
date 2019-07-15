@@ -1,11 +1,12 @@
 package net
 
 import (
+	"sync"
+
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/net"
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro/client"
-	"sync"
 )
 
 var (

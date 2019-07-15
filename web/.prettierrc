@@ -1,5 +1,5 @@
 {
-  "tabWidth": 2,
+  "tabWidth": 4,
   "semi": true,
   "trailingComma": "all",
   "singleQuote": true,
@@ -14,14 +14,14 @@
       ],
       "options": {
         "parser": "json",
-        "tabWidth": 2
+        "tabWidth": 4
       }
     },
     {
       "files": "*.{css,sass,scss,less}",
       "options": {
         "parser": "scss",
-        "tabWidth": 2
+        "tabWidth": 4
       }
     },
     {

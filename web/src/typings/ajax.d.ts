@@ -1,5 +1,4 @@
 declare namespace Ajax {
-
     export interface AxiosResponse {
         data: AjaxResponse;
     }

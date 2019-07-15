@@ -1,9 +1,10 @@
 package load
 
 import (
+	"sync"
+
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	"github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/load"
-	"sync"
 )
 
 var (

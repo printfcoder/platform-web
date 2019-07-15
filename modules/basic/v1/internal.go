@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/micro-in-cn/platform-web/internal/proxy"
-	"github.com/micro-in-cn/platform-web/modules"
+	"github.com/micro-in-cn/platform-web/modules/internal/nosj"
 	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/cmd"
 	"github.com/micro/go-micro/errors"
@@ -15,17 +15,15 @@ import (
 	"time"
 )
 
-var ()
-
 func rpc(w http.ResponseWriter, ctx context.Context, rpcReq *rpcRequest) {
 
 	if len(rpcReq.Service) == 0 {
-		writeError(w, "Service Is Not found")
+		nosj.WriteError(w, fmt.Errorf("Service Is Not found "))
 		return
 	}
 
 	if len(rpcReq.Endpoint) == 0 {
-		writeError(w, "Endpoint Is Not found")
+		nosj.WriteError(w, fmt.Errorf("Endpoint Is Not found err "))
 		return
 	}
 
@@ -35,7 +33,7 @@ func rpc(w http.ResponseWriter, ctx context.Context, rpcReq *rpcRequest) {
 		d.UseNumber()
 
 		if err := d.Decode(&rpcReq.Request); err != nil {
-			writeError(w, "error decoding request string: "+err.Error())
+			nosj.WriteError(w, fmt.Errorf("error decoding request string err: %s", err))
 			return
 		}
 	}
@@ -80,7 +78,7 @@ func rpc(w http.ResponseWriter, ctx context.Context, rpcReq *rpcRequest) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(response)
 	} else {
-		writeJsonData(w, response)
+		nosj.WriteJsonData(w, response)
 	}
 }
 
@@ -113,38 +111,4 @@ func apiProxy() http.Handler {
 		Default:  &httputil.ReverseProxy{Director: director},
 		Director: director,
 	}
-}
-
-func writeJsonData(w http.ResponseWriter, data interface{}) {
-
-	rsp := &modules.Rsp{
-		Data:    data,
-		Success: true,
-	}
-
-	b, err := json.Marshal(rsp)
-	if err != nil {
-		http.Error(w, "Error occurred:"+err.Error(), 500)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(b)
-}
-
-func writeError(w http.ResponseWriter, msg string) {
-
-	rsp := &modules.Rsp{
-		Error:   msg,
-		Success: false,
-	}
-
-	b, err := json.Marshal(rsp)
-	if err != nil {
-		http.Error(w, "Error occurred:"+err.Error(), 500)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(b)
 }

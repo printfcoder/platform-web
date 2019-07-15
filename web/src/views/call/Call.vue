@@ -116,18 +116,18 @@
 </style>
 
 <script lang="ts">
-    import {Component, Vue, Watch, Prop} from "vue-property-decorator";
-    import {State, Action,} from 'vuex-class';
+    import { Component, Vue, Watch, Prop } from 'vue-property-decorator';
+    import { State, Action } from 'vuex-class';
 
-    import {Endpoint, Service, Value} from "@/store/basic/types";
+    import { Endpoint, Service, Value } from '@/store/basic/types';
 
     // @ts-ignore
-    import JSONEditor from "jsoneditor"
-    import "jsoneditor/dist/jsoneditor.css";
+    import JSONEditor from 'jsoneditor';
+    import 'jsoneditor/dist/jsoneditor.css';
 
     const namespace: string = 'call';
 
-    @Component({components: {}})
+    @Component({ components: {} })
     export default class Call extends Vue {
 
         @Prop()
@@ -135,20 +135,20 @@
 
         private currentEndpoints: any = null;
 
-        private serviceName?: string = "";
+        private serviceName?: string = '';
 
-        private endpoint: string = "";
+        private endpoint: string = '';
 
-        private otherEndpoint: string = "";
+        private otherEndpoint: string = '';
 
         private reqJSONEditor?: JSONEditor;
 
         private rspJSONEditor?: JSONEditor;
 
-        @Action('getServiceDetails', {namespace})
+        @Action('getServiceDetails', { namespace })
         getServiceDetails: any;
 
-        @Action('postServiceRequest', {namespace})
+        @Action('postServiceRequest', { namespace })
         postServiceRequest: any;
 
         @State(state => state.call.services)
@@ -164,9 +164,9 @@
         error?: any;
 
 
-        @Watch("requestResult")
+        @Watch('requestResult')
         resultChange(rr: any) {
-            this.rspJSONEditor.set(rr)
+            this.rspJSONEditor.set(rr);
             // this.rspJSONEditor.expandAll();
         }
 
@@ -175,11 +175,11 @@
 
         mounted() {
             this.renderJSONEditor();
-            this.getServiceDetails()
+            this.getServiceDetails();
             if (this.callData && this.callData.specialModel) {
                 this.serviceName = this.callData.serviceName;
                 this.endpoint = this.callData.endpoint;
-                this.renderRequestJSON(this.endpoint, this.callData.endpoints)
+                this.renderRequestJSON(this.endpoint, this.callData.endpoints);
             }
         }
 
@@ -193,8 +193,8 @@
             let postData = {
                 endpoint: endpoint,
                 request: JSON.stringify(this.reqJSONEditor.get()),
-                service: this.serviceName
-            }
+                service: this.serviceName,
+            };
 
             this.postServiceRequest(postData);
         }
@@ -208,40 +208,40 @@
 
             this.services.forEach((s: Service, i: number) => {
                 if (s.name != serviceName) {
-                    return
+                    return;
                 }
                 if (s.endpoints) {
-                    this.currentEndpoints = s.endpoints
+                    this.currentEndpoints = s.endpoints;
                 } else {
-                    this.currentEndpoints = []
+                    this.currentEndpoints = [];
                 }
-            })
+            });
 
-            let hasOther = false
+            let hasOther = false;
             this.currentEndpoints.forEach((item: Endpoint) => {
-                if (item.name == "other") {
+                if (item.name == 'other') {
                     hasOther = true;
                 }
             });
 
             if (!hasOther) {
-                this.currentEndpoints.push({name: 'other', value: -1})
+                this.currentEndpoints.push({ name: 'other', value: -1 });
             }
         }
 
         changeEndpoint(endpoint: string) {
-            this.endpoint = endpoint
+            this.endpoint = endpoint;
             this.reqJSONEditor.set({});
             // change request json
 
-            this.renderRequestJSON(endpoint, this.currentEndpoints)
+            this.renderRequestJSON(endpoint, this.currentEndpoints);
 
         }
 
         renderRequestJSON(endpointName: string, endpoints: Endpoint[]) {
             endpoints && endpoints.forEach((item: Endpoint) => {
                 if (item.name == endpointName) {
-                    let json = {}
+                    let json = {};
                     item.request.values.forEach((value: Value) => {
 
                         let defaultValue;
@@ -250,48 +250,48 @@
                             case 'int32':
                             case 'int16':
                             case 'int':
-                                defaultValue = 0
-                                break
+                                defaultValue = 0;
+                                break;
                             case 'string':
                             default:
-                                defaultValue = ''
+                                defaultValue = '';
                                 break;
                         }
-                        json[value.name] = defaultValue
-                    })
+                        json[value.name] = defaultValue;
+                    });
 
-                    this.reqJSONEditor.set(json)
-                    return
+                    this.reqJSONEditor.set(json);
+                    return;
                 }
-            })
+            });
         }
 
         copyResult() {
-            let that = this
+            let that = this;
             // @ts-ignore
             this.$xools.copyTxt(JSON.stringify(this.rspJSONEditor.get(), null, 2),
-                function (success: boolean) {
+                function(success: boolean) {
                     that.$message({
                         // @ts-ignore
                         message: that.$t('rpc.copySuccess'),
-                        type: 'success'
+                        type: 'success',
                     });
-                })
+                });
         }
 
         renderJSONEditor() {
-            let containerReq = document.getElementById("jsonRequestEditor");
-            this.reqJSONEditor = new JSONEditor(containerReq, {mode: 'code', mainMenuBar: false});
+            let containerReq = document.getElementById('jsonRequestEditor');
+            this.reqJSONEditor = new JSONEditor(containerReq, { mode: 'code', mainMenuBar: false });
 
             let json = {};
-            this.reqJSONEditor.set(json)
+            this.reqJSONEditor.set(json);
 
-            let containerRsp = document.getElementById("jsonResponseEditor");
-            this.rspJSONEditor = new JSONEditor(containerRsp, {mode: 'code', mainMenuBar: false});
+            let containerRsp = document.getElementById('jsonResponseEditor');
+            this.rspJSONEditor = new JSONEditor(containerRsp, { mode: 'code', mainMenuBar: false });
         }
 
         formatRequestJSON() {
-            this.reqJSONEditor.format()
+            this.reqJSONEditor.format();
         }
     }
 </script>
