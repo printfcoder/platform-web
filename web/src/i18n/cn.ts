@@ -33,6 +33,19 @@ const cn = {
         statsAPI: 'API网关统计',
         statsService: '服务统计'
     },
+    monitor: {
+        lastUpdated: '最后更新时间：',
+        os: {
+            cpu: {
+                idle: '闲置',
+                loadInfo: 'CPU负载信息',
+                system: '系统',
+                threads: '线程数',
+                processes: '进程数',
+                user: '用户'
+            }
+        }
+    },
     rpc: {
         copy: '复制',
         copySuccess: '复制成功',

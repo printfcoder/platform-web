@@ -1,36 +1,10 @@
 <template>
   <el-container>
-    <el-aside width="400px">
-      <el-card>
-        <div>
-          <span>{{ $t('monitor.os.cpu.loadInfo') }}</span>
-          <el-table
-            :data="cpuItems"
-            border
-            :show-header="false"
-            style="width: 100%"
-          >
-            <el-table-column
-              width="100"
-            >
-              <template slot-scope="scope">
-                <span class="rowName">{{ $t('monitor.os.cpu.' + scope.row.name) }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column>
-              <template slot-scope="scope">
-                <span>{{ cpuData[scope.row.key] && scope.row.formatter(cpuData[scope.row.key]) }}</span>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </el-card>
-    </el-aside>
-    <el-main style="padding-top: 0px">
+    <el-main style="padding-top: 0px; padding-left: 0px">
       <el-card>
         <div>
           <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
-          <div style="height: 582px">
+          <div>
             <v-chart
               :options="cpuLoadLinearOptions"
               :autoresize="true"

@@ -34,30 +34,38 @@
                 </el-row>
             </el-card>
         </el-header>
-
-        <cpu></cpu>
+        <el-main>
+            <el-row>
+                <el-col :span="8">
+                    <cpu></cpu>
+                </el-col>
+                <el-col :span="8">
+                    <memory></memory>
+                </el-col>
+                <el-col :span="8">
+                    <network></network>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="8">
+                    <disk></disk>
+                </el-col>
+            </el-row>
+        </el-main>
     </el-container>
 </template>
 
 <style scoped>
-    .echarts {
-        width: 100%;
-        height: 100%;
-    }
-
-    .rowName {
-        font-weight: 400;
-        color: #1f2f3d;
-    }
 
     .el-header {
         padding: 0 20px 0 0;
         height: 70px !important;
     }
 
-    .el-card__body {
-        padding: 10px 10px 10px 20px !important;
+    .el-container > .el-main {
+        padding: 0;
     }
+
 </style>
 
 <script lang="ts">
@@ -69,7 +77,6 @@
 
     import { Component, Watch } from 'vue-property-decorator';
     import { State, Action } from 'vuex-class';
-
 
 
     import { Service, Node, Error } from '@/store/basic/types';
