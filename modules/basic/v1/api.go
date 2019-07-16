@@ -11,9 +11,9 @@ import (
 	"github.com/micro-in-cn/platform-web/internal/tools"
 	"github.com/micro-in-cn/platform-web/modules/internal/helper"
 	"github.com/micro-in-cn/platform-web/modules/internal/nosj"
-	"github.com/micro/go-micro/cmd"
+	"github.com/micro/go-micro/config/cmd"
 	"github.com/micro/go-micro/registry"
-	"github.com/micro/go-micro/selector"
+	"github.com/micro/go-micro/client/selector"
 )
 
 type api struct {
