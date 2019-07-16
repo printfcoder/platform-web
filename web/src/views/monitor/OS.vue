@@ -37,7 +37,7 @@
         <el-main>
             <el-row>
                 <el-col :span="8">
-                    <cpu></cpu>
+                    <cpu :cpuTimes="cpuTimes"></cpu>
                 </el-col>
                 <el-col :span="8">
                     <memory></memory>
@@ -56,7 +56,6 @@
 </template>
 
 <style scoped>
-
     .el-header {
         padding: 0 20px 0 0;
         height: 70px !important;
@@ -65,7 +64,6 @@
     .el-container > .el-main {
         padding: 0;
     }
-
 </style>
 
 <script lang="ts">
@@ -79,9 +77,8 @@
     import { State, Action } from 'vuex-class';
 
 
-    import { Service, Node, Error } from '@/store/basic/types';
-    import { Stats } from '@/store/modules/stats/types';
-    import { ipGroup } from '@/store/modules/os/types';
+    import { Error } from '@/store/basic/types';
+    import { CPUTime, IpGroup } from '@/store/modules/os/types';
 
     const namespace: string = 'monitorOS';
 
@@ -100,103 +97,6 @@
         private serverIPs: string[] = [];
         private lastUpdateTime: Date = null;
 
-        private cpuItems = [
-            {
-                name: 'system',
-                key: 'system',
-                formatter: (date: number) => {
-                    return new Date(date * 1000).toLocaleString();
-                },
-                value: '',
-            },
-            {
-                name: 'user',
-                key: 'user',
-                value: '',
-                formatter: (date: number) => {
-                    // @ts-ignore
-                    return this.$xools.secondsToHHMMSS(((new Date() - date * 1000) / 1000).toFixed(0));
-                },
-            },
-            {
-                name: 'idle',
-                key: 'idle',
-                value: '',
-                formatter: (memory: number) => {
-                    return memory;
-                },
-            },
-            {
-                name: 'threads',
-                key: 'threads',
-                value: '',
-                formatter: (threads: number) => {
-                    return threads;
-                },
-            },
-            {
-                name: 'processes',
-                key: 'processes',
-                value: '',
-                formatter: (gc: number) => {
-                    return gc;
-                },
-            },
-        ];
-
-        private cpuLoadLinearOptions = {
-            title: {},
-            tooltip: {
-                trigger: 'axis',
-            },
-            color: ['#FF4041', '#00AFF5', '#3B3B3B'],
-            legend: {
-                data: ['System', 'User', 'Idle'],
-                x: 0,
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true,
-            },
-            toolbox: {
-                feature: {},
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: [],
-            },
-            yAxis: {
-                type: 'value',
-            },
-            series: [
-                {
-                    name: 'System',
-                    type: 'line',
-                    data: [],
-                },
-                {
-                    name: 'User',
-                    type: 'line',
-                    data: [],
-                },
-                {
-                    name: 'Idle',
-                    type: 'line',
-                    data: [],
-                },
-            ],
-        };
-
-        private cpuData = {
-            'system': 0,
-            'user': 0,
-            'idle': 0,
-            'threads': 0,
-            'processes': 0,
-        };
 
         @State(state => state.monitorOS.loaded)
         loaded ?: boolean;
@@ -205,13 +105,19 @@
         pageLoading?: boolean;
 
         @State(state => state.monitorOS.ipGroups)
-        ipGroups?: ipGroup[];
+        ipGroups?: IpGroup[];
+
+        @State(state => state.monitorOS.cpuTimes)
+        cpuTimes?: CPUTime[];
 
         @State(state => state.monitorOS.xError)
         xError?: string;
 
         @Action('getIPGroups', { namespace })
         getIPGroups: any;
+
+        @Action('getCPUTimes', { namespace })
+        getCPUTimes: any;
 
         created() {
             if (!this.loaded) {
@@ -237,22 +143,26 @@
             }
         }
 
+        private now = new Date('2019-06-11T15:14:40.992341Z');
+
         changeIP() {
             if (!this.serverIP) {
                 return;
             }
 
             let go = () => {
-                // this.getStats({name: this.serviceName, address: this.serviceNode})
+                // let startTime = this.now;
+                // this.now = new Date(this.now.setSeconds(this.now.getSeconds() + 10));
+                this.getCPUTimes({
+                    ips: ['192.168.31.67'],
+                    startTime: new Date('2019-06-11T15:14:40.992341Z'),
+                    endTime: new Date('2019-06-11T15:34:40.992341Z'),
+                });
             };
 
             go();
 
             this.currentInterval = setInterval(go, 5000);
-        }
-
-        clean() {
-
         }
 
         @Watch('xError')
@@ -262,11 +172,6 @@
                 // @ts-ignore
                 this.$message.error('Oops, ' + xError.detail || xError);
             }
-        }
-
-        @Watch('currentNodeStats', { immediate: true, deep: true })
-        asyncData(data: Stats) {
-
         }
     }
 </script>

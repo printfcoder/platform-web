@@ -25,7 +25,7 @@ type CPUInfo struct {
 
 type CPUTimes struct {
 	cpu.TimesStat
-	Time time.Time
+	Time time.Time `json:"time"`
 	BaseItem
 }
 
