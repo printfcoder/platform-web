@@ -143,7 +143,7 @@
             }
         }
 
-        private now = new Date('2019-06-11T15:14:40.992341Z');
+        private now = new Date(new Date().setSeconds(new Date().getSeconds() - 10));
 
         changeIP() {
             if (!this.serverIP) {
@@ -151,18 +151,20 @@
             }
 
             let go = () => {
-                // let startTime = this.now;
-                // this.now = new Date(this.now.setSeconds(this.now.getSeconds() + 10));
+                let startTime = new Date(this.now);
+                this.now = new Date(this.now.setSeconds(this.now.getSeconds() + 1));
                 this.getCPUTimes({
-                    ips: ['192.168.31.67'],
-                    startTime: new Date('2019-06-11T15:14:40.992341Z'),
-                    endTime: new Date('2019-06-11T15:34:40.992341Z'),
+                    ips: [this.serverIP],
+                    startTime: startTime,
+                    endTime: this.now,
                 });
             };
 
+            clearInterval(this.currentInterval);
+
             go();
 
-            this.currentInterval = setInterval(go, 5000);
+            this.currentInterval = setInterval(go, 2000);
         }
 
         @Watch('xError')

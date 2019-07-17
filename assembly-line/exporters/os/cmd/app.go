@@ -119,6 +119,7 @@ func (app *c) advFlags() {
 
 func (app *c) parseFlags(ctx *cli.Context) {
 	if len(ctx.String("enable_cpu")) > 0 && !ctx.Bool("enable_cpu") {
+		log.Logf("[Info] disabled cpu")
 		app.opts.CPU.Enabled = false
 	}
 
@@ -174,8 +175,11 @@ func (app *c) loadModules(client client.Client) {
 		Client:        client,
 	}
 
+	log.Logf("[INFO] loadModules")
+
 	// cpu
 	if app.opts.CPU.Enabled {
+		log.Logf("[INFO] cpu enabled")
 		p := cpu.Pusher{}
 		_ = p.Init(opts)
 

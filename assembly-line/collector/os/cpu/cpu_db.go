@@ -20,12 +20,12 @@ func (s *storage) saveTimesStat(times []*proto.TimesStat, ip, nodeName string) (
 	// transaction is no need here
 
 	stmt, err := o.Prepare(`INSERT INTO cpu_times (
-                       time, ip, node_name, cpu, 
-                       x_user, system, idle, nice, iowait, 
-                       irq, softirq, steal, guest, guest_nice)
+                       time, ip, node_name, cpu, x_user,
+                       system, idle, nice, iowait, irq, 
+                       softirq, steal, guest, guest_nice)
 	VALUES ($1, $2, $3, $4, $5, 
 	        $6, $7, $8, $9, $10,
-	        $11, $12, $13, $14, $15)`)
+	        $11, $12, $13, $14)`)
 
 	if err != nil {
 		log.Logf("[saveTimesStat] db prepare error, %s", err)

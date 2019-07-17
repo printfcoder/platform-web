@@ -1,4 +1,4 @@
-package collector
+package main
 
 import (
 	"github.com/micro-in-cn/platform-web/assembly-line/collector/os/cpu"

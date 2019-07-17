@@ -3,9 +3,9 @@ package disk
 import (
 	"database/sql"
 
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/util"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk"
 	"github.com/micro-in-cn/platform-web/internal/db"
+	"github.com/micro-in-cn/platform-web/internal/tools"
 	"github.com/micro/go-log"
 )
 
@@ -34,7 +34,7 @@ func (s *storage) saveDiskUsageStat(usageStats []*proto.UsageStat, ip, nodeName 
 
 	for _, usageStat := range usageStats {
 		_, err = stmt.Exec(
-			util.PTimestamp(usageStat.Timestamp), ip, nodeName, usageStat.Fstype, usageStat.Path,
+			tools.PTimestamp(usageStat.Timestamp), ip, nodeName, usageStat.Fstype, usageStat.Path,
 			usageStat.Total, usageStat.Free, usageStat.Used, usageStat.UsedPercent, usageStat.InodesTotal,
 			usageStat.InodesUsed, usageStat.InodesFree, usageStat.InodesUsedPercent,
 		)
@@ -82,7 +82,7 @@ func (s *storage) saveIOCountersStat(ioCountersStats []*proto.IOCountersStat, ip
 
 	for _, item := range ioCountersStats {
 		_, err = stmt.Exec(
-			util.PTimestamp(item.Timestamp), ip, nodeName, item.ReadCount, item.MergedReadCount,
+			tools.PTimestamp(item.Timestamp), ip, nodeName, item.ReadCount, item.MergedReadCount,
 			item.WriteCount, item.MergedWriteCount, item.ReadBytes, item.WriteBytes, item.ReadTime,
 			item.WriteTime, item.IopsInProgress, item.IoTime, item.WeightedIO, item.Name,
 			item.SerialNumber, item.Label,

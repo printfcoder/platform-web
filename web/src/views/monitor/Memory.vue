@@ -6,6 +6,7 @@
                     <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
                     <div>
                         <v-chart
+                                style="width: 100%"
                                 :options="cpuLoadLinearOptions"
                                 :autoresize="true"
                         />

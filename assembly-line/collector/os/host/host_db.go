@@ -2,8 +2,8 @@ package host
 
 import (
 	"database/sql"
+	"github.com/micro-in-cn/platform-web/internal/tools"
 
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/util"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/host"
 	"github.com/micro-in-cn/platform-web/internal/db"
 	"github.com/micro/go-log"
@@ -34,7 +34,7 @@ func (s *storage) saveHostInfo(infos []*proto.HostInfo, ip, nodeName string) (er
 
 	for _, info := range infos {
 		_, err = stmt.Exec(
-			util.PTimestamp(info.Timestamp), ip, nodeName, info.Hostname, info.Uptime,
+			tools.PTimestamp(info.Timestamp), ip, nodeName, info.Hostname, info.Uptime,
 			info.BootTime, info.Procs, info.OS, info.Platform, info.PlatformFamily,
 			info.PlatformVersion, info.KernelVersion, info.VirtualizationSystem, info.VirtualizationRole, info.HostID,
 		)

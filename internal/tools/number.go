@@ -1,4 +1,4 @@
-package util
+package tools
 
 func Int32ArrayTo64(in []int32) []int64 {
 	ret := make([]int64, len(in))

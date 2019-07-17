@@ -7,9 +7,11 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/third_party/gopsutil/cpu"
 	cpu2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
+	"github.com/micro/go-micro/util/log"
 )
 
 func (p *Pusher) pushTimes() (err error) {
+	log.Log("cpu")
 	vv, err := cpu.Times(true)
 	if err != nil {
 		return fmt.Errorf("[pushTimes] get infos error: %s", err)

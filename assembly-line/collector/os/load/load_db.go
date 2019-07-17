@@ -2,11 +2,11 @@ package load
 
 import (
 	"database/sql"
+	"github.com/micro-in-cn/platform-web/internal/tools"
 
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/util"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/load"
 	"github.com/micro-in-cn/platform-web/internal/db"
-	"github.com/micro/go-log"
+	"github.com/micro/go-micro/util/log"
 )
 
 type storage struct {
@@ -32,7 +32,7 @@ func (s *storage) saveLoadAvgStat(loadAvgStats []*proto.LoadAvgStat, ip, nodeNam
 
 	for _, item := range loadAvgStats {
 		_, err = stmt.Exec(
-			util.PTimestamp(item.Timestamp), ip, nodeName, item.Load1, item.Load5,
+			tools.PTimestamp(item.Timestamp), ip, nodeName, item.Load1, item.Load5,
 			item.Load15,
 		)
 

@@ -3,9 +3,9 @@ package mem
 import (
 	"database/sql"
 
-	"github.com/micro-in-cn/platform-web/assembly-line/collector/util"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/mem"
 	"github.com/micro-in-cn/platform-web/internal/db"
+	"github.com/micro-in-cn/platform-web/internal/tools"
 	"github.com/micro/go-log"
 )
 
@@ -44,7 +44,7 @@ func (s *storage) saveVirtualMemoryStat(memStats []*proto.VirtualMemoryStat, ip,
 
 	for _, item := range memStats {
 		_, err = stmt.Exec(
-			util.PTimestamp(item.Timestamp), ip, nodeName, item.Total, item.Available,
+			tools.PTimestamp(item.Timestamp), ip, nodeName, item.Total, item.Available,
 			item.Used, item.UsedPercent, item.Free, item.Active, item.Inactive,
 			item.Wired, item.Laundry, item.Buffers, item.Cached, item.Writeback,
 			item.Dirty, item.WritebackTmp, item.Shared, item.Slab, item.SReclaimable,
@@ -90,7 +90,7 @@ func (s *storage) saveSwapMemoryStat(swapMemStats []*proto.SwapMemoryStat, ip, n
 
 	for _, item := range swapMemStats {
 		_, err = stmt.Exec(
-			util.PTimestamp(item.Timestamp), ip, nodeName, item.Total, item.Used,
+			tools.PTimestamp(item.Timestamp), ip, nodeName, item.Total, item.Used,
 			item.Free, item.UsedPercent, item.Sin, item.Sout, item.PgIn,
 			item.PgOut, item.PgFault,
 		)

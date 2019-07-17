@@ -7,7 +7,7 @@ micro:
           name: go.micro.srv.platform_collector
         push-interval: 10
         cpu:
-          enable: false
+          enable: true
         disk:
           enable: false
           paths:

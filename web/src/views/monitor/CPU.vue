@@ -48,6 +48,13 @@
             title: {},
             tooltip: {
                 trigger: 'axis',
+                formatter: function(params) {
+                    let res = '';
+                    for (let i = 0, l = params.length; i < l; i++) {
+                        res += '<div style="color:' + params[i].color + '">' + params[i].seriesName + ' : ' + params[i].value[1] + '%\</div>';
+                    }
+                    return res;
+                },
             },
             color: ['#FF4041', '#00AFF5', '#3B3B3B'],
             legend: {
@@ -73,8 +80,10 @@
                 type: 'value',
                 boundaryGap: [0, '100%'],
                 splitLine: {
-                    show: false,
+                    show: true,
                 },
+                axisLine: { show: false },
+                axisLabel: { show: false },
             },
             series: [
                 {
@@ -119,17 +128,65 @@
         @Watch('cpuTimes', { immediate: true, deep: true })
         asyncData(cpuTimes: CPUTime[]) {
             if (cpuTimes != null) {
-                cpuTimes = this.groupByTime(cpuTimes);
-                cpuTimes.forEach((ct: CPUTime) => {
-                    this.systemData.push({ name: 'system', value: ct.system });
-                    this.userData.push({ name: 'user', value: ct.user });
-                    this.idleData.push({ name: 'idle', value: ct.idle });
+                let cpuTimesShow = this.groupByTime(cpuTimes);
+                cpuTimesShow.forEach((ct: CPUTime) => {
+                    let total = ct.system + ct.user + ct.idle;
+                    if (this.systemData.length > 10) {
+                        this.systemData.shift();
+                        this.userData.shift();
+                        this.idleData.shift();
+                    }
+
+                    this.systemData.push({
+                        name: ct.time,
+                        value: [ct.time, ((ct.system / total) * 100).toFixed(2)],
+                    });
+
+                    this.userData.push({
+                        name: ct.time,
+                        value: [ct.time, ((ct.user / total) * 100).toFixed(2)],
+                    });
+
+                    this.idleData.push({
+                        name: ct.time,
+                        value: [ct.time, ((ct.idle / total) * 100).toFixed(2)],
+                    });
+                });
+                let chart = this.$refs['cpuChart'];
+               /* let systemLast = this.systemData[this.systemData.length - 1].value[1] + '%';
+                let userLast = this.userData[this.userData.length - 1].value[1] + '%';
+                let idleLast = this.idleData[this.idleData.length - 1].value[1] + '%'; */
+
+                chart && chart.chart && chart.chart.setOption({
+                    /* legend: {
+                         data: [systemLast, userLast, idleLast],
+                         x: 0,
+                     },*/
+                    series: [
+                        {
+                            //  name: systemLast,
+                            data: this.systemData,
+                        },
+                        {
+                            // name: userLast,
+                            data: this.userData,
+                        },
+                        {
+                            //   name: idleLast,
+                            data: this.idleData,
+                        },
+                    ],
                 });
             }
         }
     }
 </script>
 
-<style scoped>
+< style;
+scoped >
 
-</style>
+</
+
+style
+
+>;
