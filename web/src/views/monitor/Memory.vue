@@ -7,7 +7,7 @@
                     <div>
                         <v-chart
                                 style="width: 100%"
-                                :options="cpuLoadLinearOptions"
+                                :options="memLinearOptions"
                                 :autoresize="true"
                         />
                     </div>
@@ -34,102 +34,98 @@
     export default class Memory extends MVue {
         private lastUpdateTime: Date = null;
 
-        private cpuItems = [
-            {
-                name: 'system',
-                key: 'system',
-                formatter: (date: number) => {
-                    return new Date(date * 1000).toLocaleString();
-                },
-                value: '',
-            },
-            {
-                name: 'user',
-                key: 'user',
-                value: '',
-                formatter: (date: number) => {
-                    // @ts-ignore
-                    return this.$xools.secondsToHHMMSS(((new Date() - date * 1000) / 1000).toFixed(0));
-                },
-            },
-            {
-                name: 'idle',
-                key: 'idle',
-                value: '',
-                formatter: (memory: number) => {
-                    return memory;
-                },
-            },
-            {
-                name: 'threads',
-                key: 'threads',
-                value: '',
-                formatter: (threads: number) => {
-                    return threads;
-                },
-            },
-            {
-                name: 'processes',
-                key: 'processes',
-                value: '',
-                formatter: (gc: number) => {
-                    return gc;
-                },
-            },
-        ];
+        private memLinearOptions = {
+            title: {
 
-        private cpuLoadLinearOptions = {
-            title: {},
-            tooltip: {
-                trigger: 'axis',
             },
-            color: ['#FF4041', '#00AFF5', '#3B3B3B'],
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
             legend: {
-                data: ['System', 'User', 'Idle'],
-                x: 0,
+                data:['memUsed','cachedFiles','swapUsed','appMem','compressed','wiredMem']
+            },
+            toolbox: {
+
             },
             grid: {
                 left: '3%',
                 right: '4%',
                 bottom: '3%',
-                containLabel: true,
+                containLabel: true
             },
-            toolbox: {
-                feature: {},
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: [],
-            },
-            yAxis: {
-                type: 'value',
-            },
-            series: [
+            xAxis : [
                 {
-                    name: 'System',
-                    type: 'line',
-                    data: [],
-                },
-                {
-                    name: 'User',
-                    type: 'line',
-                    data: [],
-                },
-                {
-                    name: 'Idle',
-                    type: 'line',
-                    data: [],
-                },
+                    type : 'category',
+                    boundaryGap : false,
+                    data : ['周一','周二','周三','周四','周五','周六','周日']
+                }
             ],
-        };
-
-        private cpuData = {
-            'system': 0,
-            'user': 0,
-            'idle': 0,
-            'threads': 0,
-            'processes': 0,
+            yAxis : [
+                {
+                    type : 'value',
+                    splitLine: {
+                        show: true,
+                    },
+                    axisLine: { show: false },
+                    axisLabel: { show: false },
+                }
+            ],
+            series : [
+                {
+                    name:'memUsed',
+                    type:'line',
+                    stack: '总量',
+                    areaStyle: {},
+                    data:[120, 132, 101, 134, 90, 230, 210]
+                },
+                {
+                    name:'cachedFiles',
+                    type:'line',
+                    stack: '总量',
+                    areaStyle: {},
+                    data:[220, 182, 191, 234, 290, 330, 310]
+                },
+                {
+                    name:'swapUsed',
+                    type:'line',
+                    stack: '总量',
+                    areaStyle: {},
+                    data:[150, 232, 201, 154, 190, 330, 410]
+                },
+                {
+                    name:'appMem',
+                    type:'line',
+                    stack: '总量',
+                    areaStyle: {normal: {}},
+                    data:[320, 332, 301, 334, 390, 330, 320]
+                },
+                {
+                    name:'compressed',
+                    type:'line',
+                    stack: '总量',
+                    areaStyle: {normal: {}},
+                    data:[320, 332, 301, 334, 390, 330, 320]
+                },
+                {
+                    name:'wiredMem',
+                    type:'line',
+                    stack: '总量',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    },
+                    areaStyle: {normal: {}},
+                    data:[820, 932, 901, 934, 1290, 1330, 1320]
+                }
+            ],
         };
     }
 </script>

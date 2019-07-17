@@ -7,63 +7,23 @@ option go_package = "github.com/micro-in-cn/platform-web/assembly-line/protobuf/
 import "basic/error.proto";
 import "google/protobuf/timestamp.proto";
 
-message VirtualMemoryStat {
+message MemoryStat {
     google.protobuf.Timestamp timestamp = 1;
-    uint64 Total = 2;
-    uint64 Available = 3;
-    uint64 Used = 4;
-    double UsedPercent = 5;
-    uint64 Free = 6;
-    uint64 Active = 7;
-    uint64 Inactive = 8;
-    uint64 Wired = 9;
-    uint64 Laundry = 10;
-    uint64 Buffers = 11;
-    uint64 Cached = 12;
-    uint64 Writeback = 13;
-    uint64 Dirty = 14;
-    uint64 WritebackTmp = 15;
-    uint64 Shared = 16;
-    uint64 Slab = 17;
-    uint64 SReclaimable = 18;
-    uint64 PageTables = 19;
-    uint64 SwapCached = 20;
-    uint64 CommitLimit = 21;
-    uint64 CommittedAS = 22;
-    uint64 HighTotal = 23;
-    uint64 HighFree = 24;
-    uint64 LowTotal = 25;
-    uint64 LowFree = 26;
-    uint64 SwapTotal = 27;
-    uint64 SwapFree = 28;
-    uint64 Mapped = 29;
-    uint64 VMallocTotal = 30;
-    uint64 VMallocUsed = 31;
-    uint64 VMallocChunk = 32;
-    uint64 HugePagesTotal = 33;
-    uint64 HugePagesFree = 34;
-    uint64 HugePageSize = 35;
-}
-
-message SwapMemoryStat {
-    google.protobuf.Timestamp timestamp = 1;
-    uint64 Total = 2;
-    uint64 Used = 3;
-    uint64 Free = 4;
-    double UsedPercent = 5;
-    uint64 Sin = 6;
-    uint64 Sout = 7;
-    uint64 PgIn = 8;
-    uint64 PgOut = 9;
-    uint64 PgFault = 10;
+    double ActiveBytes = 2;
+    double CompressedBytes = 3;
+    double InactiveBytes = 4;
+    double WiredBytes = 5;
+    double FreeBytes = 6;
+    double SwappedInBytesTotal = 7;
+    double SwappedOutBytesTotal = 8;
+    double TotalBytes = 9;
 }
 
 message MemRequest {
     google.protobuf.Timestamp timestamp = 1;
     string IP = 2;
     string nodeName = 3;
-    repeated VirtualMemoryStat virtualMemoryStat = 4;
-    repeated SwapMemoryStat swapMemoryStat = 5;
+    repeated MemoryStat MemoryStat = 4;
 }
 
 message MemResponse {
@@ -71,8 +31,6 @@ message MemResponse {
 }
 
 service MemService {
-    rpc PushVirtualMemoryStat (MemRequest) returns (MemResponse) {
-    }
-    rpc PushSwapMemoryStat (MemRequest) returns (MemResponse) {
+    rpc PushMemoryStat (MemRequest) returns (MemResponse) {
     }
 }

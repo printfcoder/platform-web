@@ -36,8 +36,7 @@ var _ server.Option
 // Client API for MemService service
 
 type MemService interface {
-	PushVirtualMemoryStat(ctx context.Context, in *MemRequest, opts ...client.CallOption) (*MemResponse, error)
-	PushSwapMemoryStat(ctx context.Context, in *MemRequest, opts ...client.CallOption) (*MemResponse, error)
+	PushMemoryStat(ctx context.Context, in *MemRequest, opts ...client.CallOption) (*MemResponse, error)
 }
 
 type memService struct {
@@ -58,18 +57,8 @@ func NewMemService(name string, c client.Client) MemService {
 	}
 }
 
-func (c *memService) PushVirtualMemoryStat(ctx context.Context, in *MemRequest, opts ...client.CallOption) (*MemResponse, error) {
-	req := c.c.NewRequest(c.name, "MemService.PushVirtualMemoryStat", in)
-	out := new(MemResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *memService) PushSwapMemoryStat(ctx context.Context, in *MemRequest, opts ...client.CallOption) (*MemResponse, error) {
-	req := c.c.NewRequest(c.name, "MemService.PushSwapMemoryStat", in)
+func (c *memService) PushMemoryStat(ctx context.Context, in *MemRequest, opts ...client.CallOption) (*MemResponse, error) {
+	req := c.c.NewRequest(c.name, "MemService.PushMemoryStat", in)
 	out := new(MemResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -81,14 +70,12 @@ func (c *memService) PushSwapMemoryStat(ctx context.Context, in *MemRequest, opt
 // Server API for MemService service
 
 type MemServiceHandler interface {
-	PushVirtualMemoryStat(context.Context, *MemRequest, *MemResponse) error
-	PushSwapMemoryStat(context.Context, *MemRequest, *MemResponse) error
+	PushMemoryStat(context.Context, *MemRequest, *MemResponse) error
 }
 
 func RegisterMemServiceHandler(s server.Server, hdlr MemServiceHandler, opts ...server.HandlerOption) error {
 	type memService interface {
-		PushVirtualMemoryStat(ctx context.Context, in *MemRequest, out *MemResponse) error
-		PushSwapMemoryStat(ctx context.Context, in *MemRequest, out *MemResponse) error
+		PushMemoryStat(ctx context.Context, in *MemRequest, out *MemResponse) error
 	}
 	type MemService struct {
 		memService
@@ -101,10 +88,6 @@ type memServiceHandler struct {
 	MemServiceHandler
 }
 
-func (h *memServiceHandler) PushVirtualMemoryStat(ctx context.Context, in *MemRequest, out *MemResponse) error {
-	return h.MemServiceHandler.PushVirtualMemoryStat(ctx, in, out)
-}
-
-func (h *memServiceHandler) PushSwapMemoryStat(ctx context.Context, in *MemRequest, out *MemResponse) error {
-	return h.MemServiceHandler.PushSwapMemoryStat(ctx, in, out)
+func (h *memServiceHandler) PushMemoryStat(ctx context.Context, in *MemRequest, out *MemResponse) error {
+	return h.MemServiceHandler.PushMemoryStat(ctx, in, out)
 }

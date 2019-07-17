@@ -20,12 +20,7 @@ func (p *Pusher) Init(opts modules.Options) error {
 }
 
 func (p *Pusher) Push() (err error) {
-	err = p.pushVirtualMemoryStat()
-	if err != nil {
-		return
-	}
-
-	err = p.pushSwapMemoryStat()
+	err = p.pushMemoryStat()
 	if err != nil {
 		return
 	}

@@ -118,37 +118,36 @@ func (app *c) advFlags() {
 }
 
 func (app *c) parseFlags(ctx *cli.Context) {
-	if len(ctx.String("enable_cpu")) > 0 && !ctx.Bool("enable_cpu") {
-		log.Logf("[Info] disabled cpu")
-		app.opts.CPU.Enabled = false
+	if len(ctx.String("enable_cpu")) > 0 {
+		app.opts.CPU.Enabled = ctx.Bool("enable_cpu")
 	}
 
-	if len(ctx.String("enable_disk")) > 0 && !ctx.Bool("enable_disk") {
-		app.opts.Disk.Enabled = false
+	if len(ctx.String("enable_disk")) > 0 {
+		app.opts.Disk.Enabled = ctx.Bool("enable_disk")
 	}
 
-	if len(ctx.String("enable_docker")) > 0 && !ctx.Bool("enable_docker") {
-		app.opts.Docker.Enabled = false
+	if len(ctx.String("enable_docker")) > 0 {
+		app.opts.Docker.Enabled = ctx.Bool("enable_docker")
 	}
 
-	if len(ctx.String("enable_host")) > 0 && !ctx.Bool("enable_host") {
-		app.opts.Host.Enabled = false
+	if len(ctx.String("enable_host")) > 0 {
+		app.opts.Host.Enabled = ctx.Bool("enable_host")
 	}
 
-	if len(ctx.String("enable_load")) > 0 && !ctx.Bool("enable_load") {
-		app.opts.Load.Enabled = false
+	if len(ctx.String("enable_load")) > 0 {
+		app.opts.Load.Enabled = ctx.Bool("enable_load")
 	}
 
-	if len(ctx.String("enable_mem")) > 0 && !ctx.Bool("enable_mem") {
-		app.opts.Mem.Enabled = false
+	if len(ctx.String("enable_mem")) > 0 {
+		app.opts.Mem.Enabled = ctx.Bool("enable_mem")
 	}
 
-	if len(ctx.String("enable_net")) > 0 && !ctx.Bool("enable_net") {
-		app.opts.Net.Enabled = false
+	if len(ctx.String("enable_net")) > 0 {
+		app.opts.Net.Enabled = ctx.Bool("enable_net")
 	}
 
-	if len(ctx.String("enable_process")) > 0 && !ctx.Bool("enable_process") {
-		app.opts.Process.Enabled = false
+	if len(ctx.String("enable_process")) > 0 {
+		app.opts.Process.Enabled = ctx.Bool("enable_process")
 	}
 
 	if ctx.Int("push_interval") > 0 {
@@ -245,8 +244,10 @@ func (app *c) run() {
 			for {
 				select {
 				case <-t.C:
-					log.Logf("push data, %s", time.Now())
-					app.push()
+					if len(app.modules) > 0 {
+						log.Logf("push data, %s", time.Now())
+						app.push()
+					}
 				}
 			}
 		}()
