@@ -8,7 +8,7 @@ import (
 
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro/client"
-	"github.com/micro/util/go/lib/addr"
+	"github.com/go-micro/util/addr"
 )
 
 var (
