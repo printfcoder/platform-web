@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/micro/go-micro/util/log"
 	"net/http"
 	"net/http/httputil"
 	"regexp"
@@ -14,10 +13,11 @@ import (
 	z "github.com/micro-in-cn/platform-web/internal/zap"
 	"github.com/micro-in-cn/platform-web/modules"
 	"github.com/micro/cli"
-	"github.com/micro/go-micro/config/cmd"
-	"github.com/micro/go-micro/config"
-	"github.com/micro/go-micro/config/source/file"
 	"github.com/micro/go-micro/client/selector"
+	"github.com/micro/go-micro/config"
+	"github.com/micro/go-micro/config/cmd"
+	"github.com/micro/go-micro/config/source/file"
+	"github.com/micro/go-micro/util/log"
 	"github.com/micro/go-micro/web"
 
 	"go.uber.org/zap"

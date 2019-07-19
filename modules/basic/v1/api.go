@@ -3,6 +3,7 @@ package v1
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/micro/go-micro/client/selector"
 	"net/http"
 	"sort"
 	"strconv"
@@ -13,7 +14,6 @@ import (
 	"github.com/micro-in-cn/platform-web/modules/internal/nosj"
 	"github.com/micro/go-micro/config/cmd"
 	"github.com/micro/go-micro/registry"
-	"github.com/micro/go-micro/client/selector"
 )
 
 type api struct {

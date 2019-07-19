@@ -45,7 +45,7 @@ require (
 	github.com/go-stomp/stomp v2.0.3+incompatible // indirect
 	github.com/gocql/gocql v0.0.0-20190423091413-b99afaf3b163 // indirect
 	github.com/gogo/googleapis v1.2.0 // indirect
-	github.com/golang/protobuf v1.3.1
+	github.com/golang/protobuf v1.3.2
 	github.com/google/gofuzz v1.0.0 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/gophercloud/gophercloud v0.0.0-20190520235722-e87e5f90e7e6 // indirect
@@ -89,10 +89,8 @@ require (
 	github.com/micro/cli v0.2.0
 	github.com/micro/go-config v1.1.0
 	github.com/micro/go-log v0.1.0
-	github.com/micro/go-micro v1.5.0
+	github.com/micro/go-micro v1.7.1-0.20190718142447-8f2585724c34
 	github.com/micro/go-rcache v0.3.0 // indirect
-	github.com/micro/go-web v1.0.0
-	github.com/micro/util v0.2.0
 	github.com/mitchellh/pointerstructure v0.0.0-20190430161007-f252a8fd71c8 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20190414153302-2ae31c8b6b30 // indirect
 	github.com/opentracing/opentracing-go v1.1.0 // indirect
@@ -106,7 +104,7 @@ require (
 	github.com/vmware/govmomi v0.20.1 // indirect
 	go.uber.org/atomic v1.4.0 // indirect
 	go.uber.org/zap v1.10.0
-	golang.org/x/sys v0.0.0-20190602015325-4c4f7f33c9ed
+	golang.org/x/sys v0.0.0-20190710143415-6ec70d6a5542
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	k8s.io/api v0.0.0-20190515023547-db5a9d1c40eb // indirect
 	k8s.io/client-go v11.0.0+incompatible // indirect
