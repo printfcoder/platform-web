@@ -9,7 +9,7 @@ import (
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
 )
 
-func (p *Pusher) pushInfo() (err error) {
+func (p *CPU) pushInfo() (err error) {
 	vv, err := cpu.Info()
 	if err != nil {
 		return fmt.Errorf("[pushInfo] get infos error: %s", err)

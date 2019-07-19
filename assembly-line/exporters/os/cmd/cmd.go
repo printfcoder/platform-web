@@ -20,7 +20,7 @@ var (
 
 type c struct {
 	*cli.App
-	modules []modules.Pusher
+	modules []modules.Module
 	opts    option.Options
 }
 
@@ -37,9 +37,8 @@ func newApp(ops ...option.Option) (app *c) {
 	app = &c{
 		App: cmd.App(),
 		opts: option.Options{
-			AppName:      name,
-			AppVersion:   version,
-			PushInterval: pushInterval,
+			AppName:    name,
+			AppVersion: version,
 			Collector: &option.Collector{
 				Name: collector,
 			},

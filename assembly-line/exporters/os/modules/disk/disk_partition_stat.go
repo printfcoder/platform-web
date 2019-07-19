@@ -9,7 +9,7 @@ import (
 	disk2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk"
 )
 
-func (p *Pusher) pushPartition() (err error) {
+func (p *Disk) pushPartition() (err error) {
 	vv, err := disk.Partitions(true)
 	if err != nil {
 		return fmt.Errorf("[pushPartition] get infos error: %s", err)

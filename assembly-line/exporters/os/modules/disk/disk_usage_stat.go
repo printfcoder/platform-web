@@ -9,7 +9,7 @@ import (
 	disk2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk"
 )
 
-func (p *Pusher) pushUsage() (err error) {
+func (p *Disk) pushUsage() (err error) {
 	data := make([]*disk2.UsageStat, 0, len(p.path))
 	t := ptypes.TimestampNow()
 

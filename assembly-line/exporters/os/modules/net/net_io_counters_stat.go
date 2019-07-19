@@ -9,7 +9,7 @@ import (
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/net"
 )
 
-func (p *Pusher) pushIOCountersStat() (err error) {
+func (p *Net) pushIOCountersStat() (err error) {
 	t := ptypes.TimestampNow()
 	data := make([]*proto.IOCountersStat, 0)
 	vv, err := net.IOCounters(true)

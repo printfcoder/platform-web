@@ -10,7 +10,7 @@ import (
 	"github.com/micro/go-micro/util/log"
 )
 
-func (p *Pusher) pushTimes() (err error) {
+func (p *CPU) pushTimes() (err error) {
 	log.Log("cpu")
 	vv, err := cpu.Times(true)
 	if err != nil {

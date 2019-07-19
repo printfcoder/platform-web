@@ -1,6 +1,7 @@
 package load
 
 import (
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	"sync"
 
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
@@ -11,21 +12,21 @@ var (
 	once sync.Once
 )
 
-type Pusher struct {
-	modules.BasePusher
+type Load struct {
+	modules.BaseModule
 	loadClient load.LoadService
 }
 
-func (p *Pusher) Init(opts modules.Options) error {
+func (p *Load) Init(opts option.Options) error {
 	p.InitB()
-	p.CollectorName = opts.CollectorName
-	p.Interval = opts.Interval
-	p.loadClient = load.NewLoadService(p.CollectorName, opts.Client)
+	p.CollectorName = opts.Collector.Name
+	p.Interval = opts.Load.Interval
+	p.loadClient = load.NewLoadService(p.CollectorName, opts.Collector.Client)
 
 	return nil
 }
 
-func (p *Pusher) Push() (err error) {
+func (p *Load) Push() (err error) {
 	err = p.pushAvgStat()
 	return err
 }

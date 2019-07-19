@@ -1,6 +1,7 @@
 package host
 
 import (
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	"sync"
 
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
@@ -11,21 +12,21 @@ var (
 	once sync.Once
 )
 
-type Pusher struct {
-	modules.BasePusher
+type Host struct {
+	modules.BaseModule
 	hostClient proto.HostService
 }
 
-func (p *Pusher) Init(opts modules.Options) error {
+func (p *Host) Init(opts option.Options) error {
 	p.InitB()
-	p.CollectorName = opts.CollectorName
-	p.Interval = opts.Interval
-	p.hostClient = proto.NewHostService(p.CollectorName, opts.Client)
+	p.CollectorName = opts.Collector.Name
+	p.Interval = opts.Host.Interval
+	p.hostClient = proto.NewHostService(p.CollectorName, opts.Collector.Client)
 
 	return nil
 }
 
-func (p *Pusher) Push() (err error) {
+func (p *Host) Push() (err error) {
 	err = p.pushInfo()
 	return err
 }

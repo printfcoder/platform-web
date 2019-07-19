@@ -1,6 +1,7 @@
 package disk
 
 import (
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	"sync"
 
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
@@ -12,23 +13,23 @@ var (
 	once sync.Once
 )
 
-type Pusher struct {
-	modules.BasePusher
+type Disk struct {
+	modules.BaseModule
 	path       []string
 	diskClient disk2.DiskService
 }
 
-func (p *Pusher) Init(opts modules.Options) error {
+func (p *Disk) Init(opts option.Options) error {
 	p.InitB()
-	p.CollectorName = opts.CollectorName
-	p.Interval = opts.Interval
-	p.path = opts.DiskPaths
-	p.diskClient = disk2.NewDiskService(p.CollectorName, opts.Client)
+	p.CollectorName = opts.Collector.Name
+	p.Interval = opts.Disk.Interval
+	p.path = opts.Disk.Paths
+	p.diskClient = disk2.NewDiskService(p.CollectorName, opts.Collector.Client)
 
 	return nil
 }
 
-func (p *Pusher) Push() (err error) {
+func (p *Disk) Push() (err error) {
 	if err = p.pushIOCounters(); err != nil {
 		log.Logf("[Push] pushIOCounters err: %s", err)
 	}

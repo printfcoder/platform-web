@@ -9,7 +9,7 @@ import (
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/mem"
 )
 
-func (p *Pusher) pushMemoryStat() (err error) {
+func (p *Mem) pushMemoryStat() (err error) {
 	m, err := mem.GetMemInfo()
 	if err != nil {
 		return fmt.Errorf("[pushMemoryStat] get infos error: %s", err)

@@ -74,8 +74,8 @@ func (m *module) Handlers() (mp map[string]*modules.Handler) {
 		Method: []string{"GET"},
 	}
 
-	mp["/mem"] = &modules.Handler{
-		Func:   m.api.mem,
+	mp["/mem/percents"] = &modules.Handler{
+		Func:   m.api.memPercent,
 		Method: []string{"GET"},
 	}
 

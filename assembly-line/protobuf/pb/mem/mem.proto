@@ -9,21 +9,21 @@ import "google/protobuf/timestamp.proto";
 
 message MemoryStat {
     google.protobuf.Timestamp timestamp = 1;
-    double ActiveBytes = 2;
-    double CompressedBytes = 3;
-    double InactiveBytes = 4;
-    double WiredBytes = 5;
-    double FreeBytes = 6;
-    double SwappedInBytesTotal = 7;
-    double SwappedOutBytesTotal = 8;
-    double TotalBytes = 9;
+    double activeBytes = 2;
+    double compressedBytes = 3;
+    double inactiveBytes = 4;
+    double wiredBytes = 5;
+    double freeBytes = 6;
+    double swappedInBytesTotal = 7;
+    double swappedOutBytesTotal = 8;
+    double totalBytes = 9;
 }
 
 message MemRequest {
     google.protobuf.Timestamp timestamp = 1;
     string IP = 2;
     string nodeName = 3;
-    repeated MemoryStat MemoryStat = 4;
+    repeated MemoryStat memoryStat = 4;
 }
 
 message MemResponse {

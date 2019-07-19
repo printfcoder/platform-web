@@ -14,8 +14,9 @@ import (
 )
 
 type BaseItem struct {
-	IP       string `json:"ip"`
-	NodeName string `json:"nodeName"`
+	IP       string    `json:"ip"`
+	NodeName string    `json:"nodeName"`
+	Time     time.Time `json:"time"`
 }
 
 type CPUInfo struct {
@@ -25,7 +26,6 @@ type CPUInfo struct {
 
 type CPUTimes struct {
 	cpu.TimesStat
-	Time time.Time `json:"time"`
 	BaseItem
 }
 

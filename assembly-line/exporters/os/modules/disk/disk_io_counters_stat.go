@@ -9,7 +9,7 @@ import (
 	disk2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk"
 )
 
-func (p *Pusher) pushIOCounters() (err error) {
+func (p *Disk) pushIOCounters() (err error) {
 	vv, err := disk.IOCounters()
 	if err != nil {
 		return fmt.Errorf("[pushIOCounters] get infos error: %s", err)

@@ -1,6 +1,7 @@
 package cpu
 
 import (
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	"sync"
 	"time"
 
@@ -13,21 +14,21 @@ var (
 	once sync.Once
 )
 
-type Pusher struct {
-	modules.BasePusher
+type CPU struct {
+	modules.BaseModule
 	cpuClient cpu.CPUService
 }
 
-func (p *Pusher) Init(opts modules.Options) error {
+func (p *CPU) Init(opts option.Options) error {
 	p.InitB()
-	p.CollectorName = opts.CollectorName
-	p.Interval = opts.Interval
-	p.cpuClient = cpu.NewCPUService(p.CollectorName, opts.Client)
+	p.CollectorName = opts.Collector.Name
+	p.Interval = opts.CPU.Interval
+	p.cpuClient = cpu.NewCPUService(p.CollectorName, opts.Collector.Client)
 
 	return nil
 }
 
-func (p *Pusher) Push() (err error) {
+func (p *CPU) Push() (err error) {
 	once.Do(func() {
 		for {
 			if err = p.pushInfo(); err == nil {
@@ -49,3 +50,5 @@ func (p *Pusher) Push() (err error) {
 	}
 	return err
 }
+
+

@@ -2,24 +2,25 @@ package mem
 
 import (
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/mem"
 )
 
-type Pusher struct {
-	modules.BasePusher
+type Mem struct {
+	modules.BaseModule
 	memClient proto.MemService
 }
 
-func (p *Pusher) Init(opts modules.Options) error {
+func (p *Mem) Init(opts option.Options) error {
 	p.InitB()
-	p.CollectorName = opts.CollectorName
-	p.Interval = opts.Interval
-	p.memClient = proto.NewMemService(p.CollectorName, opts.Client)
+	p.CollectorName = opts.Collector.Name
+	p.Interval = opts.Mem.Interval
+	p.memClient = proto.NewMemService(p.CollectorName, opts.Collector.Client)
 
 	return nil
 }
 
-func (p *Pusher) Push() (err error) {
+func (p *Mem) Push() (err error) {
 	err = p.pushMemoryStat()
 	if err != nil {
 		return

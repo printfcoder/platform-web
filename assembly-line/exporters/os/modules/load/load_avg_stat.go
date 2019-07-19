@@ -9,7 +9,7 @@ import (
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/load"
 )
 
-func (p *Pusher) pushAvgStat() (err error) {
+func (p *Load) pushAvgStat() (err error) {
 	v, err := load.Avg()
 	if err != nil {
 		return fmt.Errorf("[pushAvgStat] get infos error: %s", err)

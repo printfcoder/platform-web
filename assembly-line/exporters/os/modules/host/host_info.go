@@ -8,7 +8,7 @@ import (
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/host"
 )
 
-func (p *Pusher) pushInfo() (err error) {
+func (p *Host) pushInfo() (err error) {
 	v, err := host.Info()
 	if err != nil {
 		return fmt.Errorf("[pushInfo] get info error: %s", err)

@@ -9,7 +9,7 @@ import (
 	cpu2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
 )
 
-func (p *Pusher) pushPercent() (err error) {
+func (p *CPU) pushPercent() (err error) {
 	vv, err := cpu.Percent(p.Interval, true)
 	if err != nil {
 		return fmt.Errorf("[pushPercent] get infos error: %s", err)

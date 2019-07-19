@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	"github.com/micro/go-log"
-	"github.com/micro/go-micro/client"
 	"github.com/micro/util/go/lib/addr"
 )
 
@@ -16,19 +16,22 @@ var (
 	ip, nodeName string
 )
 
-type Pusher interface {
-	Init(opts Options) error
+type Module interface {
+	Init(opts option.Options) error
 	Push() error
+	Start() error
 }
 
-type BasePusher struct {
+type BaseModule struct {
+	Module
 	CollectorName string
 	Interval      time.Duration
 	NodeName      string
 	IP            string
+	Err           chan error
 }
 
-func (b *BasePusher) InitB() {
+func (b *BaseModule) InitB() {
 	once.Do(func() {
 		var err error
 		nodeName, err = os.Hostname()
@@ -59,12 +62,19 @@ func (b *BasePusher) InitB() {
 	b.NodeName = nodeName
 }
 
-type Options struct {
-	CollectorName string
-	Client        client.Client
-	Interval      time.Duration
-	DiskPaths     []string
-	NetKinds      []string
-}
+func (b *BaseModule) Start() (err error) {
+	go func() {
+		t := time.NewTicker(b.Interval * time.Second)
+		for {
+			select {
+			case <-t.C:
+				log.Logf("push data, %s", time.Now())
+				if err = b.Push(); err != nil {
+					b.Err <- err
+				}
+			}
+		}
+	}()
 
-type Option func(*Options)
+	return nil
+}

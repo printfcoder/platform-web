@@ -9,7 +9,7 @@ import (
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/net"
 )
 
-func (p *Pusher) pushConnectionStat() (err error) {
+func (p *Net) pushConnectionStat() (err error) {
 	t := ptypes.TimestampNow()
 	data := make([]*proto.ConnectionStat, 0)
 	for _, kind := range p.kinds {
