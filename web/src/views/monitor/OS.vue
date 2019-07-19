@@ -40,7 +40,7 @@
                     <cpu :cpuTimes="cpuTimes"></cpu>
                 </el-col>
                 <el-col :span="8">
-                    <memory></memory>
+                    <memory :memPercents="memPercents"></memory>
                 </el-col>
                 <el-col :span="8">
                     <network></network>
@@ -78,7 +78,7 @@
 
 
     import { Error } from '@/store/basic/types';
-    import { CPUTime, IpGroup } from '@/store/modules/os/types';
+    import { CPUTime, IpGroup, MemPercent } from '@/store/modules/os/types';
 
     const namespace: string = 'monitorOS';
 
@@ -110,6 +110,9 @@
         @State(state => state.monitorOS.cpuTimes)
         cpuTimes?: CPUTime[];
 
+        @State(state => state.monitorOS.memPercents)
+        memPercents?: MemPercent[];
+
         @State(state => state.monitorOS.xError)
         xError?: string;
 
@@ -118,6 +121,9 @@
 
         @Action('getCPUTimes', { namespace })
         getCPUTimes: any;
+
+        @Action('getMemPercents', { namespace })
+        getMemPercents: any;
 
         created() {
             if (!this.loaded) {
@@ -143,7 +149,7 @@
             }
         }
 
-        private now = new Date(new Date().setSeconds(new Date().getSeconds() - 10));
+        private now = new Date('2019-07-17T15:45:11.312Z');
 
         changeIP() {
             if (!this.serverIP) {
@@ -154,6 +160,11 @@
                 let startTime = new Date(this.now);
                 this.now = new Date(this.now.setSeconds(this.now.getSeconds() + 1));
                 this.getCPUTimes({
+                    ips: [this.serverIP],
+                    startTime: startTime,
+                    endTime: this.now,
+                });
+                this.getMemPercents({
                     ips: [this.serverIP],
                     startTime: startTime,
                     endTime: this.now,

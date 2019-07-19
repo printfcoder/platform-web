@@ -23,8 +23,23 @@ export class CPUTime {
     }
 }
 
+export class MemPercent {
+    nodeName: string;
+    activeBytes: number;
+    compressedBytes: number;
+    inactiveBytes: number;
+    wiredBytes: number;
+    freeBytes: number;
+    swappedInBytesTotal: number;
+    swappedOutBytesTotal: number;
+    totalBytes: number;
+    time: Date;
+    ip: string;
+}
+
 export interface OSState extends State {
     ipGroups: IpGroup[];
     cpuTimes: CPUTime[];
+    memPercents: MemPercent[];
     xError: Error
 }

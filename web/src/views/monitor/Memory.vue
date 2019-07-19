@@ -6,6 +6,7 @@
                     <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
                     <div>
                         <v-chart
+                                ref="memChart"
                                 style="width: 100%"
                                 :options="memLinearOptions"
                                 :autoresize="true"
@@ -17,7 +18,7 @@
     </el-container>
 </template>
 <script lang="ts">
-    import { Component } from 'vue-property-decorator';
+    import { Component, Prop, Watch } from 'vue-property-decorator';
     import MVue from '@/basic/MVue';
 
     // @ts-ignore
@@ -25,6 +26,8 @@
     import 'echarts/lib/chart/line';
     import 'echarts/lib/component/polar';
     import 'echarts/theme/macarons';
+
+    import { MemPercent } from '@/store/modules/os/types';
 
     @Component({
         components: {
@@ -34,99 +37,221 @@
     export default class Memory extends MVue {
         private lastUpdateTime: Date = null;
 
-        private memLinearOptions = {
-            title: {
+        @Prop()
+        private memPercents?: MemPercent[];
 
-            },
-            tooltip : {
+        private byteToGB = 1024 * 1024 * 1024;
+
+        private activeData = [];
+        private compressedData = [];
+        private inactiveData = [];
+        private wiredData = [];
+        private freeData = [];
+        private swappedInData = [];
+        private swappedOutData = [];
+        private totalData = [];
+
+        private memLinearOptions = {
+            title: {},
+            tooltip: {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'cross',
                     label: {
-                        backgroundColor: '#6a7985'
+                        backgroundColor: '#6a7985',
+                    },
+                },
+                formatter: function(params) {
+                    let res = '';
+                    for (let i = 0, l = params.length; i < l; i++) {
+                        res += '<div style="color:' + params[i].color + '">' + params[i].seriesName + ' : ' + params[i].value[1] + 'G : ' + params[i].value[2] + '%\</div>';
                     }
-                }
+                    return res;
+                },
             },
             legend: {
-                data:['memUsed','cachedFiles','swapUsed','appMem','compressed','wiredMem']
+                data: ['active', 'compressed', 'inactive', 'wired', 'free', 'swappedIn', 'swappedOut', 'total'],
             },
-            toolbox: {
-
-            },
+            toolbox: {},
             grid: {
                 left: '3%',
                 right: '4%',
                 bottom: '3%',
-                containLabel: true
+                containLabel: true,
             },
-            xAxis : [
+            xAxis: [
                 {
-                    type : 'category',
-                    boundaryGap : false,
-                    data : ['周一','周二','周三','周四','周五','周六','周日']
-                }
+                    type: 'time',
+                    splitLine: {
+                        show: false,
+                    },
+                 //   maxInterval: 1
+                },
             ],
-            yAxis : [
+            yAxis: [
                 {
-                    type : 'value',
+                    type: 'value',
                     splitLine: {
                         show: true,
                     },
                     axisLine: { show: false },
                     axisLabel: { show: false },
-                }
+                },
             ],
-            series : [
+            series: [
                 {
-                    name:'memUsed',
-                    type:'line',
+                    name: 'active',
+                    type: 'line',
                     stack: '总量',
                     areaStyle: {},
-                    data:[120, 132, 101, 134, 90, 230, 210]
+                    data: [],
                 },
                 {
-                    name:'cachedFiles',
-                    type:'line',
+                    name: 'compressed',
+                    type: 'line',
                     stack: '总量',
                     areaStyle: {},
-                    data:[220, 182, 191, 234, 290, 330, 310]
+                    data: [],
                 },
                 {
-                    name:'swapUsed',
-                    type:'line',
+                    name: 'inactive',
+                    type: 'line',
                     stack: '总量',
                     areaStyle: {},
-                    data:[150, 232, 201, 154, 190, 330, 410]
+                    data: [],
                 },
                 {
-                    name:'appMem',
-                    type:'line',
+                    name: 'wired',
+                    type: 'line',
                     stack: '总量',
-                    areaStyle: {normal: {}},
-                    data:[320, 332, 301, 334, 390, 330, 320]
+                    areaStyle: { normal: {} },
+                    data: [],
                 },
                 {
-                    name:'compressed',
-                    type:'line',
+                    name: 'free',
+                    type: 'line',
                     stack: '总量',
-                    areaStyle: {normal: {}},
-                    data:[320, 332, 301, 334, 390, 330, 320]
+                    areaStyle: { normal: {} },
+                    data: [],
                 },
                 {
-                    name:'wiredMem',
-                    type:'line',
+                    name: 'swappedIn',
+                    type: 'line',
+                    stack: '总量',
+                    areaStyle: { normal: {} },
+                    data: [],
+                },
+                {
+                    name: 'swappedOut',
+                    type: 'line',
+                    stack: '总量',
+                    areaStyle: { normal: {} },
+                    data: [],
+                },
+                {
+                    name: 'total',
+                    type: 'line',
                     stack: '总量',
                     label: {
                         normal: {
                             show: true,
-                            position: 'top'
-                        }
+                            position: 'top',
+                        },
                     },
-                    areaStyle: {normal: {}},
-                    data:[820, 932, 901, 934, 1290, 1330, 1320]
-                }
+                    areaStyle: { normal: {} },
+                    data: [],
+                },
             ],
         };
+
+        @Watch('memPercents', { immediate: true, deep: true })
+        asyncData(memPercents: MemPercent[]) {
+            if (memPercents == null) {
+                return;
+            }
+
+            memPercents.forEach((mp: MemPercent) => {
+                if (this.activeData.length > 10) {
+                    this.compressedData.shift();
+                    this.inactiveData.shift();
+                    this.wiredData.shift();
+                    this.freeData.shift();
+                    this.swappedInData.shift();
+                    this.swappedOutData.shift();
+                    this.totalData.shift();
+                }
+                this.activeData.push({
+                    name: mp.time,
+                    value: [mp.time, (mp.activeBytes / this.byteToGB).toFixed(1), ((mp.activeBytes / mp.totalBytes) * 100).toFixed(2)],
+                });
+
+                this.compressedData.push({
+                    name: mp.time,
+                    value: [mp.time, (mp.compressedBytes / this.byteToGB).toFixed(1), ((mp.compressedBytes / mp.totalBytes) * 100).toFixed(2)],
+                });
+
+                this.inactiveData.push({
+                    name: mp.time,
+                    value: [mp.time, (mp.inactiveBytes / this.byteToGB).toFixed(1), ((mp.inactiveBytes / mp.totalBytes) * 100).toFixed(2)],
+                });
+
+                this.wiredData.push({
+                    name: mp.time,
+                    value: [mp.time, (mp.wiredBytes / this.byteToGB).toFixed(1), ((mp.wiredBytes / mp.totalBytes) * 100).toFixed(2)],
+                });
+
+                this.freeData.push({
+                    name: mp.time,
+                    value: [mp.time, (mp.freeBytes / this.byteToGB).toFixed(1), ((mp.freeBytes / mp.totalBytes) * 100).toFixed(2)],
+                });
+
+                this.swappedInData.push({
+                    name: mp.time,
+                    value: [mp.time, (mp.swappedInBytesTotal / this.byteToGB).toFixed(1), ((mp.swappedInBytesTotal / mp.totalBytes) * 100).toFixed(2)],
+                });
+
+                this.swappedOutData.push({
+                    name: mp.time,
+                    value: [mp.time, (mp.swappedOutBytesTotal / this.byteToGB).toFixed(1), ((mp.swappedOutBytesTotal / mp.totalBytes) * 100).toFixed(2)],
+                });
+
+                this.totalData.push({
+                    name: mp.time,
+                    value: [mp.time, (mp.totalBytes / this.byteToGB).toFixed(1), 100],
+                });
+
+            });
+
+            let chart = this.$refs['memChart'];
+            chart && chart.chart && chart.chart.setOption({
+                series: [
+                    {
+                        data: this.activeData,
+                    },
+                    {
+                        data: this.compressedData,
+                    },
+                    {
+                        data: this.inactiveData,
+                    },
+                    {
+                        data: this.wiredData,
+                    },
+                    {
+                        data: this.freeData,
+                    },
+                    {
+                        data: this.swappedInData,
+                    },
+                    {
+                        data: this.swappedOutData,
+                    },
+                    {
+                        data: this.totalData,
+                    },
+                ],
+            });
+        }
     }
 </script>
 

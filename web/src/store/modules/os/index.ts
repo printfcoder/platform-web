@@ -2,12 +2,13 @@ import { MutationTree, ActionTree } from 'vuex'
 import * as TYPES from '../../mutation-types'
 import { Error } from '@/store/basic/types'
 import { OSState, IpGroup } from './types'
-import { getIPGroup, getCPUTimes } from '@/api/os'
+import { getIPGroup, getCPUTimes, getMemPercents } from '@/api/os'
 
 const namespaced: boolean = true
 
 const state: OSState = {
     cpuTimes: [],
+    memPercents: [],
     ipGroups: [],
     requestLoading: false,
     xError: null
@@ -30,6 +31,10 @@ const mutations: MutationTree<any> = {
         state.cpuTimes = cpuTimes
         state.requestLoading = false
     },
+    [TYPES.SET_API_OS_MEM_PERCENTS] (state: OSState, { memPercents }): void {
+        state.memPercents = memPercents
+        state.requestLoading = false
+    },
     [TYPES.SET_FRAME_DATA_ERROR] (state: OSState, error: Error): void {
         state.xError = error
     }
@@ -42,10 +47,18 @@ const actions: ActionTree<any, any> = {
             ipGroupsKV: res.data
         })
     },
+
     async getCPUTimes ({ commit }, { ips, startTime, endTime }) {
         const res: Ajax.AjaxResponse = await getCPUTimes(ips, startTime, endTime)
         commit(TYPES.SET_API_OS_CPU_TIMES, {
             cpuTimes: res.data
+        })
+    },
+
+    async getMemPercents ({ commit }, { ips, startTime, endTime }) {
+        const res: Ajax.AjaxResponse = await getMemPercents(ips, startTime, endTime)
+        commit(TYPES.SET_API_OS_MEM_PERCENTS, {
+            memPercents: res.data
         })
     }
 }
