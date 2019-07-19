@@ -7,7 +7,7 @@ import (
 	"github.com/micro-in-cn/platform-web/internal/proxy"
 	"github.com/micro-in-cn/platform-web/modules/internal/nosj"
 	"github.com/micro/go-micro/client"
-	"github.com/micro/go-micro/cmd"
+	"github.com/micro/go-micro/config/cmd"
 	"github.com/micro/go-micro/errors"
 	"net/http"
 	"net/http/httputil"
