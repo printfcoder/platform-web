@@ -91,6 +91,7 @@ require (
 	github.com/micro/go-log v0.1.0
 	github.com/micro/go-micro v1.7.1-0.20190718142447-8f2585724c34
 	github.com/micro/go-rcache v0.3.0 // indirect
+	github.com/micro/util v0.2.0
 	github.com/mitchellh/pointerstructure v0.0.0-20190430161007-f252a8fd71c8 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20190414153302-2ae31c8b6b30 // indirect
 	github.com/opentracing/opentracing-go v1.1.0 // indirect
