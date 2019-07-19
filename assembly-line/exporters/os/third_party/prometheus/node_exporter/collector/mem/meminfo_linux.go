@@ -23,10 +23,12 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/third_party/prometheus/node_exporter/collector/common"
 )
 
 func getMemInfo() (map[string]float64, error) {
-	file, err := os.Open(procFilePath("meminfo"))
+	file, err := os.Open(common.ProcFilePath("meminfo"))
 	if err != nil {
 		return nil, err
 	}
