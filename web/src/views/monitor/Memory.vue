@@ -47,8 +47,6 @@
         private inactiveData = [];
         private wiredData = [];
         private freeData = [];
-        private swappedInData = [];
-        private swappedOutData = [];
         private totalData = [];
 
         private memLinearOptions = {
@@ -70,7 +68,7 @@
                 },
             },
             legend: {
-                data: ['active', 'compressed', 'inactive', 'wired', 'free', 'swappedIn', 'swappedOut', 'total'],
+                data: ['active', 'inactive', 'compressed', 'wired', 'free'],
             },
             toolbox: {},
             grid: {
@@ -85,7 +83,12 @@
                     splitLine: {
                         show: false,
                     },
-                 //   maxInterval: 1
+                    axisLabel: {
+                        formatter: function(value, index) {
+                            let date = new Date(value);
+                            return date.getMinutes() + ':' + date.getSeconds();
+                        },
+                    },
                 },
             ],
             yAxis: [
@@ -107,14 +110,14 @@
                     data: [],
                 },
                 {
-                    name: 'compressed',
+                    name: 'inactive',
                     type: 'line',
                     stack: '总量',
                     areaStyle: {},
                     data: [],
                 },
                 {
-                    name: 'inactive',
+                    name: 'compressed',
                     type: 'line',
                     stack: '总量',
                     areaStyle: {},
@@ -134,33 +137,6 @@
                     areaStyle: { normal: {} },
                     data: [],
                 },
-                {
-                    name: 'swappedIn',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: { normal: {} },
-                    data: [],
-                },
-                {
-                    name: 'swappedOut',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: { normal: {} },
-                    data: [],
-                },
-                {
-                    name: 'total',
-                    type: 'line',
-                    stack: '总量',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'top',
-                        },
-                    },
-                    areaStyle: { normal: {} },
-                    data: [],
-                },
             ],
         };
 
@@ -176,8 +152,6 @@
                     this.inactiveData.shift();
                     this.wiredData.shift();
                     this.freeData.shift();
-                    this.swappedInData.shift();
-                    this.swappedOutData.shift();
                     this.totalData.shift();
                 }
                 this.activeData.push({
@@ -204,22 +178,6 @@
                     name: mp.time,
                     value: [mp.time, (mp.freeBytes / this.byteToGB).toFixed(1), ((mp.freeBytes / mp.totalBytes) * 100).toFixed(2)],
                 });
-
-                this.swappedInData.push({
-                    name: mp.time,
-                    value: [mp.time, (mp.swappedInBytesTotal / this.byteToGB).toFixed(1), ((mp.swappedInBytesTotal / mp.totalBytes) * 100).toFixed(2)],
-                });
-
-                this.swappedOutData.push({
-                    name: mp.time,
-                    value: [mp.time, (mp.swappedOutBytesTotal / this.byteToGB).toFixed(1), ((mp.swappedOutBytesTotal / mp.totalBytes) * 100).toFixed(2)],
-                });
-
-                this.totalData.push({
-                    name: mp.time,
-                    value: [mp.time, (mp.totalBytes / this.byteToGB).toFixed(1), 100],
-                });
-
             });
 
             let chart = this.$refs['memChart'];
@@ -239,15 +197,6 @@
                     },
                     {
                         data: this.freeData,
-                    },
-                    {
-                        data: this.swappedInData,
-                    },
-                    {
-                        data: this.swappedOutData,
-                    },
-                    {
-                        data: this.totalData,
                     },
                 ],
             });
