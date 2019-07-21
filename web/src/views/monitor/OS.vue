@@ -36,6 +36,11 @@
         </el-header>
         <el-main>
             <el-row>
+                <el-col :span="24">
+                    <load :loadAvgStats="loadAvgStats"></load>
+                </el-col>
+            </el-row>
+            <el-row>
                 <el-col :span="8">
                     <cpu :cpuTimes="cpuTimes"></cpu>
                 </el-col>
@@ -70,6 +75,7 @@
     import MVue from '@/basic/MVue';
     import CPU from './CPU.vue';
     import Disk from './Disk.vue';
+    import Load from './Load.vue';
     import Memory from './Memory.vue';
     import Network from './Network.vue';
 
@@ -78,7 +84,7 @@
 
 
     import { Error } from '@/store/basic/types';
-    import { CPUTime, IpGroup, MemPercent } from '@/store/modules/os/types';
+    import { CPUTime, IpGroup, LoadAvgStat, MemPercent } from '@/store/modules/os/types';
 
     const namespace: string = 'monitorOS';
 
@@ -88,6 +94,7 @@
             'memory': Memory,
             'network': Network,
             'disk': Disk,
+            'load': Load,
         },
     })
     export default class OS extends MVue {
@@ -113,6 +120,9 @@
         @State(state => state.monitorOS.memPercents)
         memPercents?: MemPercent[];
 
+        @State(state => state.monitorOS.loadAvgStats)
+        loadAvgStats?: LoadAvgStat[];
+
         @State(state => state.monitorOS.xError)
         xError?: string;
 
@@ -124,6 +134,9 @@
 
         @Action('getMemPercents', { namespace })
         getMemPercents: any;
+
+        @Action('getLoadAvgStat', { namespace })
+        getLoadAvgStat: any;
 
         created() {
             if (!this.loaded) {
@@ -149,7 +162,7 @@
             }
         }
 
-        private now = new Date('2019-07-17T15:45:11.312Z');
+        private now = new Date('2019-06-11T15:25:02.698Z');
 
         changeIP() {
             if (!this.serverIP) {
@@ -165,6 +178,11 @@
                     endTime: this.now,
                 });
                 this.getMemPercents({
+                    ips: [this.serverIP],
+                    startTime: startTime,
+                    endTime: this.now,
+                });
+                this.getLoadAvgStat({
                     ips: [this.serverIP],
                     startTime: startTime,
                     endTime: this.now,

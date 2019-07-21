@@ -1,13 +1,13 @@
 <template>
     <el-container>
-        <el-main style="padding-top: 0px; padding-left: 0px">
+        <el-main style="padding-top: 0px; padding-left: 0px;">
             <el-card>
                 <div>
                     <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
                     <div>
                         <v-chart
                                 ref="cpuChart"
-                                style="width: 100%"
+                                style="width: 100%;"
                                 :options="cpuLoadLinearOptions"
                                 :autoresize="true"
                         />
