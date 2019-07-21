@@ -2,15 +2,16 @@ package os
 
 import (
 	"fmt"
+	"net/http"
+	"strings"
+	"time"
+
 	"github.com/lib/pq"
 	"github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
 	"github.com/micro-in-cn/platform-web/internal/db"
 	"github.com/micro-in-cn/platform-web/internal/tools"
 	"github.com/micro-in-cn/platform-web/modules/internal/nosj"
 	"github.com/micro/go-micro/util/log"
-	"net/http"
-	"strings"
-	"time"
 )
 
 type BaseItem struct {
@@ -31,7 +32,6 @@ type CPUTimes struct {
 
 type CPUPercent struct {
 	cpu.Percent
-	Time time.Time
 	BaseItem
 }
 

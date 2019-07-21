@@ -9,9 +9,9 @@ import "google/protobuf/timestamp.proto";
 
 message LoadAvgStat {
     google.protobuf.Timestamp timestamp = 1;
-    double Load1 = 2;
-    double Load5 = 3;
-    double Load15 = 4;
+    double load1 = 2;
+    double load5 = 3;
+    double load15 = 4;
 }
 
 message LoadRequest {

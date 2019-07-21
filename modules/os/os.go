@@ -69,8 +69,8 @@ func (m *module) Handlers() (mp map[string]*modules.Handler) {
 		Method: []string{"GET"},
 	}
 
-	mp["/load"] = &modules.Handler{
-		Func:   m.api.load,
+	mp["/load/avg-stat"] = &modules.Handler{
+		Func:   m.api.loadAvgStat,
 		Method: []string{"GET"},
 	}
 

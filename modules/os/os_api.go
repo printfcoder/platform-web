@@ -3,12 +3,12 @@ package os
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/micro-in-cn/platform-web/modules/internal/nosj"
 	"net/http"
 	"sync"
 
 	"github.com/micro-in-cn/platform-web/internal/config"
 	"github.com/micro-in-cn/platform-web/internal/db"
+	"github.com/micro-in-cn/platform-web/modules/internal/nosj"
 	"github.com/micro/cli"
 )
 

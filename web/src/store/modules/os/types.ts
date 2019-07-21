@@ -30,16 +30,29 @@ export class MemPercent {
     inactiveBytes: number;
     wiredBytes: number;
     freeBytes: number;
-    swappedInBytesTotal: number;
-    swappedOutBytesTotal: number;
     totalBytes: number;
     time: Date;
     ip: string;
+}
+
+export class LoadAvgStat {
+    time: Date;
+    load1: number;
+    load5: number;
+    load15: number;
+
+    constructor (load1: number, load5: number, load15: number, time: Date) {
+        this.load1 = load1
+        this.load5 = load5
+        this.load15 = load15
+        this.time = time
+    }
 }
 
 export interface OSState extends State {
     ipGroups: IpGroup[];
     cpuTimes: CPUTime[];
     memPercents: MemPercent[];
+    loadAvgStats: LoadAvgStat[],
     xError: Error
 }
