@@ -7,7 +7,7 @@
                     <div>
                         <v-chart
                                 ref="cpuChart"
-                                style="width: 100%;"
+                                style="width: 100%; height: 240px"
                                 :options="cpuLoadLinearOptions"
                                 :autoresize="true"
                         />
@@ -62,9 +62,9 @@
                 x: 0,
             },
             grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
+                left: '1%',
+                right: '1%',
+                bottom: '2%',
                 containLabel: true,
             },
             toolbox: {

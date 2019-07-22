@@ -48,14 +48,14 @@ const copyTxt = (text: string, callback: Function) => {
         return callback(fallbackCopyTextToClipboard(text))
     }
 
-    let flag = false
-
     // @ts-ignore
     navigator.clipboard.writeText(text).then(
         function () {
+            // eslint-disable-next-line standard/no-callback-literal
             callback(true)
         },
         function () {
+            // eslint-disable-next-line standard/no-callback-literal
             callback(false)
         }
     )
@@ -70,11 +70,35 @@ const secondsToHHMMSS = (secondsInput: number) => {
     return hours + ':' + (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds)
 }
 
+const getTimeInterval = (from: Date, to: Date, type: string = 's') => {
+    let ret = null
+    from = new Date(from)
+    to = new Date(to)
+
+    switch (type) {
+    case 's':
+        ret = ((from.getTime() - to.getTime()) / 1000).toFixed(0)
+        break
+    case 'm':
+        ret = ((from.getTime() - to.getTime()) / 60000).toFixed(0)
+        break
+    case 'h':
+        ret = ((from.getTime() - to.getTime()) / 3600000).toFixed(0)
+        break
+    case 'd':
+        ret = ((from.getTime() - to.getTime()) / (3600000 * 24)).toFixed(0)
+        break
+    }
+
+    return ret
+}
+
 let _xools = {
     toggleFullScreen,
     getCookieValue,
     getDefaultLan,
     secondsToHHMMSS,
+    getTimeInterval,
     setCookie,
     copyTxt
 }

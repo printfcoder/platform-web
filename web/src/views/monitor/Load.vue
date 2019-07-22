@@ -7,7 +7,7 @@
                     <div>
                         <v-chart
                                 ref="loadChart"
-                                style="width: 100%; height: 230px"
+                                style="width: 100%; height: 150px"
                                 :options="loadLinearOptions"
                                 :autoresize="true"
                         />
@@ -49,11 +49,12 @@
             tooltip: {
                 trigger: 'axis',
                 formatter: function(params) {
-                    let res = '';
-                    for (let i = 0, l = params.length; i < l; i++) {
-                        res += '<div style="color:' + params[i].color + '">' + params[i].seriesName + ' : ' + params[i].value[1] + '%\</div>';
-                    }
-                    return res;
+                    params = params[0];
+                    var date = new Date(params.name);
+                    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
+                },
+                axisPointer: {
+                    animation: false,
                 },
             },
             color: ['#FF4041', '#00AFF5', '#3B3B3B'],
@@ -62,16 +63,13 @@
                 x: 0,
             },
             grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
+                left: '1%',
+                right: '1%',
+                bottom: '2%',
                 containLabel: true,
             },
-            toolbox: {
-                feature: {},
-            },
             xAxis: {
-                type: 'time',
+                type: 'category',
                 splitLine: {
                     show: false,
                 },
@@ -85,53 +83,65 @@
                 axisLine: { show: false },
                 axisLabel: { show: false },
             },
-            series: [
-                {
-                    name: 'Load1',
-                    type: 'line',
-                    data: this.load1Data,
-                },
-                {
-                    name: 'Load5',
-                    type: 'line',
-                    data: this.load5Data,
-                },
-                {
-                    name: 'Load15',
-                    type: 'line',
-                    data: this.load15Data,
-                },
-            ],
+            series: [{
+                name: 'Load1',
+                type: 'line',
+                showSymbol: false,
+                hoverAnimation: false,
+                data: this.load1Data,
+            }, {
+                name: 'Load5',
+                type: 'line',
+                showSymbol: false,
+                hoverAnimation: false,
+                data: this.load5Data,
+            }, {
+                name: 'Load15',
+                type: 'line',
+                showSymbol: false,
+                hoverAnimation: false,
+                data: this.load15Data,
+            }],
         };
 
         mounted() {
-
         }
 
         @Watch('loadAvgStats', { immediate: true, deep: true })
         asyncData(loadAvgStats: LoadAvgStat[]) {
             if (loadAvgStats != null) {
                 loadAvgStats.forEach((ld: LoadAvgStat) => {
-                    let total = ld.load1 + ld.load5 + ld.load15;
                     if (this.load1Data.length > 20) {
                         this.load1Data.shift();
                         this.load5Data.shift();
                         this.load15Data.shift();
                     }
 
+                    let now = new Date();
+                    let xAxisName = this.$xools.getTimeInterval(ld.time, now);
+
                     this.load1Data.push({
-                        name: ld.time,
-                        value: [ld.time, ld.load1.toFixed(4)],
+                        name: xAxisName,
+                        value: [
+                            xAxisName + 's',
+                            ld.load1.toFixed(4),
+                        ],
                     });
 
                     this.load5Data.push({
-                        name: ld.time,
-                        value: [ld.time, ld.load5.toFixed(4)],
+                        name: xAxisName,
+                        value: [
+                            xAxisName + 's',
+                            ld.load5.toFixed(4),
+                        ],
                     });
 
                     this.load15Data.push({
-                        name: ld.time,
-                        value: [ld.time, ld.load15.toFixed(4)],
+                        name: xAxisName,
+                        value: [
+                            xAxisName + 's',
+                            ld.load15.toFixed(4),
+                        ],
                     });
                 });
                 let chart = this.$refs['loadChart'];
@@ -152,12 +162,3 @@
         }
     }
 </script>
-
-< style;
-scoped >
-
-</
-
-style
-
->;
