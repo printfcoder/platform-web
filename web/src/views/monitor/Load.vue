@@ -49,9 +49,11 @@
             tooltip: {
                 trigger: 'axis',
                 formatter: function(params) {
-                    params = params[0];
-                    var date = new Date(params.name);
-                    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
+                    let res = '';
+                    for (let i = 0, l = params.length; i < l; i++) {
+                        res += '<div style="color:' + params[i].color + '">' + params[i].seriesName + ' : ' + params[i].value[1] + '%\</div>';
+                    }
+                    return res;
                 },
                 axisPointer: {
                     animation: false,
@@ -73,6 +75,7 @@
                 splitLine: {
                     show: false,
                 },
+                boundaryGap: false,
             },
             yAxis: {
                 type: 'value',

@@ -162,7 +162,7 @@
             }
         }
 
-        private now = new Date('2019-06-11T15:25:02.698Z');
+        private now = new Date('2019-07-17T15:45:11.312Z');
 
         changeIP() {
             if (!this.serverIP) {

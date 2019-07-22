@@ -80,16 +80,11 @@
             },
             xAxis: [
                 {
-                    type: 'time',
+                    type: 'category',
                     splitLine: {
                         show: false,
                     },
-                    axisLabel: {
-                        formatter: function(value, index) {
-                            let date = new Date(value);
-                            return date.getMinutes() + ':' + date.getSeconds();
-                        },
-                    },
+                    boundaryGap: false,
                 },
             ],
             yAxis: [
@@ -155,29 +150,33 @@
                     this.freeData.shift();
                     this.totalData.shift();
                 }
+
+                let now = new Date();
+                let xAxisName = this.$xools.getTimeInterval(mp.time, now);
+
                 this.activeData.push({
-                    name: mp.time,
-                    value: [mp.time, (mp.activeBytes / this.byteToGB).toFixed(1), ((mp.activeBytes / mp.totalBytes) * 100).toFixed(2)],
+                    name: xAxisName,
+                    value: [xAxisName + 's', (mp.activeBytes / this.byteToGB).toFixed(1), ((mp.activeBytes / mp.totalBytes) * 100).toFixed(2)],
                 });
 
                 this.compressedData.push({
-                    name: mp.time,
-                    value: [mp.time, (mp.compressedBytes / this.byteToGB).toFixed(1), ((mp.compressedBytes / mp.totalBytes) * 100).toFixed(2)],
+                    name: xAxisName,
+                    value: [xAxisName + 's', (mp.compressedBytes / this.byteToGB).toFixed(1), ((mp.compressedBytes / mp.totalBytes) * 100).toFixed(2)],
                 });
 
                 this.inactiveData.push({
-                    name: mp.time,
-                    value: [mp.time, (mp.inactiveBytes / this.byteToGB).toFixed(1), ((mp.inactiveBytes / mp.totalBytes) * 100).toFixed(2)],
+                    name: xAxisName,
+                    value: [xAxisName + 's', (mp.inactiveBytes / this.byteToGB).toFixed(1), ((mp.inactiveBytes / mp.totalBytes) * 100).toFixed(2)],
                 });
 
                 this.wiredData.push({
-                    name: mp.time,
-                    value: [mp.time, (mp.wiredBytes / this.byteToGB).toFixed(1), ((mp.wiredBytes / mp.totalBytes) * 100).toFixed(2)],
+                    name: xAxisName,
+                    value: [xAxisName + 's', (mp.wiredBytes / this.byteToGB).toFixed(1), ((mp.wiredBytes / mp.totalBytes) * 100).toFixed(2)],
                 });
 
                 this.freeData.push({
-                    name: mp.time,
-                    value: [mp.time, (mp.freeBytes / this.byteToGB).toFixed(1), ((mp.freeBytes / mp.totalBytes) * 100).toFixed(2)],
+                    name: xAxisName,
+                    value: [xAxisName + 's', (mp.freeBytes / this.byteToGB).toFixed(1), ((mp.freeBytes / mp.totalBytes) * 100).toFixed(2)],
                 });
             });
 

@@ -135,7 +135,7 @@
             if (nodes) {
                 let nodesStr: any[] = [];
                 nodes.forEach(node => {
-                    nodesStr.push(mergeAddressAndPort(node.address, node.port));
+                    nodesStr.push(node.address);
                 });
                 return nodesStr.join(', ') + ' | ' + nodesStr.length;
             }
