@@ -1,13 +1,12 @@
 package cpu
 
 import (
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	"sync"
 	"time"
 
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	"github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
-	"github.com/micro/go-log"
+	"github.com/micro/go-micro/util/log"
 )
 
 var (
@@ -15,40 +14,46 @@ var (
 )
 
 type CPU struct {
-	modules.BaseModule
 	cpuClient cpu.CPUService
+	opts      *modules.CPUOptions
+	modules.BaseModule
 }
 
-func (p *CPU) Init(opts option.Options) error {
-	p.InitB()
-	p.CollectorName = opts.Collector.Name
-	p.Interval = opts.CPU.Interval
-	p.cpuClient = cpu.NewCPUService(p.CollectorName, opts.Collector.Client)
+func (c *CPU) Init(opts *modules.Options) {
+	c.opts = opts.CPU
+	c.InitB()
+	c.cpuClient = cpu.NewCPUService(opts.Collector.Name, opts.Collector.Client)
 
-	return nil
+	return
 }
 
-func (p *CPU) Push() (err error) {
+func (c *CPU) Push() (err error) {
 	once.Do(func() {
 		for {
-			if err = p.pushInfo(); err == nil {
+			if err = c.pushInfo(); err == nil {
 				break
 			} else {
-				log.Logf("[Push] cpu pushPercent error, %s", err)
+				log.Logf("[ERR] [Push] cpu pushPercent error, %s", err)
 				time.Sleep(2 * time.Second)
 			}
 		}
 	})
 
-	if err = p.pushPercent(); err != nil {
-		log.Logf("[Push] cpu pushPercent error, %s", err)
+	if err = c.pushPercent(); err != nil {
+		log.Logf("[ERR] [Push] cpu pushPercent error, %s", err)
 		return
 	}
-	if err = p.pushTimes(); err != nil {
-		log.Logf("[Push] cpu pushTimes error, %s", err)
+	if err = c.pushTimes(); err != nil {
+		log.Logf("[ERR] [Push] cpu pushTimes error, %s", err)
 		return
 	}
 	return err
 }
 
+func (c *CPU) Interval() time.Duration {
+	return c.opts.Interval
+}
 
+func (c *CPU) String() string {
+	return "cpu"
+}

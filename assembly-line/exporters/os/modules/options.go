@@ -1,8 +1,9 @@
-package option
+package modules
 
 import (
-	"github.com/micro/go-micro/client"
 	"time"
+
+	"github.com/micro/go-micro/client"
 )
 
 type Options struct {
@@ -19,51 +20,53 @@ type Options struct {
 	Process    *ProcessOptions `json:"process"`
 }
 
+type BaseOption struct {
+	// make modules use Collector easily
+	Collector *Collector    `json:"collector"`
+	Enabled   bool          `json:"enable"`
+	Interval  time.Duration `json:"interval"`
+	IP        string        `json:"ip"`
+	NodeName  string        `json:"nodeName"`
+}
+
 type Collector struct {
 	Name   string `json:"name"`
 	Client client.Client
 }
 
 type CPUOptions struct {
-	Enabled  bool          `json:"enable"`
-	Interval time.Duration `json:"interval"`
+	*BaseOption
 }
 
 type DiskOptions struct {
-	Enabled  bool          `json:"enable"`
-	Paths    []string      `json:"paths"`
-	Interval time.Duration `json:"interval"`
+	*BaseOption
+	Paths []string `json:"paths"`
 }
 
 type DockerOptions struct {
-	Enabled  bool          `json:"enable"`
-	Interval time.Duration `json:"interval"`
+	*BaseOption
 }
 
 type HostOptions struct {
-	Enabled  bool          `json:"enable"`
-	Interval time.Duration `json:"interval"`
+	*BaseOption
 }
 
 type LoadOptions struct {
-	Enabled  bool          `json:"enable"`
-	Interval time.Duration `json:"interval"`
+	*BaseOption
 }
 
 type MemOptions struct {
-	Enabled  bool          `json:"enable"`
-	Interval time.Duration `json:"interval"`
+	*BaseOption
 }
 
 type NetOptions struct {
-	Enabled  bool          `json:"enable"`
-	Kinds    []string      `json:"kinds"`
-	Interval time.Duration `json:"interval"`
+	*BaseOption
+	Kinds  []string `json:"kinds"`
+	Ifaces []string `json:"ifaces"`
 }
 
 type ProcessOptions struct {
-	Enabled  bool          `json:"enable"`
-	Interval time.Duration `json:"interval"`
+	*BaseOption
 }
 
 type Option func(*Options)

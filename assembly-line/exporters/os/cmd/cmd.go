@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro/config/cmd"
 )
@@ -21,11 +20,11 @@ var (
 type c struct {
 	*cli.App
 	modules []modules.Module
-	opts    option.Options
+	opts    *modules.Options
 }
 
 // Init app
-func Init(ops ...option.Option) {
+func Init(ops ...modules.Option) {
 	once.Do(func() {
 		app := newApp(ops...)
 		app.advFlags()
@@ -33,44 +32,13 @@ func Init(ops ...option.Option) {
 	})
 }
 
-func newApp(ops ...option.Option) (app *c) {
+func newApp(ops ...modules.Option) (app *c) {
 	app = &c{
 		App: cmd.App(),
-		opts: option.Options{
-			AppName:    name,
-			AppVersion: version,
-			Collector: &option.Collector{
-				Name: collector,
-			},
-			CPU: &option.CPUOptions{
-				Enabled: true,
-			},
-			Disk: &option.DiskOptions{
-				Enabled: true,
-			},
-			Docker: &option.DockerOptions{
-				Enabled: true,
-			},
-			Host: &option.HostOptions{
-				Enabled: true,
-			},
-			Load: &option.LoadOptions{
-				Enabled: true,
-			},
-			Mem: &option.MemOptions{
-				Enabled: true,
-			},
-			Net: &option.NetOptions{
-				Enabled: true,
-			},
-			Process: &option.ProcessOptions{
-				Enabled: true,
-			},
-		},
 	}
 
 	for _, o := range ops {
-		o(&app.opts)
+		o(app.opts)
 	}
 
 	return app

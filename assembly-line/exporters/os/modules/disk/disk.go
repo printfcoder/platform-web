@@ -1,8 +1,8 @@
 package disk
 
 import (
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	"sync"
+	"time"
 
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	disk2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk"
@@ -14,33 +14,39 @@ var (
 )
 
 type Disk struct {
-	modules.BaseModule
-	path       []string
 	diskClient disk2.DiskService
+	modules.BaseModule
+	opts *modules.DiskOptions
 }
 
-func (p *Disk) Init(opts option.Options) error {
-	p.InitB()
-	p.CollectorName = opts.Collector.Name
-	p.Interval = opts.Disk.Interval
-	p.path = opts.Disk.Paths
-	p.diskClient = disk2.NewDiskService(p.CollectorName, opts.Collector.Client)
+func (d *Disk) Init(opts *modules.Options) {
+	d.opts = opts.Disk
+	d.InitB()
+	d.diskClient = disk2.NewDiskService(opts.Collector.Name, opts.Collector.Client)
 
-	return nil
+	return
 }
 
-func (p *Disk) Push() (err error) {
-	if err = p.pushIOCounters(); err != nil {
+func (d *Disk) Push() (err error) {
+	if err = d.pushIOCounters(); err != nil {
 		log.Logf("[Push] pushIOCounters err: %s", err)
 	}
 
-	if err = p.pushUsage(); err != nil {
+	if err = d.pushUsage(); err != nil {
 		log.Logf("[Push] pushUsage err: %s", err)
 	}
 
-	if err = p.pushPartition(); err != nil {
+	if err = d.pushPartition(); err != nil {
 		log.Logf("[Push] pushPartition err: %s", err)
 	}
 
 	return err
+}
+
+func (d *Disk) Interval() time.Duration {
+	return d.opts.Interval
+}
+
+func (d *Disk) String() string {
+	return "disk"
 }

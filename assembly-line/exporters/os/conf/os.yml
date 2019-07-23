@@ -28,6 +28,7 @@ micro:
           enable: false
           interval: 5
           kinds:
+          ifaces: [lo0, en0]
         process:
           enable: false
           interval: 5

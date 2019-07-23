@@ -1,30 +1,40 @@
 package mem
 
 import (
+	"time"
+
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/mem"
+	"github.com/micro/go-micro/util/log"
 )
 
 type Mem struct {
 	modules.BaseModule
+	opts      *modules.MemOptions
 	memClient proto.MemService
 }
 
-func (p *Mem) Init(opts option.Options) error {
-	p.InitB()
-	p.CollectorName = opts.Collector.Name
-	p.Interval = opts.Mem.Interval
-	p.memClient = proto.NewMemService(p.CollectorName, opts.Collector.Client)
-
-	return nil
+func (m *Mem) Init(opts *modules.Options) {
+	log.Logf("[INFO] [Init] init memory module")
+	m.opts = opts.Mem
+	m.InitB()
+	m.memClient = proto.NewMemService(opts.Collector.Name, opts.Collector.Client)
+	return
 }
 
-func (p *Mem) Push() (err error) {
-	err = p.pushMemoryStat()
+func (m *Mem) Push() (err error) {
+	err = m.pushMemoryStat()
 	if err != nil {
 		return
 	}
 
 	return err
+}
+
+func (m *Mem) Interval() time.Duration {
+	return m.opts.Interval
+}
+
+func (m *Mem) String() string {
+	return "mem"
 }

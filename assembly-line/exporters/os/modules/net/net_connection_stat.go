@@ -9,10 +9,10 @@ import (
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/net"
 )
 
-func (p *Net) pushConnectionStat() (err error) {
+func (n *Net) pushConnectionStat() (err error) {
 	t := ptypes.TimestampNow()
 	data := make([]*proto.ConnectionStat, 0)
-	for _, kind := range p.kinds {
+	for _, kind := range n.opts.Kinds {
 		vv, err := net.Connections(kind)
 		if err != nil {
 			return fmt.Errorf("[pushConnectionStat] get infos error: %s", err)
@@ -44,12 +44,12 @@ func (p *Net) pushConnectionStat() (err error) {
 
 	req := &proto.NetRequest{
 		Timestamp:      t,
-		IP:             p.IP,
-		NodeName:       p.NodeName,
+		IP:             n.IP,
+		NodeName:       n.NodeName,
 		ConnectionStat: data,
 	}
 
-	_, err = p.netClient.PushConnectionStat(context.Background(), req)
+	_, err = n.netClient.PushConnectionStat(context.Background(), req)
 	if err != nil {
 		return fmt.Errorf("[pushConnectionStat] push error: %s", err)
 	}

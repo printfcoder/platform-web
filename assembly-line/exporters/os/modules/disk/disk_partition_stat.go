@@ -9,7 +9,7 @@ import (
 	disk2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk"
 )
 
-func (p *Disk) pushPartition() (err error) {
+func (d *Disk) pushPartition() (err error) {
 	vv, err := disk.Partitions(true)
 	if err != nil {
 		return fmt.Errorf("[pushPartition] get infos error: %s", err)
@@ -30,12 +30,12 @@ func (p *Disk) pushPartition() (err error) {
 
 	req := &disk2.DiskRequest{
 		Timestamp:     t,
-		IP:            p.IP,
-		NodeName:      p.NodeName,
+		IP:            d.IP,
+		NodeName:      d.NodeName,
 		PartitionStat: data,
 	}
 
-	_, err = p.diskClient.PushPartitionStat(context.Background(), req)
+	_, err = d.diskClient.PushPartitionStat(context.Background(), req)
 	if err != nil {
 		return fmt.Errorf("[pushPartition] push error: %s", err)
 	}

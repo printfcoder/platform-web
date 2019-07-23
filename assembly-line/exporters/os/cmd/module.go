@@ -17,49 +17,55 @@ func (app *c) loadModules(client client.Client) {
 	// cpu
 	if app.opts.CPU.Enabled {
 		log.Logf("[INFO] cpu enabled")
-		p := cpu.CPU{}
-		_ = p.Init(app.opts)
+		c := cpu.CPU{}
+		app.opts.CPU.Collector = app.opts.Collector
+		c.Init(app.opts)
 
-		app.modules = append(app.modules, &p)
+		app.modules = append(app.modules, &c)
 	}
 
 	// disk
 	if app.opts.Disk.Enabled {
-		p := disk.Disk{}
-		_ = p.Init(app.opts)
+		d := disk.Disk{}
+		app.opts.Disk.Collector = app.opts.Collector
+		d.Init(app.opts)
 
-		app.modules = append(app.modules, &p)
+		app.modules = append(app.modules, &d)
 	}
 
 	// host
 	if app.opts.Host.Enabled {
-		p := host.Host{}
-		_ = p.Init(app.opts)
+		h := host.Host{}
+		app.opts.Host.Collector = app.opts.Collector
+		h.Init(app.opts)
 
-		app.modules = append(app.modules, &p)
+		app.modules = append(app.modules, &h)
 	}
 
 	// load
 	if app.opts.Load.Enabled {
-		p := load.Load{}
-		_ = p.Init(app.opts)
+		l := load.Load{}
+		app.opts.Load.Collector = app.opts.Collector
+		l.Init(app.opts)
 
-		app.modules = append(app.modules, &p)
+		app.modules = append(app.modules, &l)
 	}
 
 	// mem
 	if app.opts.Mem.Enabled {
-		p := mem.Mem{}
-		_ = p.Init(app.opts)
+		m := mem.Mem{}
+		app.opts.Mem.Collector = app.opts.Collector
+		m.Init(app.opts)
 
-		app.modules = append(app.modules, &p)
+		app.modules = append(app.modules, &m)
 	}
 
 	// net
 	if app.opts.Net.Enabled {
-		p := net.Net{}
-		_ = p.Init(app.opts)
+		n := net.Net{}
+		app.opts.Net.Collector = app.opts.Collector
+		n.Init(app.opts)
 
-		app.modules = append(app.modules, &p)
+		app.modules = append(app.modules, &n)
 	}
 }

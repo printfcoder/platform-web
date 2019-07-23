@@ -10,7 +10,7 @@ import (
 	"github.com/micro/go-micro/util/log"
 )
 
-func (p *CPU) pushTimes() (err error) {
+func (c *CPU) pushTimes() (err error) {
 	log.Log("cpu")
 	vv, err := cpu.Times(true)
 	if err != nil {
@@ -39,12 +39,12 @@ func (p *CPU) pushTimes() (err error) {
 
 	req := &cpu2.CPURequest{
 		Timestamp: t,
-		IP:        p.IP,
-		NodeName:  p.NodeName,
+		IP:        c.IP,
+		NodeName:  c.NodeName,
 		TimesStat: data,
 	}
 
-	_, err = p.cpuClient.PushCPUTimesStat(context.Background(), req)
+	_, err = c.cpuClient.PushCPUTimesStat(context.Background(), req)
 	if err != nil {
 		return fmt.Errorf("[pushInfo] push error: %s", err)
 	}

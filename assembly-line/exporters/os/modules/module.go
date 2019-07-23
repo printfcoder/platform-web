@@ -6,8 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/option"
-	"github.com/micro/go-log"
+	"github.com/micro/go-micro/util/log"
 	"github.com/micro/util/go/lib/addr"
 )
 
@@ -17,18 +16,18 @@ var (
 )
 
 type Module interface {
-	Init(opts option.Options) error
+	Init(options *Options)
+	Interval() time.Duration
 	Push() error
 	Start() error
+	String() string
 }
 
 type BaseModule struct {
+	Err chan error
 	Module
-	CollectorName string
-	Interval      time.Duration
-	NodeName      string
-	IP            string
-	Err           chan error
+	NodeName string
+	IP       string
 }
 
 func (b *BaseModule) InitB() {
@@ -64,7 +63,7 @@ func (b *BaseModule) InitB() {
 
 func (b *BaseModule) Start() (err error) {
 	go func() {
-		t := time.NewTicker(b.Interval * time.Second)
+		t := time.NewTicker(time.Second * b.Interval())
 		for {
 			select {
 			case <-t.C:

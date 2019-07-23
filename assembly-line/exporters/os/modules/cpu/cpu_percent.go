@@ -9,8 +9,8 @@ import (
 	cpu2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
 )
 
-func (p *CPU) pushPercent() (err error) {
-	vv, err := cpu.Percent(p.Interval, true)
+func (c *CPU) pushPercent() (err error) {
+	vv, err := cpu.Percent(c.opts.Interval, true)
 	if err != nil {
 		return fmt.Errorf("[pushPercent] get infos error: %s", err)
 	}
@@ -27,12 +27,12 @@ func (p *CPU) pushPercent() (err error) {
 
 	req := &cpu2.CPURequest{
 		Timestamp: t,
-		IP:        p.IP,
-		NodeName:  p.NodeName,
+		IP:        c.IP,
+		NodeName:  c.NodeName,
 		Percent:   data,
 	}
 
-	_, err = p.cpuClient.PushCPUPercent(context.Background(), req)
+	_, err = c.cpuClient.PushCPUPercent(context.Background(), req)
 	if err != nil {
 		return fmt.Errorf("[pushPercent] push error: %s", err)
 	}

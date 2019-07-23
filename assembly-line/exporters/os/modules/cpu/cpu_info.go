@@ -9,7 +9,7 @@ import (
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
 )
 
-func (p *CPU) pushInfo() (err error) {
+func (c *CPU) pushInfo() (err error) {
 	vv, err := cpu.Info()
 	if err != nil {
 		return fmt.Errorf("[pushInfo] get infos error: %s", err)
@@ -39,12 +39,12 @@ func (p *CPU) pushInfo() (err error) {
 
 	req := &proto.CPURequest{
 		Timestamp: t,
-		IP:        p.IP,
-		NodeName:  p.NodeName,
+		IP:        c.IP,
+		NodeName:  c.NodeName,
 		InfoStat:  data,
 	}
 
-	_, err = p.cpuClient.PushCPUInfoStat(context.Background(), req)
+	_, err = c.cpuClient.PushCPUInfoStat(context.Background(), req)
 	if err != nil {
 		return fmt.Errorf("[pushInfo] push error: %s", err)
 	}

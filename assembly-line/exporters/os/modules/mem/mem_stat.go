@@ -9,32 +9,32 @@ import (
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/mem"
 )
 
-func (p *Mem) pushMemoryStat() (err error) {
-	m, err := mem.GetMemInfo()
+func (m *Mem) pushMemoryStat() (err error) {
+	mem, err := mem.GetMemInfo()
 	if err != nil {
-		return fmt.Errorf("[pushMemoryStat] get infos error: %s", err)
+		return fmt.Errorf("[ERR] [pushMemoryStat] get infos error: %s", err)
 	}
 
 	t := ptypes.TimestampNow()
 	data := []*proto.MemoryStat{{
 		Timestamp:            t,
-		ActiveBytes:          m["active_bytes"],
-		CompressedBytes:      m["compressed_bytes"],
-		InactiveBytes:        m["inactive_bytes"],
-		WiredBytes:           m["wired_bytes"],
-		FreeBytes:            m["free_bytes"],
-		SwappedInBytesTotal:  m["swapped_in_bytes_total"],
-		SwappedOutBytesTotal: m["swapped_out_bytes_total"],
-		TotalBytes:           m["total_bytes"],
+		ActiveBytes:          mem["active_bytes"],
+		CompressedBytes:      mem["compressed_bytes"],
+		InactiveBytes:        mem["inactive_bytes"],
+		WiredBytes:           mem["wired_bytes"],
+		FreeBytes:            mem["free_bytes"],
+		SwappedInBytesTotal:  mem["swapped_in_bytes_total"],
+		SwappedOutBytesTotal: mem["swapped_out_bytes_total"],
+		TotalBytes:           mem["total_bytes"],
 	}}
 	req := &proto.MemRequest{
 		Timestamp:  t,
-		IP:         p.IP,
-		NodeName:   p.NodeName,
+		IP:         m.opts.IP,
+		NodeName:   m.opts.NodeName,
 		MemoryStat: data,
 	}
 
-	_, err = p.memClient.PushMemoryStat(context.Background(), req)
+	_, err = m.memClient.PushMemoryStat(context.Background(), req)
 	if err != nil {
 		return fmt.Errorf("[pushMemoryStat] push error: %s", err)
 	}

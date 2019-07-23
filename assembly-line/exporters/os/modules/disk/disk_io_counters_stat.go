@@ -9,7 +9,7 @@ import (
 	disk2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk"
 )
 
-func (p *Disk) pushIOCounters() (err error) {
+func (d *Disk) pushIOCounters() (err error) {
 	vv, err := disk.IOCounters()
 	if err != nil {
 		return fmt.Errorf("[pushIOCounters] get infos error: %s", err)
@@ -40,12 +40,12 @@ func (p *Disk) pushIOCounters() (err error) {
 
 	req := &disk2.DiskRequest{
 		Timestamp:      t,
-		IP:             p.IP,
-		NodeName:       p.NodeName,
+		IP:             d.IP,
+		NodeName:       d.NodeName,
 		IoCountersStat: data,
 	}
 
-	_, err = p.diskClient.PushIOCountersStat(context.Background(), req)
+	_, err = d.diskClient.PushIOCountersStat(context.Background(), req)
 	if err != nil {
 		return fmt.Errorf("[pushIOCounters] push error: %s", err)
 	}

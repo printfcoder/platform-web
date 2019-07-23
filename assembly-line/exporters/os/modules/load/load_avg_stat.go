@@ -9,7 +9,7 @@ import (
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/load"
 )
 
-func (p *Load) pushAvgStat() (err error) {
+func (l *Load) pushAvgStat() (err error) {
 	v, err := load.Avg()
 	if err != nil {
 		return fmt.Errorf("[pushAvgStat] get infos error: %s", err)
@@ -27,12 +27,12 @@ func (p *Load) pushAvgStat() (err error) {
 
 	req := &proto.LoadRequest{
 		Timestamp:   t,
-		IP:          p.IP,
-		NodeName:    p.NodeName,
+		IP:          l.IP,
+		NodeName:    l.NodeName,
 		LoadAvgStat: data,
 	}
 
-	_, err = p.loadClient.PushLoadAvgStat(context.Background(), req)
+	_, err = l.loadClient.PushLoadAvgStat(context.Background(), req)
 	if err != nil {
 		return fmt.Errorf("[pushAvgStat] push error: %s", err)
 	}

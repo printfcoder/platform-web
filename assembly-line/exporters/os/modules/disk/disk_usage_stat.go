@@ -9,11 +9,11 @@ import (
 	disk2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/disk"
 )
 
-func (p *Disk) pushUsage() (err error) {
-	data := make([]*disk2.UsageStat, 0, len(p.path))
+func (d *Disk) pushUsage() (err error) {
+	data := make([]*disk2.UsageStat, 0, len(d.opts.Paths))
 	t := ptypes.TimestampNow()
 
-	for _, path := range p.path {
+	for _, path := range d.opts.Paths {
 		v, err := disk.Usage(path)
 		if err != nil {
 			return fmt.Errorf("[pushUsage] get usage error: %s", err)
@@ -36,12 +36,12 @@ func (p *Disk) pushUsage() (err error) {
 
 	req := &disk2.DiskRequest{
 		Timestamp: t,
-		IP:        p.IP,
-		NodeName:  p.NodeName,
+		IP:        d.IP,
+		NodeName:  d.NodeName,
 		UsageStat: data,
 	}
 
-	_, err = p.diskClient.PushDiskUsageStat(context.Background(), req)
+	_, err = d.diskClient.PushDiskUsageStat(context.Background(), req)
 	if err != nil {
 		return fmt.Errorf("[pushUsage] push error: %s", err)
 	}

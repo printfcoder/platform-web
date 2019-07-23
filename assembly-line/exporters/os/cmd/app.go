@@ -38,7 +38,6 @@ func (app *c) loadConfig(ctx *cli.Context) {
 	if err != nil {
 		panic(err)
 	}
-	log.Log(app.opts.Collector.Name)
 }
 
 func (app *c) run() {
@@ -49,7 +48,6 @@ func (app *c) run() {
 
 	s.Init(micro.Action(func(ctx *cli.Context) {
 		app.loadConfig(ctx)
-		app.parseFlags(ctx)
 		app.loadModules(s.Client())
 		app.start()
 	}))

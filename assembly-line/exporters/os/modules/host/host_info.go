@@ -8,7 +8,7 @@ import (
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/host"
 )
 
-func (p *Host) pushInfo() (err error) {
+func (h *Host) pushInfo() (err error) {
 	v, err := host.Info()
 	if err != nil {
 		return fmt.Errorf("[pushInfo] get info error: %s", err)
@@ -34,12 +34,12 @@ func (p *Host) pushInfo() (err error) {
 
 	req := &proto.HostRequest{
 		Timestamp: t,
-		IP:        p.IP,
-		NodeName:  p.NodeName,
+		IP:        h.IP,
+		NodeName:  h.NodeName,
 		HostInfo:  data,
 	}
 
-	_, err = p.hostClient.PushHostInfo(context.Background(), req)
+	_, err = h.hostClient.PushHostInfo(context.Background(), req)
 	if err != nil {
 		return fmt.Errorf("[pushInfo] push error: %s", err)
 	}
