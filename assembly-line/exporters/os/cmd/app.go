@@ -1,19 +1,24 @@
 package cmd
 
 import (
+	"os"
 	"runtime"
+	"strings"
+	"sync"
 
 	"github.com/micro/cli"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/config"
 	"github.com/micro/go-micro/config/source/file"
+	"github.com/micro/go-micro/util/addr"
 	"github.com/micro/go-micro/util/log"
 )
 
 var (
 	diskPaths  []string
 	netKinds   = []string{"all"}
-	configFile = "./conf/os.yml"
+	configFile = "/Users/shuxian/Projects/micro-in-cn/platform-web/assembly-line/exporters/os/conf/os.yml"
+	once2      sync.Once
 )
 
 func init() {
@@ -38,6 +43,35 @@ func (app *c) loadConfig(ctx *cli.Context) {
 	if err != nil {
 		panic(err)
 	}
+
+	var ip string
+	nodeName, err := os.Hostname()
+	if err != nil {
+		log.Logf("[ERR] [loadConfig] get host name error: %s", err)
+	}
+
+	// then choose ip
+	ips := addr.IPs()
+	log.Logf("[INFO] [loadConfig] got ips: %s", ips)
+
+	// find the first one which is not prefix with 127 and not ipv6
+	for _, ipTemp := range ips {
+		if strings.Index(ipTemp, "127") == 0 || strings.Count(ipTemp, ":") > 1 {
+			continue
+		}
+
+		ip = ipTemp
+		if nodeName == "" {
+			nodeName = ipTemp
+		}
+
+		log.Logf("[INFO] [loadConfig] node ip: %s and name: %s", ip, nodeName)
+
+		break
+	}
+
+	app.opts.NodeName = nodeName
+	app.opts.IP = ip
 }
 
 func (app *c) run() {

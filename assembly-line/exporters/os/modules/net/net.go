@@ -22,7 +22,8 @@ type Net struct {
 
 func (n *Net) Init(opts *modules.Options) {
 	n.opts = opts.Net
-	n.InitB()
+	n.opts.NodeName = opts.NodeName
+	n.opts.IP = opts.IP
 	n.netClient = proto.NewNetService(n.opts.Collector.Name, n.opts.Collector.Client)
 
 	// for search ifraces are used to be exported
@@ -43,6 +44,22 @@ func (n *Net) Push() (err error) {
 	}
 
 	return err
+}
+
+func (n *Net) Start() (err error) {
+	go func() {
+		t := time.NewTicker(time.Second * n.Interval())
+		for {
+			select {
+			case <-t.C:
+				if err = n.Push(); err != nil {
+					n.Err <- err
+				}
+			}
+		}
+	}()
+
+	return nil
 }
 
 func (n *Net) Interval() time.Duration {

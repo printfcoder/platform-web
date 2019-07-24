@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/micro/go-micro/util/log"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/third_party/prometheus/node_exporter/collector/mem"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/mem"
@@ -12,7 +13,9 @@ import (
 func (m *Mem) pushMemoryStat() (err error) {
 	mem, err := mem.GetMemInfo()
 	if err != nil {
-		return fmt.Errorf("[ERR] [pushMemoryStat] get infos error: %s", err)
+		err = fmt.Errorf("[ERR] [pushMemoryStat] get infos error: %s", err)
+		log.Log(err)
+		return err
 	}
 
 	t := ptypes.TimestampNow()
@@ -36,7 +39,9 @@ func (m *Mem) pushMemoryStat() (err error) {
 
 	_, err = m.memClient.PushMemoryStat(context.Background(), req)
 	if err != nil {
-		return fmt.Errorf("[pushMemoryStat] push error: %s", err)
+		err = fmt.Errorf("[ERR] [pushMemoryStat] push error: %s", err)
+		log.Log(err)
+		return err
 	}
 
 	return

@@ -18,9 +18,11 @@ type Options struct {
 	Mem        *MemOptions     `json:"mem"`
 	Net        *NetOptions     `json:"net"`
 	Process    *ProcessOptions `json:"process"`
+	IP         string
+	NodeName   string
 }
 
-type BaseOption struct {
+type ModuleBaseOptions struct {
 	// make modules use Collector easily
 	Collector *Collector    `json:"collector"`
 	Enabled   bool          `json:"enable"`
@@ -35,38 +37,38 @@ type Collector struct {
 }
 
 type CPUOptions struct {
-	*BaseOption
+	*ModuleBaseOptions
 }
 
 type DiskOptions struct {
-	*BaseOption
+	*ModuleBaseOptions
 	Paths []string `json:"paths"`
 }
 
 type DockerOptions struct {
-	*BaseOption
+	*ModuleBaseOptions
 }
 
 type HostOptions struct {
-	*BaseOption
+	*ModuleBaseOptions
 }
 
 type LoadOptions struct {
-	*BaseOption
+	*ModuleBaseOptions
 }
 
 type MemOptions struct {
-	*BaseOption
+	*ModuleBaseOptions
 }
 
 type NetOptions struct {
-	*BaseOption
+	*ModuleBaseOptions
 	Kinds  []string `json:"kinds"`
 	Ifaces []string `json:"ifaces"`
 }
 
 type ProcessOptions struct {
-	*BaseOption
+	*ModuleBaseOptions
 }
 
 type Option func(*Options)

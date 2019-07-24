@@ -17,7 +17,8 @@ type Mem struct {
 func (m *Mem) Init(opts *modules.Options) {
 	log.Logf("[INFO] [Init] init memory module")
 	m.opts = opts.Mem
-	m.InitB()
+	m.opts.NodeName = opts.NodeName
+	m.opts.IP = opts.IP
 	m.memClient = proto.NewMemService(opts.Collector.Name, opts.Collector.Client)
 	return
 }
@@ -29,6 +30,22 @@ func (m *Mem) Push() (err error) {
 	}
 
 	return err
+}
+
+func (m *Mem) Start() (err error) {
+	go func() {
+		t := time.NewTicker(time.Second * m.Interval())
+		for {
+			select {
+			case <-t.C:
+				if err = m.Push(); err != nil {
+					m.Err <- err
+				}
+			}
+		}
+	}()
+
+	return nil
 }
 
 func (m *Mem) Interval() time.Duration {

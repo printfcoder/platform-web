@@ -20,7 +20,8 @@ type Host struct {
 
 func (h *Host) Init(opts *modules.Options) {
 	h.opts = opts.Host
-	h.InitB()
+	h.opts.NodeName = opts.NodeName
+	h.opts.IP = opts.IP
 	h.hostClient = proto.NewHostService(opts.Collector.Name, opts.Collector.Client)
 
 	return
@@ -29,6 +30,22 @@ func (h *Host) Init(opts *modules.Options) {
 func (h *Host) Push() (err error) {
 	err = h.pushInfo()
 	return err
+}
+
+func (h *Host) Start() (err error) {
+	go func() {
+		t := time.NewTicker(time.Second * h.Interval())
+		for {
+			select {
+			case <-t.C:
+				if err = h.Push(); err != nil {
+					h.Err <- err
+				}
+			}
+		}
+	}()
+
+	return nil
 }
 
 func (h *Host) Interval() time.Duration {

@@ -21,7 +21,8 @@ type Disk struct {
 
 func (d *Disk) Init(opts *modules.Options) {
 	d.opts = opts.Disk
-	d.InitB()
+	d.opts.NodeName = opts.NodeName
+	d.opts.IP = opts.IP
 	d.diskClient = disk2.NewDiskService(opts.Collector.Name, opts.Collector.Client)
 
 	return
@@ -41,6 +42,22 @@ func (d *Disk) Push() (err error) {
 	}
 
 	return err
+}
+
+func (d *Disk) Start() (err error) {
+	go func() {
+		t := time.NewTicker(time.Second * d.Interval())
+		for {
+			select {
+			case <-t.C:
+				if err = d.Push(); err != nil {
+					d.Err <- err
+				}
+			}
+		}
+	}()
+
+	return nil
 }
 
 func (d *Disk) Interval() time.Duration {

@@ -20,7 +20,8 @@ type Load struct {
 
 func (l *Load) Init(opts *modules.Options) {
 	l.opts = opts.Load
-	l.InitB()
+	l.opts.NodeName = opts.NodeName
+	l.opts.IP = opts.IP
 	l.loadClient = load.NewLoadService(opts.Collector.Name, opts.Collector.Client)
 
 	return
@@ -29,6 +30,22 @@ func (l *Load) Init(opts *modules.Options) {
 func (l *Load) Push() (err error) {
 	err = l.pushAvgStat()
 	return err
+}
+
+func (l *Load) Start() (err error) {
+	go func() {
+		t := time.NewTicker(time.Second * l.Interval())
+		for {
+			select {
+			case <-t.C:
+				if err = l.Push(); err != nil {
+					l.Err <- err
+				}
+			}
+		}
+	}()
+
+	return nil
 }
 
 func (l *Load) Interval() time.Duration {

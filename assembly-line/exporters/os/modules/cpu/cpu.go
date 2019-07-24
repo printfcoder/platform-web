@@ -21,7 +21,8 @@ type CPU struct {
 
 func (c *CPU) Init(opts *modules.Options) {
 	c.opts = opts.CPU
-	c.InitB()
+	c.opts.NodeName = opts.NodeName
+	c.opts.IP = opts.IP
 	c.cpuClient = cpu.NewCPUService(opts.Collector.Name, opts.Collector.Client)
 
 	return
@@ -48,6 +49,22 @@ func (c *CPU) Push() (err error) {
 		return
 	}
 	return err
+}
+
+func (c *CPU) Start() (err error) {
+	go func() {
+		t := time.NewTicker(time.Second * c.Interval())
+		for {
+			select {
+			case <-t.C:
+				if err = c.Push(); err != nil {
+					c.Err <- err
+				}
+			}
+		}
+	}()
+
+	return nil
 }
 
 func (c *CPU) Interval() time.Duration {
