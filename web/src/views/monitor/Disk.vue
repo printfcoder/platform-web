@@ -6,8 +6,9 @@
                     <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
                     <div>
                         <v-chart
+                                ref="diskUsageChart"
                                 style="width: 100%; height: 240px"
-                                :options="cpuLoadLinearOptions"
+                                :options="diskUsageLinearOptions"
                                 :autoresize="true"
                         />
                     </div>
@@ -17,7 +18,7 @@
     </el-container>
 </template>
 <script lang="ts">
-    import { Component } from 'vue-property-decorator';
+    import { Component, Prop, Watch } from 'vue-property-decorator';
     import MVue from '@/basic/MVue';
 
     // @ts-ignore
@@ -25,6 +26,7 @@
     import 'echarts/lib/chart/line';
     import 'echarts/lib/component/polar';
     import 'echarts/theme/macarons';
+    import { DiskUsage } from '@/store/modules/os/types';
 
     @Component({
         components: {
@@ -34,103 +36,133 @@
     export default class Disk extends MVue {
         private lastUpdateTime: Date = null;
 
-        private cpuItems = [
-            {
-                name: 'system',
-                key: 'system',
-                formatter: (date: number) => {
-                    return new Date(date * 1000).toLocaleString();
-                },
-                value: '',
-            },
-            {
-                name: 'user',
-                key: 'user',
-                value: '',
-                formatter: (date: number) => {
-                    // @ts-ignore
-                    return this.$xools.secondsToHHMMSS(((new Date() - date * 1000) / 1000).toFixed(0));
-                },
-            },
-            {
-                name: 'idle',
-                key: 'idle',
-                value: '',
-                formatter: (memory: number) => {
-                    return memory;
-                },
-            },
-            {
-                name: 'threads',
-                key: 'threads',
-                value: '',
-                formatter: (threads: number) => {
-                    return threads;
-                },
-            },
-            {
-                name: 'processes',
-                key: 'processes',
-                value: '',
-                formatter: (gc: number) => {
-                    return gc;
-                },
-            },
-        ];
+        @Prop()
+        private diskUsageStats: DiskUsage[];
 
-        private cpuLoadLinearOptions = {
+        private byteToGB = 1024 * 1024 * 1024;
+
+        private usedData = [];
+        private freeData = [];
+        private totalData = [];
+
+        private diskUsageLinearOptions = {
             title: {},
             tooltip: {
                 trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985',
+                    },
+                },
+                formatter: function(params) {
+                    let res = '';
+                    for (let i = 0, l = params.length; i < l; i++) {
+                        res += '<div style="color:' + params[i].color + '">' + params[i].seriesName + ' : ' + params[i].value[1] + 'G : ' + params[i].value[2] + '%\</div>';
+                    }
+                    return res;
+                },
             },
             color: ['#FF4041', '#00AFF5', '#3B3B3B'],
             legend: {
-                data: ['System', 'User', 'Idle'],
+                data: ['used', 'free', 'total'],
                 x: 0,
             },
+            toolbox: {},
             grid: {
-                left: '1%',
+                left: '0%',
                 right: '1%',
                 bottom: '2%',
                 containLabel: true,
             },
-            toolbox: {
-                feature: {},
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: [],
-            },
-            yAxis: {
-                type: 'value',
-            },
+            xAxis: [
+                {
+                    type: 'category',
+                    splitLine: {
+                        show: false,
+                    },
+                    boundaryGap: false,
+                },
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    splitLine: {
+                        show: true,
+                    },
+                    axisLine: { show: false },
+                    axisLabel: { show: false },
+                },
+            ],
             series: [
                 {
-                    name: 'System',
+                    name: 'used',
                     type: 'line',
+                    areaStyle: {},
                     data: [],
                 },
                 {
-                    name: 'User',
+                    name: 'free',
                     type: 'line',
+                    areaStyle: {},
                     data: [],
                 },
                 {
-                    name: 'Idle',
+                    name: 'total',
                     type: 'line',
+                    areaStyle: {},
                     data: [],
                 },
             ],
         };
 
-        private cpuData = {
-            'system': 0,
-            'user': 0,
-            'idle': 0,
-            'threads': 0,
-            'processes': 0,
-        };
+        @Watch('diskUsageStats', { immediate: true, deep: true })
+        asyncData(diskUsages: DiskUsage[]) {
+            if (diskUsages == null) {
+                return;
+            }
+
+            diskUsages.forEach((mp: DiskUsage) => {
+                if (this.freeData.length > 10) {
+                    this.freeData.shift();
+                    this.usedData.shift();
+                    this.totalData.shift();
+                }
+
+                let now = new Date();
+                let xAxisName = this.$xools.getTimeInterval(mp.time, now);
+
+                this.freeData.push({
+                    name: xAxisName,
+                    value: [xAxisName + 's', (mp.free / this.byteToGB).toFixed(1), (100 - mp.usedPercent).toFixed(2)],
+                });
+
+                this.usedData.push({
+                    name: xAxisName,
+                    value: [xAxisName + 's', (mp.used / this.byteToGB).toFixed(1), mp.usedPercent.toFixed(2)],
+                });
+
+                this.totalData.push({
+                    name: xAxisName,
+                    value: [xAxisName + 's', (mp.total / this.byteToGB).toFixed(1), 100],
+                });
+            });
+
+            let chart = this.$refs['diskUsageChart'];
+            chart && chart.chart && chart.chart.setOption({
+                series: [
+                    {
+                        data: this.usedData,
+                    },
+                    {
+                        data: this.freeData,
+                    },
+                    {
+                        data: this.totalData,
+                    },
+                ],
+            });
+        }
     }
 </script>
 

@@ -15,3 +15,7 @@ export function getMemPercents (ips: string[], startTime: Date, endTime: Date) {
 export function getLoadAvgStat (ips: string[], startTime: Date, endTime: Date) {
     return $axios.get(`/api/v1/os/load/avg-stat?ips=` + ips.join() + '&startTime=' + startTime.toJSON() + '&endTime=' + endTime.toJSON())
 }
+
+export function getDiskUsageStats (ips: string[], startTime: Date, endTime: Date) {
+    return $axios.get(`/api/v1/os/disk/usage-stat?ips=` + ips.join() + '&startTime=' + startTime.toJSON() + '&endTime=' + endTime.toJSON())
+}

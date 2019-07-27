@@ -2,12 +2,13 @@ import { MutationTree, ActionTree } from 'vuex'
 import * as TYPES from '../../mutation-types'
 import { Error } from '@/store/basic/types'
 import { OSState, IpGroup } from './types'
-import { getIPGroup, getCPUTimes, getMemPercents, getLoadAvgStat } from '@/api/os'
+import { getIPGroup, getCPUTimes, getMemPercents, getLoadAvgStat, getDiskUsageStats } from '@/api/os'
 
 const namespaced: boolean = true
 
 const state: OSState = {
     cpuTimes: [],
+    diskUsageStats: [],
     memPercents: [],
     loadAvgStats: [],
     ipGroups: [],
@@ -38,6 +39,10 @@ const mutations: MutationTree<any> = {
     },
     [TYPES.SET_API_OS_LOAD_AVG_STATS] (state: OSState, { loadAvgStats }): void {
         state.loadAvgStats = loadAvgStats
+        state.requestLoading = false
+    },
+    [TYPES.SET_API_OS_DISK_USAGE_STATS] (state: OSState, { diskUsageStats }): void {
+        state.diskUsageStats = diskUsageStats
         state.requestLoading = false
     },
     [TYPES.SET_FRAME_DATA_ERROR] (state: OSState, error: Error): void {
@@ -72,7 +77,15 @@ const actions: ActionTree<any, any> = {
         commit(TYPES.SET_API_OS_LOAD_AVG_STATS, {
             loadAvgStats: res.data
         })
+    },
+
+    async getDiskUsageStats ({ commit }, { ips, startTime, endTime }) {
+        const res: Ajax.AjaxResponse = await getDiskUsageStats(ips, startTime, endTime)
+        commit(TYPES.SET_API_OS_DISK_USAGE_STATS, {
+            diskUsageStats: res.data
+        })
     }
+
 }
 
 export default {
