@@ -14,7 +14,6 @@ var (
 )
 
 type Net struct {
-	modules.BaseModule
 	opts      *modules.NetOptions
 	netClient proto.NetService
 	ifaceMap  map[string]bool
@@ -53,7 +52,6 @@ func (n *Net) Start() (err error) {
 			select {
 			case <-t.C:
 				if err = n.Push(); err != nil {
-					n.Err <- err
 				}
 			}
 		}

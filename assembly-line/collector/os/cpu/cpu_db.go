@@ -40,7 +40,7 @@ func (s *storage) saveTimesStat(times []*proto.TimesStat, ip, nodeName string) (
 		)
 
 		if err != nil {
-			log.Logf("[saveTimesStat] db prepare exec error, %s", err)
+			log.Logf("[saveTimesStat] db exec error, %s", err)
 			return
 		}
 	}
@@ -83,7 +83,7 @@ func (s *storage) saveInfoStat(infos []*proto.InfoStat, ip, nodeName string) (er
 		)
 
 		if err != nil {
-			log.Logf("[saveInfoStat] db prepare exec error, %s", err)
+			log.Logf("[saveInfoStat] db exec error, %s", err)
 			return
 		}
 	}
@@ -118,7 +118,7 @@ func (s *storage) savePercent(percents []*proto.Percent, ip, nodeName string) (e
 		)
 
 		if err != nil {
-			log.Logf("[savePercent] db prepare exec error, %s", err)
+			log.Logf("[savePercent] db exec error, %s", err)
 			return
 		}
 	}

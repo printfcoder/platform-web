@@ -40,7 +40,7 @@ func (s *storage) saveHostInfo(infos []*proto.HostInfo, ip, nodeName string) (er
 		)
 
 		if err != nil {
-			log.Logf("[saveHostInfo] db prepare exec error, %s", err)
+			log.Logf("[saveHostInfo] db exec error, %s", err)
 			return
 		}
 	}

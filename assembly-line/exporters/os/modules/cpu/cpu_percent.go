@@ -27,8 +27,8 @@ func (c *CPU) pushPercent() (err error) {
 
 	req := &cpu2.CPURequest{
 		Timestamp: t,
-		IP:        c.IP,
-		NodeName:  c.NodeName,
+		IP:        c.opts.IP,
+		NodeName:  c.opts.NodeName,
 		Percent:   data,
 	}
 

@@ -17,10 +17,3 @@ type Module interface {
 	Start() error
 	String() string
 }
-
-type BaseModule struct {
-	ModuleBaseOptions
-	Err      chan error
-	NodeName string
-	IP       string
-}

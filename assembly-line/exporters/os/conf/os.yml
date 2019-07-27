@@ -9,7 +9,7 @@ micro:
           enable: false
           interval: 5
         disk:
-          enable: false
+          enable: true
           interval: 5
           paths:
         docker:
@@ -19,7 +19,7 @@ micro:
           enable: false
           interval: 5
         load:
-          enable: false
+          enable: true
           interval: 5
         mem:
           enable: true

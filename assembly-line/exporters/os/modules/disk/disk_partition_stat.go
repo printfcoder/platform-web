@@ -30,8 +30,8 @@ func (d *Disk) pushPartition() (err error) {
 
 	req := &disk2.DiskRequest{
 		Timestamp:     t,
-		IP:            d.IP,
-		NodeName:      d.NodeName,
+		IP:            d.opts.IP,
+		NodeName:      d.opts.NodeName,
 		PartitionStat: data,
 	}
 

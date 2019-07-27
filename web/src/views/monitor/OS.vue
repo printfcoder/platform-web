@@ -162,7 +162,7 @@
             }
         }
 
-        private now = new Date('2019-07-17T15:45:11.312Z');
+        private now = new Date(new Date().setSeconds(new Date().getSeconds() - 10));
 
         changeIP() {
             if (!this.serverIP) {

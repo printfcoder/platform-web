@@ -15,7 +15,6 @@ var (
 
 type Disk struct {
 	diskClient disk2.DiskService
-	modules.BaseModule
 	opts *modules.DiskOptions
 }
 
@@ -30,15 +29,15 @@ func (d *Disk) Init(opts *modules.Options) {
 
 func (d *Disk) Push() (err error) {
 	if err = d.pushIOCounters(); err != nil {
-		log.Logf("[Push] pushIOCounters err: %s", err)
+		log.Logf("[ERR] [Push] pushIOCounters err: %s", err)
 	}
 
 	if err = d.pushUsage(); err != nil {
-		log.Logf("[Push] pushUsage err: %s", err)
+		log.Logf("[ERR] [Push] pushUsage err: %s", err)
 	}
 
 	if err = d.pushPartition(); err != nil {
-		log.Logf("[Push] pushPartition err: %s", err)
+		log.Logf("[ERR] [Push] pushPartition err: %s", err)
 	}
 
 	return err
@@ -51,7 +50,7 @@ func (d *Disk) Start() (err error) {
 			select {
 			case <-t.C:
 				if err = d.Push(); err != nil {
-					d.Err <- err
+					log.Logf("[ERR] [Start] disk push err: %s", err)
 				}
 			}
 		}

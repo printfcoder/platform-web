@@ -34,8 +34,8 @@ func (h *Host) pushInfo() (err error) {
 
 	req := &proto.HostRequest{
 		Timestamp: t,
-		IP:        h.IP,
-		NodeName:  h.NodeName,
+		IP:        h.opts.IP,
+		NodeName:  h.opts.NodeName,
 		HostInfo:  data,
 	}
 

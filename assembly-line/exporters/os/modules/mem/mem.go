@@ -9,7 +9,6 @@ import (
 )
 
 type Mem struct {
-	modules.BaseModule
 	opts      *modules.MemOptions
 	memClient proto.MemService
 }
@@ -39,7 +38,7 @@ func (m *Mem) Start() (err error) {
 			select {
 			case <-t.C:
 				if err = m.Push(); err != nil {
-					m.Err <- err
+					log.Logf("[ERR] [Start] load push err: %s", err)
 				}
 			}
 		}

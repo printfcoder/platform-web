@@ -16,7 +16,6 @@ var (
 type CPU struct {
 	cpuClient cpu.CPUService
 	opts      *modules.CPUOptions
-	modules.BaseModule
 }
 
 func (c *CPU) Init(opts *modules.Options) {
@@ -40,10 +39,10 @@ func (c *CPU) Push() (err error) {
 		}
 	})
 
-	if err = c.pushPercent(); err != nil {
+	/*if err = c.pushPercent(); err != nil {
 		log.Logf("[ERR] [Push] cpu pushPercent error, %s", err)
 		return
-	}
+	}*/
 	if err = c.pushTimes(); err != nil {
 		log.Logf("[ERR] [Push] cpu pushTimes error, %s", err)
 		return
@@ -58,7 +57,7 @@ func (c *CPU) Start() (err error) {
 			select {
 			case <-t.C:
 				if err = c.Push(); err != nil {
-					c.Err <- err
+					log.Logf("[ERR] [Start] cpu push err: %s", err)
 				}
 			}
 		}

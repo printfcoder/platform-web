@@ -39,8 +39,8 @@ func (c *CPU) pushInfo() (err error) {
 
 	req := &proto.CPURequest{
 		Timestamp: t,
-		IP:        c.IP,
-		NodeName:  c.NodeName,
+		IP:        c.opts.IP,
+		NodeName:  c.opts.NodeName,
 		InfoStat:  data,
 	}
 

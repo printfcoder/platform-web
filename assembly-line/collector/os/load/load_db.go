@@ -37,7 +37,7 @@ func (s *storage) saveLoadAvgStat(loadAvgStats []*proto.LoadAvgStat, ip, nodeNam
 		)
 
 		if err != nil {
-			log.Logf("[saveLoadAvgStat] db prepare exec error, %s", err)
+			log.Logf("[saveLoadAvgStat] db exec error, %s", err)
 			return
 		}
 	}

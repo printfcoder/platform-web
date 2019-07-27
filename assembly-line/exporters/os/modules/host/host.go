@@ -6,6 +6,7 @@ import (
 
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	proto "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/host"
+	"github.com/micro/go-micro/util/log"
 )
 
 var (
@@ -14,8 +15,7 @@ var (
 
 type Host struct {
 	hostClient proto.HostService
-	modules.BaseModule
-	opts *modules.HostOptions
+	opts       *modules.HostOptions
 }
 
 func (h *Host) Init(opts *modules.Options) {
@@ -39,7 +39,7 @@ func (h *Host) Start() (err error) {
 			select {
 			case <-t.C:
 				if err = h.Push(); err != nil {
-					h.Err <- err
+					log.Logf("[ERR] [Start] host push err: %s", err)
 				}
 			}
 		}

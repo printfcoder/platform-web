@@ -37,8 +37,8 @@ func (n *Net) pushIOCountersStat() (err error) {
 
 	req := &proto.NetRequest{
 		Timestamp:      t,
-		IP:             n.IP,
-		NodeName:       n.NodeName,
+		IP:             n.opts.IP,
+		NodeName:       n.opts.NodeName,
 		IOCountersStat: data,
 	}
 

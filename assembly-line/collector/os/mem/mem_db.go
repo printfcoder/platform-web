@@ -40,7 +40,7 @@ func (s *storage) saveMemStat(memStats []*proto.MemoryStat, ip, nodeName string)
 		)
 
 		if err != nil {
-			log.Logf("[saveMemStat] db prepare exec error, %s", err)
+			log.Logf("[saveMemStat] db exec error, %s", err)
 			return
 		}
 	}

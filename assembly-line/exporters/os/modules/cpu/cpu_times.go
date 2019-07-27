@@ -7,11 +7,9 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/third_party/gopsutil/cpu"
 	cpu2 "github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/cpu"
-	"github.com/micro/go-micro/util/log"
 )
 
 func (c *CPU) pushTimes() (err error) {
-	log.Log("cpu")
 	vv, err := cpu.Times(true)
 	if err != nil {
 		return fmt.Errorf("[pushTimes] get infos error: %s", err)
@@ -39,8 +37,8 @@ func (c *CPU) pushTimes() (err error) {
 
 	req := &cpu2.CPURequest{
 		Timestamp: t,
-		IP:        c.IP,
-		NodeName:  c.NodeName,
+		IP:        c.opts.IP,
+		NodeName:  c.opts.NodeName,
 		TimesStat: data,
 	}
 

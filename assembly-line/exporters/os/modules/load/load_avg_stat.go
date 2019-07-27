@@ -27,8 +27,8 @@ func (l *Load) pushAvgStat() (err error) {
 
 	req := &proto.LoadRequest{
 		Timestamp:   t,
-		IP:          l.IP,
-		NodeName:    l.NodeName,
+		IP:          l.opts.IP,
+		NodeName:    l.opts.NodeName,
 		LoadAvgStat: data,
 	}
 

@@ -59,8 +59,13 @@ func (m *module) Handlers() (mp map[string]*modules.Handler) {
 		Method: []string{"GET"},
 	}
 
-	mp["/disk"] = &modules.Handler{
-		Func:   m.api.disk,
+	mp["/disk/usage-stat"] = &modules.Handler{
+		Func:   m.api.diskUsageStat,
+		Method: []string{"GET"},
+	}
+
+	mp["/disk/io-stat"] = &modules.Handler{
+		Func:   m.api.diskIOStat,
 		Method: []string{"GET"},
 	}
 

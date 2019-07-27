@@ -40,7 +40,7 @@ func (s *storage) saveDiskUsageStat(usageStats []*proto.UsageStat, ip, nodeName 
 		)
 
 		if err != nil {
-			log.Logf("[saveDiskUsageStat] db prepare exec error, %s", err)
+			log.Logf("[saveDiskUsageStat] db exec error, %s", err)
 			return
 		}
 	}
@@ -89,7 +89,7 @@ func (s *storage) saveIOCountersStat(ioCountersStats []*proto.IOCountersStat, ip
 		)
 
 		if err != nil {
-			log.Logf("[saveIOCountersStat] db prepare exec error, %s", err)
+			log.Logf("[saveIOCountersStat] db exec error, %s", err)
 			return
 		}
 	}

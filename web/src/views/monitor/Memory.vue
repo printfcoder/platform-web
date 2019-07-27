@@ -73,7 +73,7 @@
             },
             toolbox: {},
             grid: {
-                left: '1%',
+                left: '0%',
                 right: '1%',
                 bottom: '2%',
                 containLabel: true,

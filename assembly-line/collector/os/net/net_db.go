@@ -41,7 +41,7 @@ func (s *storage) saveConnectionStat(connectionStats []*proto.ConnectionStat, ip
 		)
 
 		if err != nil {
-			log.Logf("[saveConnectionStat] db prepare exec error, %s", err)
+			log.Logf("[saveConnectionStat] db exec error, %s", err)
 			return
 		}
 	}
@@ -82,7 +82,7 @@ func (s *storage) saveIOCountersStat(ioCountersStats []*proto.IOCountersStat, ip
 		)
 
 		if err != nil {
-			log.Logf("[saveIOCountersStat] db prepare exec error, %s", err)
+			log.Logf("[saveIOCountersStat] db exec error, %s", err)
 			return
 		}
 	}

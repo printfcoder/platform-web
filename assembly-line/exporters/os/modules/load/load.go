@@ -6,6 +6,7 @@ import (
 
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/modules"
 	"github.com/micro-in-cn/platform-web/assembly-line/protobuf/go/load"
+	"github.com/micro/go-micro/util/log"
 )
 
 var (
@@ -14,8 +15,7 @@ var (
 
 type Load struct {
 	loadClient load.LoadService
-	modules.BaseModule
-	opts *modules.LoadOptions
+	opts       *modules.LoadOptions
 }
 
 func (l *Load) Init(opts *modules.Options) {
@@ -39,7 +39,7 @@ func (l *Load) Start() (err error) {
 			select {
 			case <-t.C:
 				if err = l.Push(); err != nil {
-					l.Err <- err
+					log.Logf("[ERR] [Start] load push err: %s", err)
 				}
 			}
 		}
