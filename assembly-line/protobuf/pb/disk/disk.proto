@@ -9,42 +9,42 @@ import "google/protobuf/timestamp.proto";
 
 message UsageStat {
     google.protobuf.Timestamp timestamp = 1;
-    string Path = 2;
-    string Fstype = 3;
-    uint64 Total = 4;
-    uint64 Free = 5;
-    uint64 Used = 6;
-    double UsedPercent = 7;
-    uint64 InodesTotal = 8;
-    uint64 InodesUsed = 9;
-    uint64 InodesFree = 10;
-    double InodesUsedPercent = 11;
+    string path = 2;
+    string fstype = 3;
+    uint64 total = 4;
+    uint64 free = 5;
+    uint64 used = 6;
+    double usedPercent = 7;
+    uint64 inodesTotal = 8;
+    uint64 inodesUsed = 9;
+    uint64 inodesFree = 10;
+    double inodesUsedPercent = 11;
 }
 
 message PartitionStat {
     google.protobuf.Timestamp timestamp = 1;
-    string Device = 2;
-    string Mountpoint = 3;
-    string Fstype = 4;
-    string Opts = 5;
+    string device = 2;
+    string mountpoint = 3;
+    string fstype = 4;
+    string opts = 5;
 }
 
 message IOCountersStat {
     google.protobuf.Timestamp timestamp = 1;
-    uint64 ReadCount = 2;
-    uint64 MergedReadCount = 3;
-    uint64 WriteCount = 4;
-    uint64 MergedWriteCount = 5;
-    uint64 ReadBytes = 6;
-    uint64 WriteBytes = 7;
-    uint64 ReadTime = 8;
-    uint64 WriteTime = 9;
-    uint64 IopsInProgress = 10;
-    uint64 IoTime = 11;
-    uint64 WeightedIO = 12;
-    string Name = 13;
-    string SerialNumber = 14;
-    string Label = 15;
+    uint64 readCount = 2;
+    uint64 mergedReadCount = 3;
+    uint64 writeCount = 4;
+    uint64 mergedWriteCount = 5;
+    uint64 readBytes = 6;
+    uint64 writeBytes = 7;
+    uint64 readTime = 8;
+    uint64 writeTime = 9;
+    uint64 iopsInProgress = 10;
+    uint64 ioTime = 11;
+    uint64 weightedIO = 12;
+    string name = 13;
+    string serialNumber = 14;
+    string label = 15;
 }
 
 message DiskRequest {

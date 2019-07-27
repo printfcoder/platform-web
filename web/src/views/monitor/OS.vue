@@ -53,7 +53,7 @@
             </el-row>
             <el-row>
                 <el-col :span="8">
-                    <disk></disk>
+                    <disk :diskUsageStats="diskUsageStats"></disk>
                 </el-col>
             </el-row>
         </el-main>
@@ -84,7 +84,7 @@
 
 
     import { Error } from '@/store/basic/types';
-    import { CPUTime, IpGroup, LoadAvgStat, MemPercent } from '@/store/modules/os/types';
+    import { CPUTime, DiskUsage, IpGroup, LoadAvgStat, MemPercent } from '@/store/modules/os/types';
 
     const namespace: string = 'monitorOS';
 
@@ -123,6 +123,9 @@
         @State(state => state.monitorOS.loadAvgStats)
         loadAvgStats?: LoadAvgStat[];
 
+        @State(state => state.monitorOS.diskUsageStats)
+        diskUsageStats?: DiskUsage[];
+
         @State(state => state.monitorOS.xError)
         xError?: string;
 
@@ -137,6 +140,9 @@
 
         @Action('getLoadAvgStat', { namespace })
         getLoadAvgStat: any;
+
+        @Action('getDiskUsageStats', { namespace })
+        getDiskUsageStats: any;
 
         created() {
             if (!this.loaded) {
@@ -162,7 +168,8 @@
             }
         }
 
-        private now = new Date(new Date().setSeconds(new Date().getSeconds() - 10));
+        // private now = new Date(new Date().setSeconds(new Date().getSeconds() - 10));
+        private now = new Date('2019-06-11T15:36:35.856Z');
 
         changeIP() {
             if (!this.serverIP) {
@@ -183,6 +190,11 @@
                     endTime: this.now,
                 });
                 this.getLoadAvgStat({
+                    ips: [this.serverIP],
+                    startTime: startTime,
+                    endTime: this.now,
+                });
+                this.getDiskUsageStats({
                     ips: [this.serverIP],
                     startTime: startTime,
                     endTime: this.now,
