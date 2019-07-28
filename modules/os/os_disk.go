@@ -34,7 +34,7 @@ func (o *api) diskUsageStat(w http.ResponseWriter, r *http.Request) {
 	stmt, err := db.GetPG().Prepare(`SELECT 
        time, ip, node_name, total, free, 
        used, used_percent
-    FROM disk_usage_stat WHERE ip = ANY($1) AND time BETWEEN $2 AND $3`)
+    FROM disk_usage_stat WHERE ip = ANY($1) AND time BETWEEN $2 AND $3 ORDER BY time DESC`)
 	if err != nil {
 		err = fmt.Errorf("[diskUsageStat] prepare err: %s", err)
 		log.Logf("[ERR] %s", err)
@@ -72,3 +72,4 @@ func (o *api) diskUsageStat(w http.ResponseWriter, r *http.Request) {
 func (o *api) diskIOStat(w http.ResponseWriter, r *http.Request) {
 	return
 }
+

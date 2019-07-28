@@ -74,7 +74,7 @@ const router = new Router({
             path: '/monitor/os',
             meta: { breadcrumb: true },
             name: 'monitor-os',
-            component: () => import(`@/views/monitor/OS.vue`)
+            component: () => import(`@/views/monitor/os/OS.vue`)
         },
         {
             path: '/registry',

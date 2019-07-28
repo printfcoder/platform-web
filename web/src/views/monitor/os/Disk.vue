@@ -122,13 +122,11 @@
                 return;
             }
 
-            diskUsages.forEach((mp: DiskUsage) => {
-                if (this.freeData.length > 10) {
-                    this.freeData.shift();
-                    this.usedData.shift();
-                    this.totalData.shift();
-                }
+            this.freeData = [];
+            this.usedData = [];
+            this.totalData = [];
 
+            diskUsages.forEach((mp: DiskUsage) => {
                 let now = new Date();
                 let xAxisName = this.$xools.getTimeInterval(mp.time, now);
 

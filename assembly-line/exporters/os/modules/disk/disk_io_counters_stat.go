@@ -3,6 +3,7 @@ package disk
 import (
 	"context"
 	"fmt"
+	"github.com/micro/go-micro/util/log"
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/third_party/gopsutil/disk"
@@ -36,6 +37,9 @@ func (d *Disk) pushIOCounters() (err error) {
 			SerialNumber:     v.SerialNumber,
 			Label:            v.Label,
 		})
+
+		log.Logf("ReadCount: %d, WriteCount: %d, ReadBytes: %d, WriteBytes: %d, ReadTime: %d, WriteTime: %d",
+			v.ReadCount, v.WriteCount, v.ReadBytes, v.WriteBytes, v.ReadTime, v.WriteTime)
 	}
 
 	req := &disk2.DiskRequest{

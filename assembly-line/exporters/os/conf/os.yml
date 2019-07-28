@@ -6,12 +6,12 @@ micro:
         collector:
           name: go.micro.srv.platform_collector
         cpu:
-          enable: false
-          interval: 5
+          enable: true
+          interval: 1
         disk:
           enable: true
-          interval: 5
-          paths:
+          interval: 1
+          paths: ["/"]
         docker:
           enable: false
           interval: 5
@@ -20,10 +20,10 @@ micro:
           interval: 5
         load:
           enable: true
-          interval: 5
+          interval: 1
         mem:
           enable: true
-          interval: 5
+          interval: 1
         net:
           enable: false
           interval: 5

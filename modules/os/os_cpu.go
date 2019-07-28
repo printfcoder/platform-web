@@ -79,7 +79,7 @@ func (o *api) cpuPercent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stmt, err := db.GetPG().Prepare(`SELECT time, ip, node_name, percent FROM cpu_percent WHERE ip = ANY($1) AND time BETWEEN $2 AND $3`)
+	stmt, err := db.GetPG().Prepare(`SELECT time, ip, node_name, percent FROM cpu_percent WHERE ip = ANY($1) AND time BETWEEN $2 AND $3 ORDER BY time DESC`)
 	if err != nil {
 		err = fmt.Errorf("[cpuPercent] prepare err: %s", err)
 		log.Log(err)
@@ -129,7 +129,7 @@ func (o *api) cpuTimes(w http.ResponseWriter, r *http.Request) {
        time, ip, node_name, cpu, x_user, 
        system, idle, nice, iowait, irq, 
        softirq, steal, guest, guest_nice
-       FROM cpu_times WHERE ip = ANY($1) AND time BETWEEN $2 AND $3`)
+       FROM cpu_times WHERE ip = ANY($1) AND time BETWEEN $2 AND $3 ORDER BY time DESC`)
 	if err != nil {
 		err = fmt.Errorf("[cpuTimes] prepare err: %s", err)
 		log.Log(err)

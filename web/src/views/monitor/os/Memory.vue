@@ -142,15 +142,13 @@
                 return;
             }
 
-            memPercents.forEach((mp: MemPercent) => {
-                if (this.activeData.length > 10) {
-                    this.compressedData.shift();
-                    this.inactiveData.shift();
-                    this.wiredData.shift();
-                    this.freeData.shift();
-                    this.totalData.shift();
-                }
+            this.compressedData = [];
+            this.inactiveData = [];
+            this.wiredData = [];
+            this.freeData = [];
+            this.totalData = [];
 
+            memPercents.forEach((mp: MemPercent) => {
                 let now = new Date();
                 let xAxisName = this.$xools.getTimeInterval(mp.time, now);
 

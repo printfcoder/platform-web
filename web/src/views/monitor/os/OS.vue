@@ -41,19 +41,19 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="8">
+                <el-col :span="12">
                     <cpu :cpuTimes="cpuTimes"></cpu>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="12">
                     <memory :memPercents="memPercents"></memory>
-                </el-col>
-                <el-col :span="8">
-                    <network></network>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="8">
                     <disk :diskUsageStats="diskUsageStats"></disk>
+                </el-col>
+                <el-col :span="16">
+                    <network></network>
                 </el-col>
             </el-row>
         </el-main>
@@ -103,7 +103,6 @@
         private serverIP: string = '';
         private serverIPs: string[] = [];
         private lastUpdateTime: Date = null;
-
 
         @State(state => state.monitorOS.loaded)
         loaded ?: boolean;
@@ -168,36 +167,33 @@
             }
         }
 
-        // private now = new Date(new Date().setSeconds(new Date().getSeconds() - 10));
-        private now = new Date('2019-06-11T15:36:35.856Z');
-
         changeIP() {
             if (!this.serverIP) {
                 return;
             }
 
             let go = () => {
-                let startTime = new Date(this.now);
-                this.now = new Date(this.now.setSeconds(this.now.getSeconds() + 1));
+                let startTime = new Date(new Date().setSeconds(new Date().getSeconds() - 15))
+                let now = new Date()
                 this.getCPUTimes({
                     ips: [this.serverIP],
                     startTime: startTime,
-                    endTime: this.now,
+                    endTime: now,
                 });
                 this.getMemPercents({
                     ips: [this.serverIP],
                     startTime: startTime,
-                    endTime: this.now,
+                    endTime: now,
                 });
                 this.getLoadAvgStat({
                     ips: [this.serverIP],
                     startTime: startTime,
-                    endTime: this.now,
+                    endTime: now,
                 });
                 this.getDiskUsageStats({
                     ips: [this.serverIP],
                     startTime: startTime,
-                    endTime: this.now,
+                    endTime: now,
                 });
             };
 
@@ -205,7 +201,7 @@
 
             go();
 
-            this.currentInterval = setInterval(go, 2000);
+            this.currentInterval = setInterval(go, 1000);
         }
 
         @Watch('xError')

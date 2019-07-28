@@ -32,7 +32,7 @@ func (o *api) loadAvgStat(w http.ResponseWriter, r *http.Request) {
 	}
 
 	stmt, err := db.GetPG().Prepare(`SELECT time, ip, node_name, load1, load5, load15
-    FROM load_avg_stat WHERE ip = ANY($1) AND time BETWEEN $2 AND $3`)
+    FROM load_avg_stat WHERE ip = ANY($1) AND time BETWEEN $2 AND $3 ORDER BY time`)
 	if err != nil {
 		err = fmt.Errorf("[loadAvgStat] prepare err: %s", err)
 		log.Logf("[ERR] %s", err)

@@ -34,7 +34,7 @@ func (o *api) memPercent(w http.ResponseWriter, r *http.Request) {
 	stmt, err := db.GetPG().Prepare(`SELECT time, ip, node_name, active_bytes, compressed_bytes,
        inactive_bytes,  wired_bytes, free_bytes, swapped_in_bytes_total, swapped_out_bytes_total,
        total_bytes
-    FROM memory_stat WHERE ip = ANY($1) AND time BETWEEN $2 AND $3`)
+    FROM memory_stat WHERE ip = ANY($1) AND time BETWEEN $2 AND $3 ORDER BY time DESC`)
 	if err != nil {
 		err = fmt.Errorf("[memPercent] prepare err: %s", err)
 		log.Logf("[ERR] %s", err)

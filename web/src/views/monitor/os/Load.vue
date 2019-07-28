@@ -1,19 +1,36 @@
 <template>
     <el-container>
         <el-main style="padding-top: 0px; padding-left: 0px">
-            <el-card>
-                <div>
-                    <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
+            <el-col :span="3">
+                <el-card>
+                    <el-form style="height: 150px">
+                        <el-form-item label="Load1: ">
+                            <span> {{ load1Data.length>0 ?load1Data[load1Data.length-1].value[1]+'%' : ''}}</span>
+                        </el-form-item>
+                        <el-form-item label="Load5: ">
+                            <span> {{ load5Data.length>0 ?load5Data[load5Data.length-1].value[1]+'%' : ''}}</span>
+                        </el-form-item>
+                        <el-form-item label="Load15: ">
+                            <span> {{ load15Data.length>0 ?load15Data[load15Data.length-1].value[1]+'%' : ''}}</span>
+                        </el-form-item>
+                    </el-form>
+                </el-card>
+            </el-col>
+            <el-col :span="21">
+                <el-card>
                     <div>
-                        <v-chart
-                                ref="loadChart"
-                                style="width: 100%; height: 150px"
-                                :options="loadLinearOptions"
-                                :autoresize="true"
-                        />
+                        <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
+                        <div>
+                            <v-chart
+                                    ref="loadChart"
+                                    style="width: 100%; height: 150px"
+                                    :options="loadLinearOptions"
+                                    :autoresize="true"
+                            />
+                        </div>
                     </div>
-                </div>
-            </el-card>
+                </el-card>
+            </el-col>
         </el-main>
     </el-container>
 </template>
@@ -113,13 +130,10 @@
         @Watch('loadAvgStats', { immediate: true, deep: true })
         asyncData(loadAvgStats: LoadAvgStat[]) {
             if (loadAvgStats != null) {
+                this.load1Data = [];
+                this.load5Data = [];
+                this.load15Data = [];
                 loadAvgStats.forEach((ld: LoadAvgStat) => {
-                    if (this.load1Data.length > 20) {
-                        this.load1Data.shift();
-                        this.load5Data.shift();
-                        this.load15Data.shift();
-                    }
-
                     let now = new Date();
                     let xAxisName = this.$xools.getTimeInterval(ld.time, now);
 
