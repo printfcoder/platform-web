@@ -1,19 +1,36 @@
 <template>
     <el-container>
         <el-main style="padding-top: 0px; padding-left: 0px">
-            <el-card>
-                <div>
-                    <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
+            <el-col :span="7">
+                <el-card>
+                    <el-form style="height: 186px">
+                        <el-form-item label="Used: ">
+                            <span> {{ usedData.length>0 ?usedData[usedData.length-1].value[1] : ''}} GB</span>
+                        </el-form-item>
+                        <el-form-item label="Free: ">
+                            <span> {{ freeData.length>0 ?freeData[freeData.length-1].value[1] : ''}} GB</span>
+                        </el-form-item>
+                        <el-form-item label="Total: ">
+                            <span> {{ totalData.length>0 ?totalData[totalData.length-1].value[1] : ''}} GB</span>
+                        </el-form-item>
+                    </el-form>
+                </el-card>
+            </el-col>
+            <el-col :span="17">
+                <el-card>
                     <div>
-                        <v-chart
-                                ref="diskUsageChart"
-                                style="width: 100%; height: 240px"
-                                :options="diskUsageLinearOptions"
-                                :autoresize="true"
-                        />
+                        <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
+                        <div>
+                            <v-chart
+                                    ref="diskUsageChart"
+                                    style="width: 100%; height: 186px"
+                                    :options="diskUsageLinearOptions"
+                                    :autoresize="true"
+                            />
+                        </div>
                     </div>
-                </div>
-            </el-card>
+                </el-card>
+            </el-col>
         </el-main>
     </el-container>
 </template>

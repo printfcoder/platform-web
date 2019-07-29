@@ -3,6 +3,7 @@ package cpu
 import (
 	"context"
 	"fmt"
+	"sync"
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/micro-in-cn/platform-web/assembly-line/exporters/os/third_party/gopsutil/cpu"
@@ -10,11 +11,31 @@ import (
 )
 
 func (c *CPU) pushTimes() (err error) {
-	vv, err := cpu.Times(true)
-	if err != nil {
-		return fmt.Errorf("[pushTimes] get infos error: %s", err)
-	}
+	var vvPer, vvAll []cpu.TimesStat
+	var errPer, errAll error
 
+	wg := sync.WaitGroup{}
+	wg.Add(2)
+
+	go func() {
+		vvPer, err = cpu.Times(true)
+		if err != nil {
+			errPer = fmt.Errorf("[pushTimes] get per CPU times error: %s", err)
+		}
+		wg.Done()
+	}()
+
+	go func() {
+		vvAll, err = cpu.Times(false)
+		if err != nil {
+			errAll = fmt.Errorf("[pushTimes] get per CPU times error: %s", err)
+		}
+		wg.Done()
+	}()
+
+	wg.Wait()
+
+	vv := append(vvPer, vvAll...)
 	t := ptypes.TimestampNow()
 	data := make([]*cpu2.TimesStat, 0, len(vv))
 

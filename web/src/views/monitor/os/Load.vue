@@ -5,13 +5,13 @@
                 <el-card>
                     <el-form style="height: 150px">
                         <el-form-item label="Load1: ">
-                            <span> {{ load1Data.length>0 ?load1Data[load1Data.length-1].value[1]+'%' : ''}}</span>
+                            <span> {{ load1Data.length>0 ?load1Data[load1Data.length-1].value[1] : ''}}</span>
                         </el-form-item>
                         <el-form-item label="Load5: ">
-                            <span> {{ load5Data.length>0 ?load5Data[load5Data.length-1].value[1]+'%' : ''}}</span>
+                            <span> {{ load5Data.length>0 ?load5Data[load5Data.length-1].value[1] : ''}}</span>
                         </el-form-item>
                         <el-form-item label="Load15: ">
-                            <span> {{ load15Data.length>0 ?load15Data[load15Data.length-1].value[1]+'%' : ''}}</span>
+                            <span> {{ load15Data.length>0 ?load15Data[load15Data.length-1].value[1] : ''}}</span>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -68,7 +68,7 @@
                 formatter: function(params) {
                     let res = '';
                     for (let i = 0, l = params.length; i < l; i++) {
-                        res += '<div style="color:' + params[i].color + '">' + params[i].seriesName + ' : ' + params[i].value[1] + '%\</div>';
+                        res += '<div style="color:' + params[i].color + '">' + params[i].seriesName + ' : ' + params[i].value[1] + '\</div>';
                     }
                     return res;
                 },

@@ -1,19 +1,46 @@
 <template>
     <el-container>
         <el-main style="padding-top: 0px; padding-left: 0px;">
-            <el-card>
-                <div>
-                    <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
+            <el-col :span="5">
+                <el-card>
+                    <el-form>
+                        <el-form-item label="CPU: ">
+                            <el-select v-model="cpu" placeholder="CPU">
+                                <el-option
+                                        v-for="item in cpuOptions"
+                                        :key="item.name"
+                                        :label="item.name"
+                                        :value="item.name">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="System: ">
+                            <span> {{ systemData.length>0 ?systemData[systemData.length-1].value[1] : ''}}%</span>
+                        </el-form-item>
+                        <el-form-item label="User: ">
+                            <span> {{ userData.length>0 ?userData[userData.length-1].value[1] : ''}}%</span>
+                        </el-form-item>
+                        <el-form-item label="Idle: ">
+                            <span> {{ idleData.length>0 ?idleData[idleData.length-1].value[1] : ''}}%</span>
+                        </el-form-item>
+                    </el-form>
+                </el-card>
+            </el-col>
+            <el-col :span="19">
+                <el-card>
                     <div>
-                        <v-chart
-                                ref="cpuChart"
-                                style="width: 100%; height: 240px"
-                                :options="cpuLoadLinearOptions"
-                                :autoresize="true"
-                        />
+                        <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
+                        <div>
+                            <v-chart
+                                    ref="cpuChart"
+                                    style="width: 100%; height: 186px"
+                                    :options="cpuLoadLinearOptions"
+                                    :autoresize="true"
+                            />
+                        </div>
                     </div>
-                </div>
-            </el-card>
+                </el-card>
+            </el-col>
         </el-main>
     </el-container>
 </template>
@@ -43,6 +70,8 @@
         private systemData = [];
         private userData = [];
         private idleData = [];
+        private cpu = 'cpu-total';
+        private cpuOptions = [];
 
         private cpuLoadLinearOptions = {
             title: {},
@@ -110,37 +139,40 @@
         }
 
         groupByTime(cpuTimes: CPUTime[]) {
-            let result = [];
-            cpuTimes.reduce(function(res: Map<Date, CPUTime>, ct: CPUTime) {
-                if (!res.get(ct.time)) {
-                    res.set(ct.time, new CPUTime(ct.user, ct.system, ct.idle, ct.time));
-                    result.push(res.get(ct.time));
+            let cpuTimesRet = [];
+            cpuTimes.forEach(v => {
+                if (v.cpu == this.cpu) {
+                    cpuTimesRet.push(v);
                 }
-                res.get(ct.time).user += ct.user;
-                res.get(ct.time).system += ct.system;
-                res.get(ct.time).idle += ct.idle;
-                return res;
-            }, new Map<Date, CPUTime>());
+            });
 
-            return result;
+            return cpuTimesRet;
         }
 
+        collectCPU(cpuTimes: CPUTime[]) {
+            cpuTimes.forEach(item => {
+                if (this.cpuOptions.indexOf(item.cpu) == -1) {
+                    this.cpuOptions.push({ name: item.cpu });
+                }
+            });
+        }
 
         @Watch('cpuTimes', { immediate: true, deep: true })
         asyncData(cpuTimes: CPUTime[]) {
-            if (cpuTimes != null) {
+            if (cpuTimes != null && cpuTimes.length > 0) {
+                this.collectCPU(cpuTimes);
+
                 let cpuTimesShow = this.groupByTime(cpuTimes);
+                this.systemData = [];
+                this.userData = [];
+                this.idleData = [];
+
+                console.log(cpuTimesShow);
+
                 cpuTimesShow.forEach((ct: CPUTime) => {
                     let total = ct.system + ct.user + ct.idle;
-                    if (this.systemData.length > 10) {
-                        this.systemData.shift();
-                        this.userData.shift();
-                        this.idleData.shift();
-                    }
-
                     let now = new Date();
                     let xAxisName = this.$xools.getTimeInterval(ct.time, now);
-
 
                     this.systemData.push({
                         name: xAxisName,
@@ -180,11 +212,6 @@
     }
 </script>
 
-< style;
-scoped >
+<style scoped>
 
-</
-
-style
-
->;
+</style>;

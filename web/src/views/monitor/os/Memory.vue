@@ -1,19 +1,42 @@
 <template>
     <el-container>
         <el-main style="padding-top: 0px; padding-left: 0px">
-            <el-card>
-                <div>
-                    <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
+            <el-col :span="5">
+                <el-card>
+                    <el-form style="height: 186px">
+                        <el-form-item label="Active: ">
+                            <span> {{ activeData.length>0 ?activeData[activeData.length-1].value[1] : ''}}%</span>
+                        </el-form-item>
+                        <el-form-item label="Compressed: ">
+                            <span> {{ compressedData.length>0 ?compressedData[compressedData.length-1].value[1] : ''}}%</span>
+                        </el-form-item>
+                        <el-form-item label="Inactive: ">
+                            <span> {{ inactiveData.length>0 ?inactiveData[inactiveData.length-1].value[1] : ''}}%</span>
+                        </el-form-item>
+                        <el-form-item label="Wired: ">
+                            <span> {{ wiredData.length>0 ?wiredData[wiredData.length-1].value[1] : ''}}%</span>
+                        </el-form-item>
+                        <el-form-item label="Free: ">
+                            <span> {{ freeData.length>0 ?freeData[freeData.length-1].value[1] : ''}}%</span>
+                        </el-form-item>
+                    </el-form>
+                </el-card>
+            </el-col>
+            <el-col :span="19">
+                <el-card>
                     <div>
-                        <v-chart
-                                ref="memChart"
-                                style="width: 100%; height: 240px"
-                                :options="memLinearOptions"
-                                :autoresize="true"
-                        />
+                        <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
+                        <div>
+                            <v-chart
+                                    ref="memChart"
+                                    style="width: 100%; height: 186px"
+                                    :options="memLinearOptions"
+                                    :autoresize="true"
+                            />
+                        </div>
                     </div>
-                </div>
-            </el-card>
+                </el-card>
+            </el-col>
         </el-main>
     </el-container>
 </template>
@@ -203,5 +226,7 @@
 </script>
 
 <style scoped>
-
+    .el-form-item {
+        margin-bottom: 0px;
+    }
 </style>
