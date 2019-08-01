@@ -5,13 +5,13 @@
                 <el-card>
                     <el-form style="height: 186px">
                         <el-form-item label="Used: ">
-                            <span> {{ usedData.length>0 ?usedData[usedData.length-1].value[1] : ''}} GB</span>
+                            <span> {{ used }} GB</span>
                         </el-form-item>
                         <el-form-item label="Free: ">
-                            <span> {{ freeData.length>0 ?freeData[freeData.length-1].value[1] : ''}} GB</span>
+                            <span> {{ free }} GB</span>
                         </el-form-item>
                         <el-form-item label="Total: ">
-                            <span> {{ totalData.length>0 ?totalData[totalData.length-1].value[1] : ''}} GB</span>
+                            <span> {{ total }} GB</span>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -19,14 +19,15 @@
             <el-col :span="17">
                 <el-card>
                     <div>
-                        <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
                         <div>
-                            <v-chart
-                                    ref="diskUsageChart"
-                                    style="width: 100%; height: 186px"
-                                    :options="diskUsageLinearOptions"
-                                    :autoresize="true"
-                            />
+                            <div>
+                                <ve-line
+                                        :height="'186px'"
+                                        :width="'100%'"
+                                        :extend="chartExtend"
+                                        :data="chartData"
+                                        :settings="chartSettings"></ve-line>
+                            </div>
                         </div>
                     </div>
                 </el-card>
@@ -38,17 +39,10 @@
     import { Component, Prop, Watch } from 'vue-property-decorator';
     import MVue from '@/basic/MVue';
 
-    // @ts-ignore
-    import ECharts from 'vue-echarts';
-    import 'echarts/lib/chart/line';
-    import 'echarts/lib/component/polar';
-    import 'echarts/theme/macarons';
     import { DiskUsage } from '@/store/modules/os/types';
 
     @Component({
-        components: {
-            'v-chart': ECharts,
-        },
+        components: {},
     })
     export default class Disk extends MVue {
         private lastUpdateTime: Date = null;
@@ -58,80 +52,32 @@
 
         private byteToGB = 1024 * 1024 * 1024;
 
-        private usedData = [];
-        private freeData = [];
-        private totalData = [];
+        private chartSettings = {
+            stack: { 'disk': ['used', 'free'] },
+            area: true,
+        };
 
-        private diskUsageLinearOptions = {
-            title: {},
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    label: {
-                        backgroundColor: '#6a7985',
-                    },
-                },
-                formatter: function(params) {
-                    let res = '';
-                    for (let i = 0, l = params.length; i < l; i++) {
-                        res += '<div style="color:' + params[i].color + '">' + params[i].seriesName + ' : ' + params[i].value[1] + 'G : ' + params[i].value[2] + '%\</div>';
-                    }
-                    return res;
-                },
+        private chartData = {
+            columns: ['time', 'used', 'free'],
+            rows: [],
+        };
+
+        private chartExtend = {
+            series: {
+                showSymbol: false,
             },
-            color: ['#FF4041', '#00AFF5', '#3B3B3B'],
-            legend: {
-                data: ['used', 'free', 'total'],
-                x: 0,
-            },
-            toolbox: {},
             grid: {
                 left: '0%',
-                right: '1%',
+                right: '0%',
+                top: '20%',
                 bottom: '2%',
                 containLabel: true,
             },
-            xAxis: [
-                {
-                    type: 'category',
-                    splitLine: {
-                        show: false,
-                    },
-                    boundaryGap: false,
-                },
-            ],
-            yAxis: [
-                {
-                    type: 'value',
-                    splitLine: {
-                        show: true,
-                    },
-                    axisLine: { show: false },
-                    axisLabel: { show: false },
-                },
-            ],
-            series: [
-                {
-                    name: 'used',
-                    type: 'line',
-                    areaStyle: {},
-                    data: [],
-                },
-                {
-                    name: 'free',
-                    type: 'line',
-                    areaStyle: {},
-                    data: [],
-                },
-                {
-                    name: 'total',
-                    type: 'line',
-                    areaStyle: {},
-                    data: [],
-                },
-            ],
         };
+
+        private used = '0';
+        private free = '0';
+        private total = '0';
 
         @Watch('diskUsageStats', { immediate: true, deep: true })
         asyncData(diskUsages: DiskUsage[]) {
@@ -139,48 +85,28 @@
                 return;
             }
 
-            this.freeData = [];
-            this.usedData = [];
-            this.totalData = [];
+            this.chartData.rows = [];
 
-            diskUsages.forEach((mp: DiskUsage) => {
+            diskUsages.forEach((du: DiskUsage) => {
                 let now = new Date();
-                let xAxisName = this.$xools.getTimeInterval(mp.time, now);
+                let xAxisName = this.$xools.getTimeInterval(du.time, now);
 
-                this.freeData.push({
-                    name: xAxisName,
-                    value: [xAxisName + 's', (mp.free / this.byteToGB).toFixed(1), (100 - mp.usedPercent).toFixed(2)],
+                this.used = (du.used / this.byteToGB).toFixed(1);
+                this.free = (du.free / this.byteToGB).toFixed(1);
+                this.total = (du.total / this.byteToGB).toFixed(1);
+
+                this.chartData.rows.push({
+                    'time': xAxisName,
+                    'used': this.used,
+                    'free': this.free,
                 });
-
-                this.usedData.push({
-                    name: xAxisName,
-                    value: [xAxisName + 's', (mp.used / this.byteToGB).toFixed(1), mp.usedPercent.toFixed(2)],
-                });
-
-                this.totalData.push({
-                    name: xAxisName,
-                    value: [xAxisName + 's', (mp.total / this.byteToGB).toFixed(1), 100],
-                });
-            });
-
-            let chart = this.$refs['diskUsageChart'];
-            chart && chart.chart && chart.chart.setOption({
-                series: [
-                    {
-                        data: this.usedData,
-                    },
-                    {
-                        data: this.freeData,
-                    },
-                    {
-                        data: this.totalData,
-                    },
-                ],
             });
         }
     }
 </script>
 
 <style scoped>
-
+    .el-card .el-form {
+        overflow: scroll;
+    }
 </style>
