@@ -34,7 +34,7 @@ func (s *storage) saveTimesStat(times []*proto.TimesStat, ip, nodeName string) (
 
 	for _, time := range times {
 		_, err = stmt.Exec(
-			tools.PTimestamp(time.Timestamp), ip, nodeName, time.CPU, time.User,
+			tools.PTimestamp(time.Timestamp), ip, nodeName, time.Cpu, time.User,
 			time.System, time.Idle, time.Nice, time.Iowait, time.Irq,
 			time.Softirq, time.Steal, time.Guest, time.GuestNice,
 		)

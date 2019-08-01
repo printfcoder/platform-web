@@ -149,7 +149,7 @@ func (o *api) cpuTimes(w http.ResponseWriter, r *http.Request) {
 	var data []*CPUTimes
 	for rows.Next() {
 		item := &CPUTimes{}
-		if err = rows.Scan(&item.Time, &item.IP, &item.NodeName, &item.CPU, &item.User,
+		if err = rows.Scan(&item.Time, &item.IP, &item.NodeName, &item.Cpu, &item.User,
 			&item.System, &item.Idle, &item.Nice, &item.Iowait, &item.Irq,
 			&item.Softirq, &item.Steal, &item.Guest, &item.GuestNice);
 			err != nil {

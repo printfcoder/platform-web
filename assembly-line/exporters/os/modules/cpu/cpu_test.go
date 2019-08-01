@@ -6,7 +6,7 @@ import (
 )
 
 func TestCPUTimes(t *testing.T) {
-	vvPer, _ := cpu.Times(false)
+	vvPer, _ := cpu.Times(true)
 
 	for _, v := range vvPer {
 		t.Logf("user %f, system: %f, idle: %f",

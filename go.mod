@@ -101,6 +101,7 @@ require (
 	github.com/smartystreets/assertions v0.0.0-20190401211740-f487f9de1cd3 // indirect
 	github.com/softlayer/softlayer-go v0.0.0-20190508182157-7c592eb2559c // indirect
 	github.com/streadway/amqp v0.0.0-20190404075320-75d898a42a94 // indirect
+	github.com/stretchr/testify v1.3.0
 	github.com/ugorji/go v1.1.4 // indirect
 	github.com/vmware/govmomi v0.20.1 // indirect
 	go.uber.org/atomic v1.4.0 // indirect

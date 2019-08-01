@@ -2,6 +2,7 @@ import Vue from 'vue'
 
 import '@/plugins/tools'
 import '@/plugins/vuetify'
+import '@/plugins/vcharts'
 import i18n from '@/plugins/I18n'
 import { setLan } from '@/plugins/elementui'
 import '@/theme/style'

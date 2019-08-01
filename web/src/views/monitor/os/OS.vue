@@ -41,10 +41,10 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="12">
+                <el-col :span="10">
                     <cpu :cpuTimes="cpuTimes"></cpu>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="14">
                     <memory :memPercents="memPercents"></memory>
                 </el-col>
             </el-row>
@@ -169,6 +169,7 @@
 
         changeIP() {
             if (!this.serverIP) {
+                clearInterval(this.currentInterval);
                 return;
             }
 

@@ -10,7 +10,7 @@ import "google/protobuf/timestamp.proto";
 
 message TimesStat {
     google.protobuf.Timestamp timestamp = 1;
-    string CPU = 2;
+    string cpu = 2;
     double user = 3;
     double system = 4;
     double idle = 5;

@@ -4,20 +4,20 @@
             <el-col :span="5">
                 <el-card>
                     <el-form style="height: 186px">
-                        <el-form-item label="Active: ">
-                            <span> {{ activeData.length>0 ?activeData[activeData.length-1].value[1] : ''}}%</span>
+                        <el-form-item label="Act: ">
+                            <span> {{ formatDBAndPercent(active) }}</span>
                         </el-form-item>
-                        <el-form-item label="Compressed: ">
-                            <span> {{ compressedData.length>0 ?compressedData[compressedData.length-1].value[1] : ''}}%</span>
+                        <el-form-item label="Ina: ">
+                            <span> {{ formatDBAndPercent(inactive) }}</span>
                         </el-form-item>
-                        <el-form-item label="Inactive: ">
-                            <span> {{ inactiveData.length>0 ?inactiveData[inactiveData.length-1].value[1] : ''}}%</span>
+                        <el-form-item label="Cpsed: ">
+                            <span> {{ formatDBAndPercent(compressed) }}</span>
                         </el-form-item>
                         <el-form-item label="Wired: ">
-                            <span> {{ wiredData.length>0 ?wiredData[wiredData.length-1].value[1] : ''}}%</span>
+                            <span> {{ formatDBAndPercent(wired) }}</span>
                         </el-form-item>
                         <el-form-item label="Free: ">
-                            <span> {{ freeData.length>0 ?freeData[freeData.length-1].value[1] : ''}}%</span>
+                            <span> {{ formatDBAndPercent(free) }}</span>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -25,15 +25,12 @@
             <el-col :span="19">
                 <el-card>
                     <div>
-                        <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
-                        <div>
-                            <v-chart
-                                    ref="memChart"
-                                    style="width: 100%; height: 186px"
-                                    :options="memLinearOptions"
-                                    :autoresize="true"
-                            />
-                        </div>
+                        <ve-line
+                                :height="'186px'"
+                                :width="'100%'"
+                                :extend="chartExtend"
+                                :data="chartData"
+                                :settings="chartSettings"></ve-line>
                     </div>
                 </el-card>
             </el-col>
@@ -44,18 +41,10 @@
     import { Component, Prop, Watch } from 'vue-property-decorator';
     import MVue from '@/basic/MVue';
 
-    // @ts-ignore
-    import ECharts from 'vue-echarts';
-    import 'echarts/lib/chart/line';
-    import 'echarts/lib/component/polar';
-    import 'echarts/theme/macarons';
-
     import { MemPercent } from '@/store/modules/os/types';
 
     @Component({
-        components: {
-            'v-chart': ECharts,
-        },
+        components: {},
     })
     export default class Memory extends MVue {
         private lastUpdateTime: Date = null;
@@ -65,99 +54,42 @@
 
         private byteToGB = 1024 * 1024 * 1024;
 
-        private activeData = [];
-        private compressedData = [];
-        private inactiveData = [];
-        private wiredData = [];
-        private freeData = [];
-        private totalData = [];
+        private chartSettings = {
+            stack: { 'mem': ['active', 'inactive', 'compressed', 'wired', 'free'] },
+            area: true,
+        };
 
-        private memLinearOptions = {
-            title: {},
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    label: {
-                        backgroundColor: '#6a7985',
-                    },
-                },
-                formatter: function(params) {
-                    let res = '';
-                    for (let i = 0, l = params.length; i < l; i++) {
-                        res += '<div style="color:' + params[i].color + '">' + params[i].seriesName + ' : ' + params[i].value[1] + 'G : ' + params[i].value[2] + '%\</div>';
-                    }
-                    return res;
-                },
+        private chartData = {
+            columns: ['time', 'active', 'inactive', 'compressed', 'wired', 'free'],
+            rows: [],
+        };
+
+        private chartExtend = {
+            series: {
+                showSymbol: false,
             },
-            legend: {
-                data: ['active', 'inactive', 'compressed', 'wired', 'free'],
-                x: 0,
-            },
-            toolbox: {},
             grid: {
                 left: '0%',
-                right: '1%',
+                right: '0%',
                 bottom: '2%',
                 containLabel: true,
             },
-            xAxis: [
-                {
-                    type: 'category',
-                    splitLine: {
-                        show: false,
-                    },
-                    boundaryGap: false,
-                },
-            ],
-            yAxis: [
-                {
-                    type: 'value',
-                    splitLine: {
-                        show: true,
-                    },
-                    axisLine: { show: false },
-                    axisLabel: { show: false },
-                },
-            ],
-            series: [
-                {
-                    name: 'active',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: {},
-                    data: [],
-                },
-                {
-                    name: 'inactive',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: {},
-                    data: [],
-                },
-                {
-                    name: 'compressed',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: {},
-                    data: [],
-                },
-                {
-                    name: 'wired',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: { normal: {} },
-                    data: [],
-                },
-                {
-                    name: 'free',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: { normal: {} },
-                    data: [],
-                },
-            ],
         };
+
+        private active = '0';
+        private inactive = '0';
+        private compressed = '0';
+        private wired = '0';
+        private free = '0';
+        private total = '0';
+
+        formatDBAndPercent(val) {
+            if (this.total == '0') {
+                return '';
+            }
+
+            return val + 'GB, ' + (val / Number.parseInt(this.total) * 100).toFixed(2) + '%';
+        }
 
         @Watch('memPercents', { immediate: true, deep: true })
         asyncData(memPercents: MemPercent[]) {
@@ -165,61 +97,26 @@
                 return;
             }
 
-            this.compressedData = [];
-            this.inactiveData = [];
-            this.wiredData = [];
-            this.freeData = [];
-            this.totalData = [];
+            this.chartData.rows = [];
 
             memPercents.forEach((mp: MemPercent) => {
                 let now = new Date();
-                let xAxisName = this.$xools.getTimeInterval(mp.time, now);
+                let xAxisName = this.$xools.getTimeInterval(mp.time, now) + 's';
 
-                this.activeData.push({
-                    name: xAxisName,
-                    value: [xAxisName + 's', (mp.activeBytes / this.byteToGB).toFixed(1), ((mp.activeBytes / mp.totalBytes) * 100).toFixed(2)],
+                this.active = (mp.activeBytes / this.byteToGB).toFixed(1);
+                this.inactive = (mp.inactiveBytes / this.byteToGB).toFixed(1);
+                this.compressed = (mp.compressedBytes / this.byteToGB).toFixed(1);
+                this.wired = (mp.wiredBytes / this.byteToGB).toFixed(1);
+                this.free = (mp.freeBytes / this.byteToGB).toFixed(1);
+                this.total = (mp.totalBytes / this.byteToGB).toFixed(1);
+                this.chartData.rows.push({
+                    'time': xAxisName,
+                    'active': this.active,
+                    'inactive': this.inactive,
+                    'compressed': this.compressed,
+                    'wired': this.wired,
+                    'free': this.free,
                 });
-
-                this.compressedData.push({
-                    name: xAxisName,
-                    value: [xAxisName + 's', (mp.compressedBytes / this.byteToGB).toFixed(1), ((mp.compressedBytes / mp.totalBytes) * 100).toFixed(2)],
-                });
-
-                this.inactiveData.push({
-                    name: xAxisName,
-                    value: [xAxisName + 's', (mp.inactiveBytes / this.byteToGB).toFixed(1), ((mp.inactiveBytes / mp.totalBytes) * 100).toFixed(2)],
-                });
-
-                this.wiredData.push({
-                    name: xAxisName,
-                    value: [xAxisName + 's', (mp.wiredBytes / this.byteToGB).toFixed(1), ((mp.wiredBytes / mp.totalBytes) * 100).toFixed(2)],
-                });
-
-                this.freeData.push({
-                    name: xAxisName,
-                    value: [xAxisName + 's', (mp.freeBytes / this.byteToGB).toFixed(1), ((mp.freeBytes / mp.totalBytes) * 100).toFixed(2)],
-                });
-            });
-
-            let chart = this.$refs['memChart'];
-            chart && chart.chart && chart.chart.setOption({
-                series: [
-                    {
-                        data: this.activeData,
-                    },
-                    {
-                        data: this.compressedData,
-                    },
-                    {
-                        data: this.inactiveData,
-                    },
-                    {
-                        data: this.wiredData,
-                    },
-                    {
-                        data: this.freeData,
-                    },
-                ],
             });
         }
     }
@@ -228,5 +125,9 @@
 <style scoped>
     .el-form-item {
         margin-bottom: 0px;
+    }
+
+    .el-card .el-form {
+        overflow: scroll;
     }
 </style>

@@ -17,6 +17,7 @@
     "nprogress": "^0.2.0",
     "quill": "^1.3.6",
     "stylus": "^0.54.5",
+    "v-charts": "^1.19.0",
     "vee-validate": "^2.2.11",
     "vue": "^2.6.10",
     "vue-class-component": "^7.1.0",

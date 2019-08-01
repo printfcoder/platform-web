@@ -1,16 +1,16 @@
 <template>
     <el-container>
         <el-main style="padding-top: 0px; padding-left: 0px;">
-            <el-col :span="5">
-                <el-card>
-                    <el-form>
+            <el-col :span="7">
+                <el-card :body-style="infoCardStyle">
+                    <el-form style="height: 186px">
                         <el-form-item label="CPU: ">
-                            <el-select v-model="cpu" placeholder="CPU">
+                            <el-select v-model="cpu" placeholder="CPU" style="width: 70%" @change="changeCPU">
                                 <el-option
                                         v-for="item in cpuOptions"
-                                        :key="item.name"
-                                        :label="item.name"
-                                        :value="item.name">
+                                        :key="item"
+                                        :label="item"
+                                        :value="item">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -26,7 +26,7 @@
                     </el-form>
                 </el-card>
             </el-col>
-            <el-col :span="19">
+            <el-col :span="17">
                 <el-card>
                     <div>
                         <span style="float: right"> {{ lastUpdateTime && ($t('monitor.lastUpdated') + lastUpdateTime.toLocaleTimeString()) }}</span>
@@ -73,6 +73,10 @@
         private cpu = 'cpu-total';
         private cpuOptions = [];
 
+        private infoCardStyle = {
+            overflowX: 'auto',
+        };
+
         private cpuLoadLinearOptions = {
             title: {},
             tooltip: {
@@ -110,7 +114,7 @@
                 type: 'value',
                 boundaryGap: [0, '100%'],
                 splitLine: {
-                    show: true,
+                    show: false,
                 },
                 axisLine: { show: false },
                 axisLabel: { show: false },
@@ -119,16 +123,19 @@
                 {
                     name: 'System',
                     type: 'line',
+                    showSymbol: false,
                     data: this.systemData,
                 },
                 {
                     name: 'User',
                     type: 'line',
+                    showSymbol: false,
                     data: this.userData,
                 },
                 {
                     name: 'Idle',
                     type: 'line',
+                    showSymbol: false,
                     data: this.idleData,
                 },
             ],
@@ -136,6 +143,10 @@
 
         mounted() {
 
+        }
+
+        changeCPU(v) {
+            this.cpu = v;
         }
 
         groupByTime(cpuTimes: CPUTime[]) {
@@ -152,7 +163,7 @@
         collectCPU(cpuTimes: CPUTime[]) {
             cpuTimes.forEach(item => {
                 if (this.cpuOptions.indexOf(item.cpu) == -1) {
-                    this.cpuOptions.push({ name: item.cpu });
+                    this.cpuOptions.push(item.cpu);
                 }
             });
         }
@@ -166,8 +177,6 @@
                 this.systemData = [];
                 this.userData = [];
                 this.idleData = [];
-
-                console.log(cpuTimesShow);
 
                 cpuTimesShow.forEach((ct: CPUTime) => {
                     let total = ct.system + ct.user + ct.idle;
@@ -213,5 +222,11 @@
 </script>
 
 <style scoped>
+    .el-form-item {
+        margin-bottom: 10px;
+    }
 
-</style>;
+    .el-card .el-form {
+        overflow: scroll;
+    }
+</style>

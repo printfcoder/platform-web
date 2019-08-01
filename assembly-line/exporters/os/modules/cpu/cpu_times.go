@@ -42,7 +42,7 @@ func (c *CPU) pushTimes() (err error) {
 	for _, v := range vv {
 		data = append(data, &cpu2.TimesStat{
 			Timestamp: t,
-			CPU:       v.CPU,
+			Cpu:       v.CPU,
 			User:      v.User,
 			System:    v.System,
 			Idle:      v.Idle,
