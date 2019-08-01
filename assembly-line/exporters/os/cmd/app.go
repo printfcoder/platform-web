@@ -17,7 +17,7 @@ import (
 var (
 	diskPaths  []string
 	netKinds   = []string{"all"}
-	configFile = "/Users/shuxian/Projects/micro-in-cn/platform-web/assembly-line/exporters/os/conf/os.yml"
+	configFile = "./conf/os.yml"
 	once2      sync.Once
 )
 
