@@ -53,8 +53,11 @@
                     <disk :diskUsageStats="diskUsageStats"></disk>
                 </el-col>
                 <el-col :span="16">
-                    <network></network>
+                    <disk-io :diskIOStats="diskIOStats"></disk-io>
                 </el-col>
+            </el-row>
+            <el-row>
+                <network></network>
             </el-row>
         </el-main>
     </el-container>
@@ -75,6 +78,7 @@
     import MVue from '@/basic/MVue';
     import CPU from './CPU.vue';
     import Disk from './Disk.vue';
+    import DiskIO from './DiskIO.vue';
     import Load from './Load.vue';
     import Memory from './Memory.vue';
     import Network from './Network.vue';
@@ -94,6 +98,7 @@
             'memory': Memory,
             'network': Network,
             'disk': Disk,
+            'disk-io': DiskIO,
             'load': Load,
         },
     })
@@ -125,6 +130,9 @@
         @State(state => state.monitorOS.diskUsageStats)
         diskUsageStats?: DiskUsage[];
 
+        @State(state => state.monitorOS.diskIOStats)
+        diskIOStats?: DiskIO[];
+
         @State(state => state.monitorOS.xError)
         xError?: string;
 
@@ -142,6 +150,9 @@
 
         @Action('getDiskUsageStats', { namespace })
         getDiskUsageStats: any;
+
+        @Action('getDiskIOStats', { namespace })
+        getDiskIOStats: any;
 
         created() {
             if (!this.loaded) {
@@ -174,8 +185,8 @@
             }
 
             let go = () => {
-                let startTime = new Date(new Date().setSeconds(new Date().getSeconds() - 15))
-                let now = new Date()
+                let startTime = new Date(new Date().setSeconds(new Date().getSeconds() - 15));
+                let now = new Date();
                 this.getCPUTimes({
                     ips: [this.serverIP],
                     startTime: startTime,
@@ -192,6 +203,12 @@
                     endTime: now,
                 });
                 this.getDiskUsageStats({
+                    ips: [this.serverIP],
+                    startTime: startTime,
+                    endTime: now,
+                });
+
+                this.getDiskIOStats({
                     ips: [this.serverIP],
                     startTime: startTime,
                     endTime: now,
