@@ -207,7 +207,6 @@
                     startTime: startTime,
                     endTime: now,
                 });
-
                 this.getDiskIOStats({
                     ips: [this.serverIP],
                     startTime: startTime,

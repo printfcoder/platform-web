@@ -91,7 +91,7 @@
             this.cpu = v;
         }
 
-        groupByTime(cpuTimes: CPUTime[]) {
+        groupByName(cpuTimes: CPUTime[]) {
             let cpuTimesRet = [];
             cpuTimes.forEach(v => {
                 if (v.cpu == this.cpu) {
@@ -115,7 +115,7 @@
             if (cpuTimes != null && cpuTimes.length > 0) {
                 this.collectCPU(cpuTimes);
 
-                let cpuTimesShow = this.groupByTime(cpuTimes);
+                let cpuTimesShow = this.groupByName(cpuTimes);
                 this.chartData.rows = [];
 
                 cpuTimesShow.forEach((ct: CPUTime) => {
