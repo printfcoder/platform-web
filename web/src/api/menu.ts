@@ -33,7 +33,7 @@ const Menu = [
             { name: 'serviceStatistics', title: 'statsService', component: 'serviceStatistics' }
         ]
     },
-    {
+    /*  disable monitor  {
         title: 'monitor',
         component: 'monitor',
         icon: 'web',
@@ -41,7 +41,7 @@ const Menu = [
         items: [
             { name: 'os', title: 'os', component: 'monitor-os' }
         ]
-    },
+    }, */
     { divider: true }
 ]
 // reorder menu

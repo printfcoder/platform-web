@@ -6,7 +6,6 @@ import call from './modules/call'
 import registry from './modules/registry'
 import servicesStats from './modules/stats/services'
 import apiStats from './modules/stats/api'
-import monitorOS from './modules/os'
 
 // index.js or main.js
 import 'vuetify/dist/vuetify.min.css'
@@ -26,7 +25,6 @@ export default new Vuex.Store({
     modules: {
         apiStats,
         call,
-        monitorOS,
         registry,
         servicesStats
     }
