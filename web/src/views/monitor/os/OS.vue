@@ -57,7 +57,7 @@
                 </el-col>
             </el-row>
             <el-row>
-                <network></network>
+                <network-io></network-io>
             </el-row>
         </el-main>
     </el-container>
@@ -81,7 +81,7 @@
     import DiskIO from './DiskIO.vue';
     import Load from './Load.vue';
     import Memory from './Memory.vue';
-    import Network from './Network.vue';
+    import NetworkIO from './NetworkIO.vue';
 
     import { Component, Watch } from 'vue-property-decorator';
     import { State, Action } from 'vuex-class';
@@ -96,7 +96,7 @@
         components: {
             'cpu': CPU,
             'memory': Memory,
-            'network': Network,
+            'network-io': NetworkIO,
             'disk': Disk,
             'disk-io': DiskIO,
             'load': Load,

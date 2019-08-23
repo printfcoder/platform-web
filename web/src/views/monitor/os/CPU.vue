@@ -135,6 +135,29 @@
                     });
                 });
             }
+
+
+            let dd = { 'A': 1, 'B.A': 2, 'B.B': 3, 'CC.D.E': 4, 'CC.D.F': 5 };
+            let out = {};
+
+            for (let k in dd) {
+                if (!out[k]) {
+                    out[k] = dd[k];
+                }
+            }
+
+            function keyToObj(out, oldKey) {
+                if (oldKey.indexOf('.') > 0) {
+                    let keys = oldKey.split(oldKey, '.');
+                    for (let k in keys) {
+                        if (!out[k]) {
+                            keyToObj(out, k);
+                        }
+                    }
+                } else {
+                    return oldKey
+                }
+            }
         }
     }
 </script>

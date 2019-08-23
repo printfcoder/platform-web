@@ -25,7 +25,7 @@ micro:
           enable: true
           interval: 1
         net:
-          enable: false
+          enable: true
           interval: 5
           kinds:
           ifaces: [lo0, en0]

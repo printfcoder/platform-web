@@ -14,4 +14,4 @@ micro:
       maxBackups: 200
       maxAge: 10
     os:
-      ip-group: {first: [192.168.31.67, 192.168.24.28]}
+      ip-group: {first: [192.168.31.67, 192.168.43.236]}

@@ -24,8 +24,9 @@ func (n *Net) Init(opts *modules.Options) {
 	n.opts.NodeName = opts.NodeName
 	n.opts.IP = opts.IP
 	n.netClient = proto.NewNetService(n.opts.Collector.Name, n.opts.Collector.Client)
+	n.ifaceMap = map[string]bool{}
 
-	// for search ifraces are used to be exported
+	// ifraces which are used to be exported
 	for _, i := range n.opts.Ifaces {
 		n.ifaceMap[i] = true
 	}
